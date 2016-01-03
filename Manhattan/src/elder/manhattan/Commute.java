@@ -15,7 +15,7 @@ public class Commute
 	{
 		assert(home==null);
 		this.home = home;
-		home.getResidents().add(this);
+		home.addResident(this);
 	}
 	
 	public Block getOffice()
@@ -27,7 +27,7 @@ public class Commute
 	{
 		assert(office==null);
 		this.office = office;
-		office.getWorkers().add(this);
+		office.addWorker(this);
 	}
 	
 	@Override

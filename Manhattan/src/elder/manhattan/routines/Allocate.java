@@ -82,7 +82,7 @@ public class Allocate implements Routine
 			{
 				for (int y=0; y<city.getWidth(); y++)
 				{
-					if (city.getBlock(x, y).isBuilt())
+					if (city.getBlock(x, y).isBuilt()&&city.getBlock(x, y).getPopulation()<simulation.BLOCK_POPULATION_LIMIT)
 					{
 					
 						double distanceScore = (Math.abs(block.getX() - x) + Math.abs(block.getY() - y));
@@ -126,7 +126,7 @@ public class Allocate implements Routine
 
 		}
 		
-		//commutes.clear();
+		commutes.clear();
 		
 	}
 	

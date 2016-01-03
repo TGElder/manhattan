@@ -8,10 +8,12 @@ import java.util.Random;
 
 public class Simulation implements Runnable
 {
+	public final double BLOCK_POPULATION_LIMIT;
+
 	private final City city;
 
 	private boolean halt;
-	private boolean verbose;
+	private boolean verbose=true;
 	private int iterations=0;
 	private int steps;
 	
@@ -23,10 +25,11 @@ public class Simulation implements Runnable
 	
 	private final Random random;
 	
-	public Simulation(City city, long seed)
+	public Simulation(City city, long seed, int BLOCK_POPULATION_LIMIT)
 	{
 		this.city = city;
 		random = new Random(seed);
+		this.BLOCK_POPULATION_LIMIT = BLOCK_POPULATION_LIMIT;
 	}
 	
 	public void step()
@@ -41,7 +44,7 @@ public class Simulation implements Runnable
 				return;
 			}
 			iterations ++;
-			System.out.println(iterations);
+			System.out.println(iterations+" ("+city.getPopulation()+")");
         	
         	for (Routine routine : routines)
         	{

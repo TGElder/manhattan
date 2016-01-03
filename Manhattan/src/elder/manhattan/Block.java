@@ -18,6 +18,8 @@ public class Block
 	private final List<Commute> workers = new ArrayList<Commute> ();
 	private final List<Commute> residents = new ArrayList<Commute> ();
 	
+	private Block[] neighbours;
+	
 	public Block(int x, int y, Polygon polygon)
 	{
 		this.x = x;
@@ -49,6 +51,18 @@ public class Block
 	{
 		return workers;
 	}
+	
+	public void addWorker(Commute worker)
+	{
+		workers.add(worker);
+		assert(getPopulation()<=1000);
+	}
+	
+	public void addResident(Commute resident)
+	{
+		residents.add(resident);
+		assert(getPopulation()<=1000);
+	}
 
 	public int getX()
 	{
@@ -64,6 +78,21 @@ public class Block
 	public String toString()
 	{
 		return "("+x+","+y+")";
+	}
+
+	public Block[] getNeighbours()
+	{
+		return neighbours;
+	}
+
+	void setNeighbours(Block[] neighbours)
+	{
+		this.neighbours = neighbours;
+	}
+
+	public double getPopulation()
+	{
+		return workers.size()+residents.size();
 	}
 	
 

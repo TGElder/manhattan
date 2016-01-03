@@ -21,14 +21,12 @@ public class BlockLayer extends SimulationLayer
 			
 			if (block.isBuilt())
 			{
-				if (block.getResidents().isEmpty()&&block.getWorkers().isEmpty())
-				{
-					drawPolygon(block.getPolygon(),0.5f,0.5f,0.5f,true);
-				}
-				else
-				{
-					drawPolygon(block.getPolygon(),0f,0f,0f,true);
-				}
+				float occupancy = (float) ((block.getPopulation())/(simulation.BLOCK_POPULATION_LIMIT*1.0));
+				occupancy *= 0.75;
+				occupancy = 0.75f - occupancy;
+				
+				drawPolygon(block.getPolygon(),occupancy,occupancy,occupancy,true);
+				
 			}
 			else
 			{

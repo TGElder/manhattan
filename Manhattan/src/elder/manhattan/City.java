@@ -40,6 +40,41 @@ public class City
 				
 			}
 		}
+		
+		for (int x=0;x<width;x++)
+		{
+			for (int y=0;y<height; y++)
+			{
+				ArrayList<Block> neighbours1 = new ArrayList<Block> ();
+								
+				if (x-1>0)
+				{
+					neighbours1.add(getBlock(x-1,y));
+				}
+				if (x+1<width)
+				{
+					neighbours1.add(getBlock(x+1,y));
+				}
+				if (y-1>0)
+				{
+					neighbours1.add(getBlock(x,y-1));
+				}
+				if (y+1<height)
+				{
+					neighbours1.add(getBlock(x,y+1));
+				}
+				
+				
+				Block[] neighbours2 = new Block[neighbours1.size()];
+				
+				for (int n=0; n<neighbours1.size(); n++)
+				{
+					neighbours2[n] = neighbours1.get(n);
+				}
+				
+				getBlock(x,y).setNeighbours(neighbours2);
+			}
+		}
 	}
 	
 	private void setBlock(int x, int y, Block block)
@@ -80,6 +115,18 @@ public class City
 	public List<Commute> getUnemployed()
 	{
 		return unemployed;
+	}
+	
+	public int getPopulation()
+	{
+		int population = homeless.size();
+		
+		for (Block block : blocks)
+		{
+			population += block.getResidents().size();
+		}
+		
+		return population;
 	}
 
 	

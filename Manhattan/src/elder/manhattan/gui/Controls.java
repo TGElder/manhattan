@@ -17,7 +17,10 @@ import elder.manhattan.graphics.CityDrawer;
 import elder.manhattan.graphics.CityDrawerLayer;
 import elder.manhattan.layers.BlockLayer;
 import elder.manhattan.layers.KatherineLayer;
+import elder.manhattan.routines.AddChildren;
+import elder.manhattan.routines.AddImmigrants;
 import elder.manhattan.routines.Allocate;
+import elder.manhattan.routines.OpenFields;
 import elder.manhattan.routines.OpenRandomFields;
 import elder.manhattan.routines.Populate;
 
@@ -79,11 +82,14 @@ public class Controls extends JFrame
 	{
 		
 		
-		Simulation sim = new Simulation(new City(160,160,1),1987);
+		Simulation sim = new Simulation(new City(160,160,1),1987,100);
 
-		sim.run(new OpenRandomFields(1),false);
-		sim.run(new Populate(1),false);
+		sim.run(new OpenRandomFields(0.05),false);
+		sim.run(new Populate(1000),false);
+		sim.addRoutine(new OpenFields(1.0/52.0));
 		sim.addRoutine(new Allocate());
+		sim.addRoutine(new AddImmigrants(50));
+		sim.addRoutine(new AddChildren(50));
 				
 		CityDrawer cityDrawer = new CityDrawer(sim,1024,1024);
 		
