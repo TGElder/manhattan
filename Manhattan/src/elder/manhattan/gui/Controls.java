@@ -11,12 +11,12 @@ import javax.swing.BoxLayout;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
-import elder.geometry.Line;
-import elder.geometry.Point;
 import elder.manhattan.City;
 import elder.manhattan.Simulation;
 import elder.manhattan.graphics.CityDrawer;
 import elder.manhattan.graphics.CityDrawerLayer;
+import elder.manhattan.layers.KatherineLayer;
+import elder.manhattan.routines.OpenRandomFields;
 
 
 
@@ -76,9 +76,18 @@ public class Controls extends JFrame
 	{
 		
 		
-		Simulation sim = new Simulation(new City(40,40));
+		Simulation sim = new Simulation(new City(160,160,1),1986);
+
 				
 		CityDrawer cityDrawer = new CityDrawer(sim,1024,1024);
+		
+		Navigator navigator = new Navigator(cityDrawer);
+		
+		KatherineLayer katherineLayer = new KatherineLayer();
+		cityDrawer.addLayer(katherineLayer);
+		
+		sim.addRoutine(new OpenRandomFields(0.1));
+		sim.addRoutine(katherineLayer);
 
     	Controls controls = new Controls(sim,cityDrawer);
 

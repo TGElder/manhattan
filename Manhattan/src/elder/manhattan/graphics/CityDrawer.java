@@ -114,7 +114,7 @@ public class CityDrawer
         GL11.glAlphaFunc(GL11.GL_GREATER, 0.1f);
     	GL11.glEnable(GL11.GL_TEXTURE_2D);
 
-		adjustZoom(Math.max(width, height),0,0);
+		adjustZoom(Math.max(width/(sim.getCity().getWidth()*sim.getCity().getScale()), height/(sim.getCity().getWidth()*sim.getCity().getScale())),0,0);
     }
     
     public void addLayer(CityDrawerLayer layer)

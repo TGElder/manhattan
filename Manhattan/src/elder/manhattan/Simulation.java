@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 
 public class Simulation implements Runnable
 {
@@ -14,14 +15,18 @@ public class Simulation implements Runnable
 	private int iterations=0;
 	private int steps;
 	
-	private final List<Routine> routines = new ArrayList<Routine> ();
 	
 	private final Map<Routine,Long> runTime = new HashMap<Routine,Long> ();
 	private final Map<Routine,Integer> runCount = new HashMap<Routine,Integer> ();
+
+	private final List<Routine> routines = new ArrayList<Routine> ();
 	
-	public Simulation(City city)
+	private final Random random;
+	
+	public Simulation(City city, long seed)
 	{
 		this.city = city;
+		random = new Random(seed);
 	}
 	
 	public void step()
@@ -68,14 +73,12 @@ public class Simulation implements Runnable
 		print("Running "+routine);
 		
 		long start = System.currentTimeMillis();
-		routine.run();
+		String message = routine.run(this);
 		long time = System.currentTimeMillis()-start;
-		
-		String message = routine.getMessage();
-		
-		if (message.length()>0)
+				
+		if (message!=null)
 		{
-			print(" ("+routine.getMessage()+")");
+			print(" ("+message+")");
 		}
 		
 		print(" "+time+"ms");
@@ -94,7 +97,6 @@ public class Simulation implements Runnable
 
 			print(" average "+runTime.get(routine)/runCount.get(routine) + "ms");
 		}
-
 		
 		println("");
 
@@ -120,5 +122,26 @@ public class Simulation implements Runnable
 	{
 		this.steps = steps;
 	}
+	
+	public void update()
+	{
+    	for (Routine routine : routines )
+		{
+			run(routine,true);
+		}
+	}
+
+	public void addRoutine(Routine routine)
+	{
+		routines.add(routine);
+	}
+
+	public Random getRandom()
+	{
+		return random;
+	}
+
+
+	
 	
 }

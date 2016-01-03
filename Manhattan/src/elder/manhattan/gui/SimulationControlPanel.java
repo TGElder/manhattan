@@ -9,7 +9,6 @@ import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.JSpinner;
-import javax.swing.JTextField;
 import javax.swing.SpinnerNumberModel;
 
 import elder.manhattan.Simulation;
