@@ -67,7 +67,7 @@ public class Simulation implements Runnable
 		}
 	}
 
-	private void run(Routine routine, boolean keepStats)
+	public void run(Routine routine, boolean keepStats)
 	{
 		
 		print("Running "+routine);

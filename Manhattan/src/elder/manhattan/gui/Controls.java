@@ -15,8 +15,11 @@ import elder.manhattan.City;
 import elder.manhattan.Simulation;
 import elder.manhattan.graphics.CityDrawer;
 import elder.manhattan.graphics.CityDrawerLayer;
+import elder.manhattan.layers.BlockLayer;
 import elder.manhattan.layers.KatherineLayer;
+import elder.manhattan.routines.Allocate;
 import elder.manhattan.routines.OpenRandomFields;
+import elder.manhattan.routines.Populate;
 
 
 
@@ -76,17 +79,24 @@ public class Controls extends JFrame
 	{
 		
 		
-		Simulation sim = new Simulation(new City(160,160,1),1986);
+		Simulation sim = new Simulation(new City(160,160,1),1987);
 
+		sim.run(new OpenRandomFields(1),false);
+		sim.run(new Populate(1),false);
+		sim.addRoutine(new Allocate());
 				
 		CityDrawer cityDrawer = new CityDrawer(sim,1024,1024);
 		
 		Navigator navigator = new Navigator(cityDrawer);
 		
+		BlockLayer blockLayer = new BlockLayer();
+		cityDrawer.addLayer(blockLayer);
+		
 		KatherineLayer katherineLayer = new KatherineLayer();
 		cityDrawer.addLayer(katherineLayer);
-		
-		sim.addRoutine(new OpenRandomFields(0.1));
+		katherineLayer.disable();
+	
+		sim.addRoutine(blockLayer);
 		sim.addRoutine(katherineLayer);
 
     	Controls controls = new Controls(sim,cityDrawer);
