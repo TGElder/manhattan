@@ -3,9 +3,11 @@ package elder.manhattan;
 import java.util.ArrayList;
 import java.util.List;
 
+import elder.geometry.Point;
 import elder.geometry.Polygon;
+import elder.network.Node;
 
-public class Block
+public class Block extends Node
 {
 	
 	private final int x;
@@ -20,8 +22,12 @@ public class Block
 	
 	private Block[] neighbours;
 	
-	public Block(int x, int y, Polygon polygon)
+	private int station=-1;
+	
+	
+	public Block(int x, int y, Polygon polygon, Point centre)
 	{
+		super(centre.x,centre.y);
 		this.x = x;
 		this.y = y;
 		this.polygon = polygon;
@@ -93,6 +99,16 @@ public class Block
 	public double getPopulation()
 	{
 		return workers.size()+residents.size();
+	}
+
+	public int getStation()
+	{
+		return station;
+	}
+
+	public void setStation(int station)
+	{
+		this.station = station;
 	}
 	
 

@@ -27,36 +27,46 @@ public class Allocate implements Routine
 		
 		double max=0;
 		
-		for (Block block : city.getBlocks())
+		for (int x=0; x<city.getWidth(); x++)
 		{
-			if (homeless)
+			for (int y=0; y<city.getWidth(); y++)
 			{
-				max = Math.max(max, block.getResidents().size());
-			}
-			else
-			{
-				max = Math.max(max, block.getWorkers().size());
+				
+				Block block = city.getBlock(x, y);
+				
+				if (homeless)
+				{
+					gravity[x][y] = block.getResidents().size();
+				}
+				else
+				{
+					gravity[x][y] = block.getWorkers().size();
+				}
+				
+				for (Block neighbour : block.getNeighbours())
+				{
+					if (homeless)
+					{
+						gravity[x][y] += neighbour.getResidents().size();
+					}
+					else
+					{
+						gravity[x][y] += neighbour.getWorkers().size();
+					}
+				}
+				
+				max = Math.max(max, gravity[x][y]);
 			}
 		}
 		
+		
 		if (max>0)
 		{
-		
 			for (int x=0; x<city.getWidth(); x++)
 			{
 				for (int y=0; y<city.getWidth(); y++)
 				{
-								
-					if (homeless)
-					{
-						gravity[x][y] = city.getBlock(x, y).getResidents().size();
-					}
-					else
-					{
-						gravity[x][y] = city.getBlock(x, y).getWorkers().size();
-					}
-					
-					gravity[x][y] = gravity[x][y]/max;
+					gravity[x][y] /= max;
 				}
 			}
 		}

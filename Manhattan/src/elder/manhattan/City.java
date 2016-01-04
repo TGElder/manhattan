@@ -18,6 +18,11 @@ public class City
 	private final List<Commute> homeless = new ArrayList<Commute> ();
 	private final List<Commute> unemployed = new ArrayList<Commute> ();
 	
+	private static int [] neighbourXs = { 0,-1, 0, 1,-2,-1,1,2,-1,0,1,0};
+	private static int [] neighbourYs = {-2,-1,-1,-1, 0, 0,0,0, 1,1,1,2};
+	
+	private final List<Block> stations = new ArrayList<Block> ();
+
 	public City(int width, int height, double scale)
 	{
 		this.width = width;
@@ -36,7 +41,7 @@ public class City
 				polygon.add(new Point((x+1)*scale,(y+1)*scale));
 				polygon.add(new Point(x*scale,(y+1)*scale));
 				
-				setBlock(x,y,new Block(x,y,polygon));
+				setBlock(x,y,new Block(x,y,polygon,new Point(x+(scale/2.0),y+(scale/2.0))));
 				
 			}
 		}
@@ -46,24 +51,17 @@ public class City
 			for (int y=0;y<height; y++)
 			{
 				ArrayList<Block> neighbours1 = new ArrayList<Block> ();
-								
-				if (x-1>0)
-				{
-					neighbours1.add(getBlock(x-1,y));
-				}
-				if (x+1<width)
-				{
-					neighbours1.add(getBlock(x+1,y));
-				}
-				if (y-1>0)
-				{
-					neighbours1.add(getBlock(x,y-1));
-				}
-				if (y+1<height)
-				{
-					neighbours1.add(getBlock(x,y+1));
-				}
 				
+				for (int n=0; n<neighbourXs.length; n++)
+				{
+					int nx = x+neighbourXs[n];
+					int ny = y+neighbourYs[n];
+					
+					if (nx>0 && nx<width && ny>0 && ny<height)
+					{
+						neighbours1.add(getBlock(nx,ny));
+					}
+				}
 				
 				Block[] neighbours2 = new Block[neighbours1.size()];
 				
@@ -128,6 +126,27 @@ public class City
 		
 		return population;
 	}
+	
+	public List<Block> getStations()
+	{
+		return stations;
+	}
+	
+	public void createStation(Block block)
+	{
+		if (block.getStation()==-1)
+		{
+		
+			if (!block.isBuilt())
+			{
+				block.setBuilt(true);
+			}
+			block.setStation(stations.size());
+			stations.add(block);
+			
+		}
+	}
+
 
 	
 

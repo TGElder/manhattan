@@ -31,7 +31,7 @@ public class OpenFields implements Routine
 						
 						double occupancy = (neighbour.getPopulation())/(simulation.BLOCK_POPULATION_LIMIT*1.0);
 						
-						score += occupancy*(openProbability/4.0);
+						score += occupancy*(openProbability/13.0);
 					}
 				}
 			}
