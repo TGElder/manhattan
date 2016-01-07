@@ -24,6 +24,7 @@ import elder.manhattan.layers.TubeLayer;
 import elder.manhattan.routines.AddChildren;
 import elder.manhattan.routines.AddImmigrants;
 import elder.manhattan.routines.Allocate;
+import elder.manhattan.routines.ComputeTubeways;
 import elder.manhattan.routines.Dijkstra;
 import elder.manhattan.routines.OpenFields;
 import elder.manhattan.routines.OpenRandomFields;
@@ -90,10 +91,27 @@ public class Controls extends JFrame
 		
 		Simulation sim = new Simulation(new City(160,160,1),1986,500);
 
+		CityDrawer cityDrawer = new CityDrawer(sim,1024,1024);
+		
+		Navigator navigator = new Navigator(cityDrawer);
+		
+		HoverSelector selector = new HoverSelector(sim);
+		cityDrawer.addMouseListener(selector);
+		
 		sim.run(new OpenRandomFields(0.01),false);
 		sim.run(new Populate(1000),false);
+		
+		TubeBuilder tubeBuilder = new TubeBuilder();
+		selector.getSelectedBlock().addListener(tubeBuilder);
+		cityDrawer.addMouseListener(tubeBuilder);
+		sim.addRoutine(tubeBuilder);
 		sim.addRoutine(new OpenFields(2.0/52.0));
 		
+		
+		sim.addRoutine(new UpdateStations());
+		
+		sim.addRoutine(new ComputeTubeways());
+
 		Dijkstra dijkstra = new Dijkstra();	
 		sim.addRoutine(dijkstra);
 		sim.addRoutine(new Allocate(dijkstra));
@@ -101,12 +119,9 @@ public class Controls extends JFrame
 		sim.addRoutine(new AddChildren(50));
 		
 				
-		CityDrawer cityDrawer = new CityDrawer(sim,1024,1024);
 		
-		Navigator navigator = new Navigator(cityDrawer);
 		
-		HoverSelector selector = new HoverSelector(sim);
-		cityDrawer.addMouseListener(selector);
+		
 		
 
 		
@@ -124,11 +139,8 @@ public class Controls extends JFrame
 		selector.getSelectedBlock().addListener(selectedBlock);
 		cityDrawer.addLayer(selectedBlock);
 		
-		TubeBuilder tubeBuilder = new TubeBuilder();
-		selector.getSelectedBlock().addListener(tubeBuilder);
-		cityDrawer.addMouseListener(tubeBuilder);
-		sim.addRoutine(tubeBuilder);
-		sim.addRoutine(new UpdateStations());
+		
+
 		
 		
 		DijkstraLayer dijkstraLayer = new DijkstraLayer(dijkstra);

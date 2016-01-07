@@ -393,7 +393,7 @@ public class CityDrawer
     				}
     			}
     			
-    			else if (Mouse.getEventButton()<2)
+    			else if (Mouse.getEventButton()<3)
     			{
     				int b = Mouse.getEventButton();
     				

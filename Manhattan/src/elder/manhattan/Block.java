@@ -13,6 +13,8 @@ public class Block extends Node
 	private final int cityX;
 	private final int cityY;
 	
+	private final int index;
+	
 	private boolean built=false;
 	
 	private final Polygon polygon;
@@ -21,16 +23,16 @@ public class Block extends Node
 	private final List<Commute> residents = new ArrayList<Commute> ();
 	
 	private Block[] neighbours;
-	private int[] stations = {};
+	private Station[] stations = {};
 	
-	private int station=-1;
+	private Station station;
 	
-	
-	public Block(int x, int y, Polygon polygon, Point centre)
+	public Block(int x, int y, int index, Polygon polygon, Point centre)
 	{
 		super(centre.x,centre.y);
 		this.cityX = x;
 		this.cityY = y;
+		this.index = index;
 		this.polygon = polygon;
 	}
 
@@ -102,29 +104,34 @@ public class Block extends Node
 		return workers.size()+residents.size();
 	}
 
-	public int getStation()
+	public Station getStation()
 	{
 		return station;
 	}
 	
 	public boolean hasStation()
 	{
-		return station>-1;
+		return station!=null;
 	}
 
-	public void setStation(int station)
+	public void setStation(Station station)
 	{
 		this.station = station;
 	}
 
-	public int[] getStations()
+	public Station[] getStations()
 	{
 		return stations;
 	}
 	
-	public void setStations(int[] stations)
+	public void setStations(Station[] stations)
 	{
 		this.stations = stations;
+	}
+
+	public int getIndex()
+	{
+		return index;
 	}
 	
 

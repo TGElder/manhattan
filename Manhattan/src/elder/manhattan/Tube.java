@@ -31,6 +31,11 @@ public class Tube extends SpeedEdge
 	{
 		this.reverse = reverse;
 	}
+	
+	public String toString()
+	{
+		return super.toString();
+	}
 
 	
 }

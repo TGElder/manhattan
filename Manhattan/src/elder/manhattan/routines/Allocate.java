@@ -8,6 +8,7 @@ import elder.manhattan.City;
 import elder.manhattan.Commute;
 import elder.manhattan.Routine;
 import elder.manhattan.Simulation;
+import elder.manhattan.Station;
 
 public class Allocate implements Routine
 {
@@ -108,11 +109,11 @@ public class Allocate implements Routine
 					{
 						double distance = (Math.abs(block.x - focus.x) + Math.abs(block.y - focus.y));
 						
-						for (int s : block.getStations())
+						for (Station s : block.getStations())
 						{
-							for (int s2: focus.getStations())
+							for (Station s2: focus.getStations())
 							{
-								distance = Math.min(distance, dijkstra.getDistances()[s][s2]);
+								distance = Math.min(distance, dijkstra.getDistances()[s.getIndex()][s2.getIndex()]);
 							}
 						}
 						

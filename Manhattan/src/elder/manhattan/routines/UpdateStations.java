@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import elder.manhattan.Block;
 import elder.manhattan.Routine;
 import elder.manhattan.Simulation;
+import elder.manhattan.Station;
 
 public class UpdateStations implements Routine
 {
@@ -12,7 +13,7 @@ public class UpdateStations implements Routine
 	@Override
 	public String run(Simulation simulation)
 	{
-		ArrayList<Integer> stations = new ArrayList<Integer> ();
+		ArrayList<Station> stations = new ArrayList<Station> ();
 		
 		for (Block block : simulation.getCity().getBlocks())
 		{
@@ -33,7 +34,7 @@ public class UpdateStations implements Routine
 				}
 			}
 			
-			block.setStations(new int[stations.size()]);
+			block.setStations(new Station[stations.size()]);
 			
 			for (int s=0; s<stations.size(); s++)
 			{

@@ -5,7 +5,6 @@ import java.util.List;
 
 import elder.geometry.Point;
 import elder.geometry.Polygon;
-import elder.network.Node;
 
 public class City
 {
@@ -22,7 +21,7 @@ public class City
 	private static int [] neighbourXs = { 0,-1, 0, 1,-2,-1,1,2,-1,0,1,0};
 	private static int [] neighbourYs = {-2,-1,-1,-1, 0, 0,0,0, 1,1,1,2};
 	
-	private final List<Block> stations = new ArrayList<Block> ();
+	private final List<Station> stations = new ArrayList<Station> ();
 	
 	public City(int width, int height, double scale)
 	{
@@ -42,7 +41,7 @@ public class City
 				polygon.add(new Point((x+1)*scale,(y+1)*scale));
 				polygon.add(new Point(x*scale,(y+1)*scale));
 				
-				setBlock(x,y,new Block(x,y,polygon,new Point(x+(scale/2.0),y+(scale/2.0))));
+				setBlock(x,y,new Block(x,y,(y*width)+x,polygon,new Point(x+(scale/2.0),y+(scale/2.0))));
 				
 			}
 		}
@@ -128,7 +127,7 @@ public class City
 		return population;
 	}
 	
-	public List<Block> getStations()
+	public List<Station> getStations()
 	{
 		return stations;
 	}
@@ -142,8 +141,12 @@ public class City
 			{
 				block.setBuilt(true);
 			}
-			block.setStation(stations.size());
-			stations.add(block);
+			
+			Station station = new Station(block,stations.size());
+			block.setStation(station);
+			stations.add(station);
+			
+			System.out.println(stations);
 			
 		}
 	}

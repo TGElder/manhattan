@@ -3,6 +3,7 @@ package elder.manhattan.layers;
 import elder.manhattan.Block;
 import elder.manhattan.SelectionListener;
 import elder.manhattan.Tube;
+import elder.manhattan.Tubeway;
 import elder.manhattan.graphics.CityDrawerLayer;
 import elder.manhattan.routines.Dijkstra;
 
@@ -36,13 +37,16 @@ public class DijkstraLayer extends CityDrawerLayer implements SelectionListener<
 			
 			if (selectedBlock.hasStation())
 			{
-				Tube [] tubes = dijkstra.getDirections()[selectedBlock.getStation()];
+				Tubeway [] tubeways = dijkstra.getDirections()[selectedBlock.getStation().getIndex()];
 				
-				for (Tube tube : tubes)
+				for (Tubeway tubeway : tubeways)
 				{
-					if (tube!=null)
+					if (tubeway!=null)
 					{
-						drawLine(tube,1f,1f,1f,6f,false);
+						for (Tube tube : tubeway.getTubes())
+						{
+								drawLine(tube,1f,1f,1f,6f,false);
+						}
 					}
 				}
 			}

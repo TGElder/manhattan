@@ -15,10 +15,11 @@ import elder.manhattan.graphics.CityDrawerLayer;
 public class TubeBuilder extends CityDrawerLayer implements SelectionListener<Block>,MouseListener,Routine
 {
 	
+	private final List<Block> newStations = new ArrayList<Block> ();
 	private final List<Tube> newTubes = new ArrayList<Tube> ();
 	private Block from=null;
 	private Block to=null;
-
+	
 	public TubeBuilder()
 	{
 		super("Tube Builder");
@@ -61,7 +62,7 @@ public class TubeBuilder extends CityDrawerLayer implements SelectionListener<Bl
 	@Override
 	public void onMiddleClick(Point cityPoint)
 	{
-		
+		newStations.add(to);
 	}
 
 	@Override
@@ -106,9 +107,15 @@ public class TubeBuilder extends CityDrawerLayer implements SelectionListener<Bl
 	@Override
 	public String run(Simulation simulation)
 	{
+		for (Block block : newStations )
+		{
+			simulation.getCity().createStation(block);
+		}
+		
+		newStations.clear();
+		
 		for (Tube tube : newTubes)
 		{
-			simulation.getCity().createStation(tube.getFrom());
 			tube.getFrom().addEdge(tube);
 		}
 		
@@ -122,14 +129,23 @@ public class TubeBuilder extends CityDrawerLayer implements SelectionListener<Bl
 	@Override
 	public void draw()
 	{
+		
 		for (Tube tube : newTubes)
 		{
 			drawLine(tube,0f,0f,1f,2f,false);
 		}
 		
+		
+		
 		if ( (from!=null&&to!=null) && (from!=to))
 		{
 			drawLine(new Line(from,to),0f,0f,1f,1f,false);
+		}
+		
+		for (Block block : newStations)
+		{
+			drawPoint(block,0f,0f,0f,6f);
+			drawPoint(block,1f,1f,1f,4f);
 		}
 	}
 

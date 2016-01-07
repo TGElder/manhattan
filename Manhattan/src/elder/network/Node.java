@@ -43,6 +43,11 @@ public class Node extends Point
 
 		
 	}
+	
+	public void clearNeighbours()
+	{		
+		edges.clear();
+	}
 
 	
 	public Collection<Edge> getEdges()
