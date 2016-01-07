@@ -1,6 +1,5 @@
 package elder.manhattan.routines;
 
-import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.PriorityQueue;
@@ -8,11 +7,16 @@ import java.util.PriorityQueue;
 import elder.manhattan.Block;
 import elder.manhattan.Routine;
 import elder.manhattan.Simulation;
+import elder.manhattan.Tube;
 import elder.network.Edge;
 
 public class Dijkstra implements Routine
 {
 
+	private Tube [][] directions;
+	private double [][] distances;
+
+	
 	@Override
 	public String run(Simulation simulation)
 	{
@@ -24,13 +28,11 @@ public class Dijkstra implements Routine
 		int [] closed = new int[noStations];
 		
 		
-		final Block [] directions = new Block[noStations];
+		final Tube [] directions = new Tube[noStations];
 		final double [] distances = new double[noStations];
 		
-		
-		Block [][] directionsOut = new Block[noStations][noStations];
-		double [][] distancesOut = new double[noStations][noStations];
-
+		this.directions = new Tube[noStations][noStations];
+		this.distances = new double[noStations][noStations];
 		
 		PriorityQueue<Block> openList = new PriorityQueue<Block> (new Comparator<Block>() 
 		{
@@ -76,9 +78,10 @@ public class Dijkstra implements Routine
 			{
 				for (Edge edge : focus.getEdges())
 				{
-					Block neighbour  = (Block)(edge.b);
+					Tube tube = (Tube)edge;
+					Block neighbour  = tube.getTo();
 					
-					double focusDistance = distances[focus.getStation()] + edge.length;
+					double focusDistance = distances[focus.getStation()] + (tube.length/tube.getSpeed());
 					
 					if (closed[neighbour.getStation()]!=session)
 					{
@@ -93,7 +96,7 @@ public class Dijkstra implements Routine
 								open[neighbour.getStation()] = session;
 							}
 							
-							directions[neighbour.getStation()] = focus;
+							directions[neighbour.getStation()] = tube.getReverse();
 							distances[neighbour.getStation()] = focusDistance;
 							
 							openList.add(neighbour);
@@ -105,6 +108,11 @@ public class Dijkstra implements Routine
 				closed[focus.getStation()] = session;
 			}
 			
+			for (int s2=0; s2<noStations; s2++)
+			{
+				this.directions[s][s2] = directions[s2];
+				this.distances[s][s2] = distances[s2];
+			}
 			
 		}
 		
@@ -119,6 +127,14 @@ public class Dijkstra implements Routine
 		}
 	}
 	
+	public Tube [][] getDirections()
+	{
+		return directions;
+	}
 	
-
+	
+	public double [][] getDistances()
+	{
+		return distances;
+	}
 }

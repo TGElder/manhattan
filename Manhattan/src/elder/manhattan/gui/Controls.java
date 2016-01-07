@@ -17,6 +17,7 @@ import elder.manhattan.Tube;
 import elder.manhattan.graphics.CityDrawer;
 import elder.manhattan.graphics.CityDrawerLayer;
 import elder.manhattan.layers.BlockLayer;
+import elder.manhattan.layers.DijkstraLayer;
 import elder.manhattan.layers.KatherineLayer;
 import elder.manhattan.layers.SelectedBlockLayer;
 import elder.manhattan.layers.TubeLayer;
@@ -27,6 +28,7 @@ import elder.manhattan.routines.Dijkstra;
 import elder.manhattan.routines.OpenFields;
 import elder.manhattan.routines.OpenRandomFields;
 import elder.manhattan.routines.Populate;
+import elder.manhattan.routines.UpdateStations;
 
 
 
@@ -86,12 +88,15 @@ public class Controls extends JFrame
 	{
 		
 		
-		Simulation sim = new Simulation(new City(160,160,1),1986,1000);
+		Simulation sim = new Simulation(new City(160,160,1),1986,500);
 
-		sim.run(new OpenRandomFields(0.005),false);
+		sim.run(new OpenRandomFields(0.01),false);
 		sim.run(new Populate(1000),false);
 		sim.addRoutine(new OpenFields(2.0/52.0));
-		sim.addRoutine(new Allocate());
+		
+		Dijkstra dijkstra = new Dijkstra();	
+		sim.addRoutine(dijkstra);
+		sim.addRoutine(new Allocate(dijkstra));
 		sim.addRoutine(new AddImmigrants(50));
 		sim.addRoutine(new AddChildren(50));
 		
@@ -109,7 +114,6 @@ public class Controls extends JFrame
 		cityDrawer.addLayer(blockLayer);
 		
 		TubeLayer tubeLayer = new TubeLayer();
-		cityDrawer.addLayer(tubeLayer);
 
 		
 		KatherineLayer katherineLayer = new KatherineLayer();
@@ -124,10 +128,16 @@ public class Controls extends JFrame
 		selector.getSelectedBlock().addListener(tubeBuilder);
 		cityDrawer.addMouseListener(tubeBuilder);
 		sim.addRoutine(tubeBuilder);
-		sim.addRoutine(new Dijkstra());
-
+		sim.addRoutine(new UpdateStations());
+		
+		
+		DijkstraLayer dijkstraLayer = new DijkstraLayer(dijkstra);
+		selector.getSelectedBlock().addListener(dijkstraLayer);
+		cityDrawer.addLayer(dijkstraLayer);
+		cityDrawer.addLayer(tubeLayer);
 		cityDrawer.addLayer(tubeBuilder);
 		
+
 		
 		sim.addRoutine(blockLayer);
 		sim.addRoutine(tubeLayer);

@@ -5,6 +5,7 @@ import java.util.List;
 
 import elder.geometry.Point;
 import elder.geometry.Polygon;
+import elder.network.Node;
 
 public class City
 {
@@ -22,7 +23,7 @@ public class City
 	private static int [] neighbourYs = {-2,-1,-1,-1, 0, 0,0,0, 1,1,1,2};
 	
 	private final List<Block> stations = new ArrayList<Block> ();
-
+	
 	public City(int width, int height, double scale)
 	{
 		this.width = width;
@@ -134,7 +135,7 @@ public class City
 	
 	public void createStation(Block block)
 	{
-		if (block.getStation()==-1)
+		if (!block.hasStation())
 		{
 		
 			if (!block.isBuilt())

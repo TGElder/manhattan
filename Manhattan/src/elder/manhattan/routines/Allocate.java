@@ -1,5 +1,6 @@
 package elder.manhattan.routines;
 
+import java.util.ArrayList;
 import java.util.Collection;
 
 import elder.manhattan.Block;
@@ -11,6 +12,13 @@ import elder.manhattan.Simulation;
 public class Allocate implements Routine
 {
 
+	private final Dijkstra dijkstra;
+	
+	public Allocate(Dijkstra dijkstra)
+	{
+		this.dijkstra = dijkstra;
+	}
+	
 	@Override
 	public String run(Simulation simulation)
 	{
@@ -82,6 +90,7 @@ public class Allocate implements Routine
 			{
 				block = commute.getHome();
 			}
+									
 			
 			double score[] = new double[city.getWidth()*city.getHeight()];
 			double totalScore=0.0;
@@ -92,15 +101,25 @@ public class Allocate implements Routine
 			{
 				for (int y=0; y<city.getWidth(); y++)
 				{
-					if (city.getBlock(x, y).isBuilt()&&city.getBlock(x, y).getPopulation()<simulation.BLOCK_POPULATION_LIMIT)
-					{
+					Block focus = city.getBlock(x, y);
+										
 					
-						double distanceScore = (Math.abs(block.getX() - x) + Math.abs(block.getY() - y));
-						distanceScore /= maxDistance;
-						distanceScore = 1 - distanceScore;
-						distanceScore = Math.pow(distanceScore,2);
+					if (focus.isBuilt()&&focus.getPopulation()<simulation.BLOCK_POPULATION_LIMIT)
+					{
+						double distance = (Math.abs(block.x - focus.x) + Math.abs(block.y - focus.y));
 						
-						double blockScore = distanceScore*0.5 + gravity[x][y]*0.5;
+						for (int s : block.getStations())
+						{
+							for (int s2: focus.getStations())
+							{
+								distance = Math.min(distance, dijkstra.getDistances()[s][s2]);
+							}
+						}
+						
+						double distanceScore = distance/maxDistance;
+						
+						double blockScore = distanceScore*1.0 + gravity[x][y]*0.0;
+						blockScore = 1/Math.pow(2,distanceScore*10);
 						
 						score[(y*city.getWidth())+x]=blockScore;
 						totalScore += blockScore;

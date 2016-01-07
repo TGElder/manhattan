@@ -43,8 +43,14 @@ public class TubeBuilder extends CityDrawerLayer implements SelectionListener<Bl
 	{
 		if ( (from!=null&&to!=null) && (from!=to))
 		{
-			newTubes.add(new Tube(from,to));
-			newTubes.add(new Tube(to,from));
+			Tube fromTo = new Tube(from,to,10);
+			Tube toFrom = new Tube(to,from,10);
+			
+			fromTo.setReverse(toFrom);
+			toFrom.setReverse(fromTo);
+			
+			newTubes.add(fromTo);
+			newTubes.add(toFrom);
 		}
 		
 		from = to;

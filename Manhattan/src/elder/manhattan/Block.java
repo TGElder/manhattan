@@ -10,8 +10,8 @@ import elder.network.Node;
 public class Block extends Node
 {
 	
-	private final int x;
-	private final int y;
+	private final int cityX;
+	private final int cityY;
 	
 	private boolean built=false;
 	
@@ -21,6 +21,7 @@ public class Block extends Node
 	private final List<Commute> residents = new ArrayList<Commute> ();
 	
 	private Block[] neighbours;
+	private int[] stations = {};
 	
 	private int station=-1;
 	
@@ -28,8 +29,8 @@ public class Block extends Node
 	public Block(int x, int y, Polygon polygon, Point centre)
 	{
 		super(centre.x,centre.y);
-		this.x = x;
-		this.y = y;
+		this.cityX = x;
+		this.cityY = y;
 		this.polygon = polygon;
 	}
 
@@ -72,18 +73,18 @@ public class Block extends Node
 
 	public int getX()
 	{
-		return x;
+		return cityX;
 	}
 	
 	public int getY()
 	{
-		return y;
+		return cityY;
 	}
 	
 	@Override
 	public String toString()
 	{
-		return "("+x+","+y+")";
+		return "("+cityX+","+cityY+")";
 	}
 
 	public Block[] getNeighbours()
@@ -105,10 +106,25 @@ public class Block extends Node
 	{
 		return station;
 	}
+	
+	public boolean hasStation()
+	{
+		return station>-1;
+	}
 
 	public void setStation(int station)
 	{
 		this.station = station;
+	}
+
+	public int[] getStations()
+	{
+		return stations;
+	}
+	
+	public void setStations(int[] stations)
+	{
+		this.stations = stations;
 	}
 	
 

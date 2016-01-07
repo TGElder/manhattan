@@ -1,13 +1,15 @@
 package elder.manhattan;
 
-import elder.network.Edge;
+import elder.network.SpeedEdge;
 
-public class Tube extends Edge
+public class Tube extends SpeedEdge
 {
+	
+	private Tube reverse;
 
-	public Tube(Block from, Block to)
+	public Tube(Block from, Block to, double speed)
 	{
-		super(from,to);
+		super(from,to,speed);
 	}
 
 	public Block getFrom()
@@ -20,4 +22,15 @@ public class Tube extends Edge
 		return (Block)b;
 	}
 
+	public Tube getReverse()
+	{
+		return reverse;
+	}
+
+	public void setReverse(Tube reverse)
+	{
+		this.reverse = reverse;
+	}
+
+	
 }
