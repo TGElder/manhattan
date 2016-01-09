@@ -28,7 +28,6 @@ public class Dijkstra implements Routine
 		int [] closed = new int[noStations];
 		
 		
-		final Tubeway [] directions = new Tubeway[noStations];
 		final double [] distances = new double[noStations];
 		
 		this.directions = new Tubeway[noStations][noStations];
@@ -64,6 +63,8 @@ public class Dijkstra implements Routine
 			session++;
 			
 			init(distances,Double.POSITIVE_INFINITY);
+			final Tubeway [] directions = new Tubeway[noStations];
+
 			openList.clear();
 			
 			openList.add(stations.get(s));

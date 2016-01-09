@@ -20,7 +20,9 @@ import elder.manhattan.layers.BlockLayer;
 import elder.manhattan.layers.DijkstraLayer;
 import elder.manhattan.layers.KatherineLayer;
 import elder.manhattan.layers.SelectedBlockLayer;
+import elder.manhattan.layers.StationLayer;
 import elder.manhattan.layers.TubeLayer;
+import elder.manhattan.layers.TubewayLayer;
 import elder.manhattan.routines.AddChildren;
 import elder.manhattan.routines.AddImmigrants;
 import elder.manhattan.routines.Allocate;
@@ -150,12 +152,23 @@ public class Controls extends JFrame
 		selector.getSelectedBlock().addListener(dijkstraLayer);
 		cityDrawer.addLayer(dijkstraLayer);
 		cityDrawer.addLayer(tubeLayer);
+		TubewayLayer tubewayLayer = new TubewayLayer();
+		cityDrawer.addLayer(tubewayLayer);
+		tubewayLayer.disable();
+		
+		StationLayer stationLayer = new StationLayer();
+		selector.getSelectedBlock().addListener(stationLayer);
+		cityDrawer.addLayer(stationLayer);
+		stationLayer.disable();
+		
 		cityDrawer.addLayer(tubeBuilder);
 		
 
 		
 		sim.addRoutine(blockLayer);
 		sim.addRoutine(tubeLayer);
+		sim.addRoutine(tubewayLayer);
+
 		sim.addRoutine(katherineLayer);
 		
 

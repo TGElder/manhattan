@@ -5,14 +5,15 @@ import elder.manhattan.SelectionListener;
 import elder.manhattan.graphics.CityDrawerLayer;
 import elder.network.Edge;
 
-public class SelectedBlockLayer extends CityDrawerLayer implements SelectionListener<Block>
+public class StationLayer extends CityDrawerLayer implements SelectionListener<Block>
 {
 
 	private Block selectedBlock;
 	
-	public SelectedBlockLayer()
+	
+	public StationLayer()
 	{
-		super("Selected Block");
+		super("Station Layer");
 	}
 
 	@Override
@@ -29,11 +30,17 @@ public class SelectedBlockLayer extends CityDrawerLayer implements SelectionList
 		
 		if (selectedBlock!=null)
 		{
-			drawPolygon(selectedBlock.getPolygon(),1f,1f,1f,false);
-
+			
+			if (selectedBlock.hasStation())
+			{
+				for (Edge edge : selectedBlock.getStation().getEdges())
+				{
+					
+					drawLine(edge,1f,1f,1f,6f,false);
+				
+				}
+			}
 		}
-		
-		
 	}
 
 
