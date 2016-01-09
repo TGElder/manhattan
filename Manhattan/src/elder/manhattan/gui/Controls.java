@@ -19,6 +19,7 @@ import elder.manhattan.graphics.CityDrawerLayer;
 import elder.manhattan.layers.BlockLayer;
 import elder.manhattan.layers.DijkstraLayer;
 import elder.manhattan.layers.KatherineLayer;
+import elder.manhattan.layers.PathfindTestLayer;
 import elder.manhattan.layers.SelectedBlockLayer;
 import elder.manhattan.layers.StationLayer;
 import elder.manhattan.layers.TubeLayer;
@@ -151,6 +152,12 @@ public class Controls extends JFrame
 		DijkstraLayer dijkstraLayer = new DijkstraLayer(dijkstra);
 		selector.getSelectedBlock().addListener(dijkstraLayer);
 		cityDrawer.addLayer(dijkstraLayer);
+		
+		PathfindTestLayer pathfindTestLayer = new PathfindTestLayer(dijkstra);
+		selector.getSelectedBlock().addListener(pathfindTestLayer);
+		cityDrawer.addLayer(pathfindTestLayer);
+		pathfindTestLayer.disable();
+		
 		cityDrawer.addLayer(tubeLayer);
 		TubewayLayer tubewayLayer = new TubewayLayer();
 		cityDrawer.addLayer(tubewayLayer);

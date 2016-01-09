@@ -149,6 +149,25 @@ public class City
 			
 		}
 	}
+	
+	public Station createPlatform(Block block)
+	{
+		Station platform = new Station(block,stations.size());
+		stations.add(platform);
+		
+		Tubeway down = new Tubeway(block.getStation(),platform,10, new Tube[] {});
+		down.length=.1;
+		Tubeway up = new Tubeway(platform,block.getStation(),10, new Tube[] {});
+		up.length=.1;
+		
+		up.setReverse(down);
+		down.setReverse(up);
+		
+		block.getStation().addEdge(down);
+		platform.addEdge(up);
+		
+		return platform;
+	}
 
 
 	

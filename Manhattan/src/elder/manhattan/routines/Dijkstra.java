@@ -60,61 +60,64 @@ public class Dijkstra implements Routine
 		
 		for (int s=0; s<noStations; s++)
 		{
-			session++;
-			
-			init(distances,Double.POSITIVE_INFINITY);
-			final Tubeway [] directions = new Tubeway[noStations];
-
-			openList.clear();
-			
-			openList.add(stations.get(s));
-			open[s] = session;
-
-			distances[s] = 0;
-			directions[s] = null;
-			
-			Station focus;
-			
-			while ((focus = openList.poll())!=null)
+			if (stations.get(s).getBlock().getStation()==stations.get(s)) // Not a platform
 			{
-				for (Edge edge : focus.getEdges())
+			
+				session++;
+				
+				init(distances,Double.POSITIVE_INFINITY);
+				final Tubeway [] directions = new Tubeway[noStations];
+	
+				openList.clear();
+				
+				openList.add(stations.get(s));
+				open[s] = session;
+	
+				distances[s] = 0;
+				directions[s] = null;
+				
+				Station focus;
+				
+				while ((focus = openList.poll())!=null)
 				{
-					Tubeway tube = (Tubeway)edge;
-					Station neighbour  = tube.getTo();
-					
-					double focusDistance = distances[focus.getIndex()] + (tube.length/tube.getSpeed());
-					
-					if (closed[neighbour.getIndex()]!=session)
+					for (Edge edge : focus.getEdges())
 					{
-						if (focusDistance < distances[neighbour.getIndex()])
+						Tubeway tube = (Tubeway)edge;
+						Station neighbour  = tube.getTo();
+						
+						double focusDistance = distances[focus.getIndex()] + (tube.length/tube.getSpeed());
+						
+						if (closed[neighbour.getIndex()]!=session)
 						{
-							if (open[neighbour.getIndex()]==session)
+							if (focusDistance < distances[neighbour.getIndex()])
 							{
-								openList.remove(neighbour);
+								if (open[neighbour.getIndex()]==session)
+								{
+									openList.remove(neighbour);
+								}
+								else
+								{
+									open[neighbour.getIndex()] = session;
+								}
+								
+								directions[neighbour.getIndex()] = tube.getReverse();
+								distances[neighbour.getIndex()] = focusDistance;
+								
+								openList.add(neighbour);
+								
 							}
-							else
-							{
-								open[neighbour.getIndex()] = session;
-							}
-							
-							directions[neighbour.getIndex()] = tube.getReverse();
-							distances[neighbour.getIndex()] = focusDistance;
-							
-							openList.add(neighbour);
-							
 						}
 					}
+					
+					closed[focus.getIndex()] = session;
 				}
 				
-				closed[focus.getIndex()] = session;
+				for (int s2=0; s2<noStations; s2++)
+				{
+					this.directions[s][s2] = directions[s2];
+					this.distances[s][s2] = distances[s2];
+				}
 			}
-			
-			for (int s2=0; s2<noStations; s2++)
-			{
-				this.directions[s][s2] = directions[s2];
-				this.distances[s][s2] = distances[s2];
-			}
-			
 		}
 		
 		return null;

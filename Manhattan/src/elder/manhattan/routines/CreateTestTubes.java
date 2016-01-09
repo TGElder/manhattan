@@ -41,7 +41,7 @@ public class CreateTestTubes implements Routine
 			Station A;
 			if (city.getBlock(x2, 0).hasStation())
 			{
-				A = city.getBlock(x2, 0).getStation();
+				A = city.createPlatform(city.getBlock(x2, 0));
 			}
 			else
 			{
@@ -74,8 +74,12 @@ public class CreateTestTubes implements Routine
 				
 				if (b.hasStation())
 				{
+					Station platformB = city.createPlatform(b);
+
 					if (A!=null)
 					{
+						Station platformA = A;
+						
 						Tube [] ABarray = new Tube[tubes.size()];
 						Tube [] BAarray = new Tube[tubes.size()];
 						for (int t=0; t<tubes.size(); t++)
@@ -84,21 +88,20 @@ public class CreateTestTubes implements Routine
 							BAarray[t] = reverseTubes.get(t);
 						}
 						
-						
-						Tubeway AB = new Tubeway(A,b.getStation(),10,ABarray);
+						Tubeway AB = new Tubeway(platformA,platformB,10,ABarray);
 						AB.length = length;
-						Tubeway BA = new Tubeway(b.getStation(),A,10,BAarray);
+						Tubeway BA = new Tubeway(platformB,platformA,10,BAarray);
 						BA.length = length;
 							
-						A.addEdge(AB);
-						b.getStation().addEdge(BA);
+						platformA.addEdge(AB);
+						platformB.addEdge(BA);
 						
 						AB.setReverse(BA);
 						BA.setReverse(AB);
 
 					}
 					
-					A = b.getStation();
+					A = platformB;
 					tubes.clear();
 					reverseTubes.clear();
 					length = 0;
@@ -114,7 +117,7 @@ public class CreateTestTubes implements Routine
 			Station A;
 			if (city.getBlock(0, y2).hasStation())
 			{
-				A = city.getBlock(0, y2).getStation();
+				A = city.createPlatform(city.getBlock(0, y2));
 			}
 			else
 			{
@@ -147,8 +150,12 @@ public class CreateTestTubes implements Routine
 				
 				if (b.hasStation())
 				{
+					Station platformB = city.createPlatform(b);
+
 					if (A!=null)
 					{
+						Station platformA = A;
+												
 						Tube [] ABarray = new Tube[tubes.size()];
 						Tube [] BAarray = new Tube[tubes.size()];
 						for (int t=0; t<tubes.size(); t++)
@@ -157,21 +164,19 @@ public class CreateTestTubes implements Routine
 							BAarray[t] = reverseTubes.get(t);
 						}
 						
-						
-						Tubeway AB = new Tubeway(A,b.getStation(),10,ABarray);
+						Tubeway AB = new Tubeway(platformA,platformB,10,ABarray);
 						AB.length = length;
-						Tubeway BA = new Tubeway(b.getStation(),A,10,BAarray);
+						Tubeway BA = new Tubeway(platformB,platformA,10,BAarray);
 						BA.length = length;
 							
-						A.addEdge(AB);
-						b.getStation().addEdge(BA);
+						platformA.addEdge(AB);
+						platformB.addEdge(BA);
 						
 						AB.setReverse(BA);
 						BA.setReverse(AB);
-
 					}
 					
-					A = b.getStation();
+					A = platformB;
 					tubes.clear();
 					reverseTubes.clear();
 					length = 0;
