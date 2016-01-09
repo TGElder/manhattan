@@ -146,7 +146,6 @@ public class City
 			block.setStation(station);
 			stations.add(station);
 			
-			System.out.println(stations);
 			
 		}
 	}

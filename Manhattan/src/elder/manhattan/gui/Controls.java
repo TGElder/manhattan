@@ -25,6 +25,7 @@ import elder.manhattan.routines.AddChildren;
 import elder.manhattan.routines.AddImmigrants;
 import elder.manhattan.routines.Allocate;
 import elder.manhattan.routines.ComputeTubeways;
+import elder.manhattan.routines.CreateTestTubes;
 import elder.manhattan.routines.Dijkstra;
 import elder.manhattan.routines.OpenFields;
 import elder.manhattan.routines.OpenRandomFields;
@@ -98,8 +99,10 @@ public class Controls extends JFrame
 		HoverSelector selector = new HoverSelector(sim);
 		cityDrawer.addMouseListener(selector);
 		
-		sim.run(new OpenRandomFields(0.01),false);
+		sim.run(new OpenRandomFields(0.05),false);
 		sim.run(new Populate(1000),false);
+		
+		sim.run(new CreateTestTubes(),false);
 		
 		TubeBuilder tubeBuilder = new TubeBuilder();
 		selector.getSelectedBlock().addListener(tubeBuilder);
@@ -110,7 +113,7 @@ public class Controls extends JFrame
 		
 		sim.addRoutine(new UpdateStations());
 		
-		sim.addRoutine(new ComputeTubeways());
+		//sim.addRoutine(new ComputeTubeways());
 
 		Dijkstra dijkstra = new Dijkstra();	
 		sim.addRoutine(dijkstra);
