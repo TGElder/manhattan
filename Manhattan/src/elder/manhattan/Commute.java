@@ -13,7 +13,7 @@ public class Commute
 	
 	public void setHome(Block home)
 	{
-		assert(home==null);
+		assert(this.home==null);
 		this.home = home;
 		home.addResident(this);
 	}
@@ -25,7 +25,7 @@ public class Commute
 	
 	public void setOffice(Block office)
 	{
-		assert(office==null);
+		assert(this.office==null);
 		this.office = office;
 		office.addWorker(this);
 	}

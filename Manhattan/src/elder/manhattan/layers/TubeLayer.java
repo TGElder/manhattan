@@ -24,7 +24,7 @@ public class TubeLayer extends SimulationLayer
 		{
 			for (Edge edge : block.getEdges())
 			{
-				drawLine(edge,0f,0f,1f,3f,false);
+				drawLine(edge,0f,0f,0f,3f,false);
 			}
 
 		}

@@ -23,6 +23,8 @@ public class City
 	
 	private final List<Station> stations = new ArrayList<Station> ();
 	
+	private final List<Line> lines = new ArrayList<Line> ();
+	
 	public City(int width, int height, double scale)
 	{
 		this.width = width;
@@ -169,7 +171,10 @@ public class City
 		return platform;
 	}
 
+	public List<Line> getLines()
+	{
+		return lines;
+	}
 
-	
 
 }

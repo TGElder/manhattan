@@ -23,6 +23,7 @@ import elder.manhattan.layers.DijkstraLayer;
 import elder.manhattan.layers.KatherineLayer;
 import elder.manhattan.layers.PathfindTestLayer;
 import elder.manhattan.layers.SelectedBlockLayer;
+import elder.manhattan.layers.ServiceLayer;
 import elder.manhattan.layers.StationLayer;
 import elder.manhattan.layers.TubeLayer;
 import elder.manhattan.layers.TubewayLayer;
@@ -104,19 +105,24 @@ public class Controls extends JFrame
 		Navigator navigator = new Navigator(cityDrawer);
 		
 		
-		
+		Dijkstra dijkstra = new Dijkstra();	
+
 		
 		HoverSelector selector = new HoverSelector(sim);
 		cityDrawer.addMouseListener(selector);
 		
-		sim.run(new OpenRandomFields(0.05),false);
+		sim.run(new OpenRandomFields(0.005),false);
 		sim.run(new Populate(1000),false);
 		
-		sim.run(new CreateTestTubes(),false);
+		//sim.run(new CreateTestTubes(),false);
 		
 		TubeBuilder tubeBuilder = new TubeBuilder();
 		selector.getSelectedBlock().addListener(tubeBuilder);
 		sim.addRoutine(tubeBuilder);
+		
+		ServiceBuilder serviceBuilder = new ServiceBuilder(sim.getCity());
+		selector.getSelectedBlock().addListener(serviceBuilder);
+		sim.addRoutine(serviceBuilder);
 		
 		StationBuilder stationBuilder = new StationBuilder();
 		selector.getSelectedBlock().addListener(stationBuilder);
@@ -129,7 +135,6 @@ public class Controls extends JFrame
 		
 		//sim.addRoutine(new ComputeTubeways());
 
-		Dijkstra dijkstra = new Dijkstra();	
 		sim.addRoutine(dijkstra);
 		sim.addRoutine(new Allocate(dijkstra));
 		sim.addRoutine(new AddImmigrants(50));
@@ -170,9 +175,9 @@ public class Controls extends JFrame
 		pathfindTestLayer.disable();
 		
 		cityDrawer.addLayer(tubeLayer);
-		TubewayLayer tubewayLayer = new TubewayLayer();
-		cityDrawer.addLayer(tubewayLayer);
-		tubewayLayer.disable();
+		
+		ServiceLayer serviceLayer = new ServiceLayer();
+		cityDrawer.addLayer(serviceLayer);
 		
 		StationLayer stationLayer = new StationLayer();
 		selector.getSelectedBlock().addListener(stationLayer);
@@ -183,12 +188,14 @@ public class Controls extends JFrame
 		
 		cityDrawer.addLayer(tubeBuilder);
 		cityDrawer.addLayer(stationBuilder);
+		cityDrawer.addLayer(serviceBuilder);
 
 
 		
 		sim.addRoutine(blockLayer);
 		sim.addRoutine(tubeLayer);
-		sim.addRoutine(tubewayLayer);
+		sim.addRoutine(serviceLayer);
+
 
 		sim.addRoutine(katherineLayer);
 		
@@ -196,6 +203,7 @@ public class Controls extends JFrame
 		List<MouseListener> modes = new ArrayList<MouseListener> ();
 		modes.add(tubeBuilder);
 		modes.add(stationBuilder);
+		modes.add(serviceBuilder);
 
 		MouseListenerManager manager = new MouseListenerManager();
 		cityDrawer.addMouseListener(manager);
@@ -205,7 +213,10 @@ public class Controls extends JFrame
 		
     	Controls controls = new Controls(sim,cityDrawer,modes,manager);
 
+    	new LineFrame(sim.getCity(),serviceBuilder);
+    	
     	cityDrawer.run();
+    	
 
 
 	}

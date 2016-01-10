@@ -1,5 +1,6 @@
 package elder.manhattan.routines;
 
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.PriorityQueue;
@@ -140,5 +141,22 @@ public class Dijkstra implements Routine
 	public double [][] getDistances()
 	{
 		return distances;
+	}
+	
+	public List<Edge> getPath(Station from, Station to)
+	{
+		int focus = from.getIndex();
+		
+		Edge edge;
+		
+		List<Edge> out = new ArrayList<Edge> ();
+		
+		while ((edge = getDirections()[to.getIndex()][focus])!=null)
+		{
+			out.add(edge);
+			focus = ((Station)edge.b).getIndex();
+		}
+		
+		return out;
 	}
 }

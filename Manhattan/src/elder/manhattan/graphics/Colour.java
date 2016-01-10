@@ -19,4 +19,11 @@ public class Colour
 		G = random.nextFloat();
 		B = random.nextFloat();
 	}
+	
+	public Colour(float R, float G, float B)
+	{
+		this.R = R;
+		this.G = G;
+		this.B = B;
+	}
 }
