@@ -5,6 +5,8 @@ import java.awt.Checkbox;
 import java.awt.GridBagLayout;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
@@ -41,7 +43,7 @@ public class Controls extends JFrame
 {
 	
 	
-	Controls(Simulation simulation, CityDrawer cityDrawer)
+	Controls(Simulation simulation, CityDrawer cityDrawer, List<MouseListener> listeners, MouseListenerManager manager)
 	{
 		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -49,6 +51,8 @@ public class Controls extends JFrame
 		setLayout(new GridBagLayout());
 		
 		add(new SimulationControlPanel(simulation));
+		
+		add(new MouseListenerPanel(listeners, manager));
 		
 		JPanel layerPanel = new JPanel();
 		layerPanel.setName("Layers");
@@ -99,6 +103,9 @@ public class Controls extends JFrame
 		
 		Navigator navigator = new Navigator(cityDrawer);
 		
+		
+		
+		
 		HoverSelector selector = new HoverSelector(sim);
 		cityDrawer.addMouseListener(selector);
 		
@@ -109,8 +116,12 @@ public class Controls extends JFrame
 		
 		TubeBuilder tubeBuilder = new TubeBuilder();
 		selector.getSelectedBlock().addListener(tubeBuilder);
-		cityDrawer.addMouseListener(tubeBuilder);
 		sim.addRoutine(tubeBuilder);
+		
+		StationBuilder stationBuilder = new StationBuilder();
+		selector.getSelectedBlock().addListener(stationBuilder);
+		sim.addRoutine(stationBuilder);
+		
 		sim.addRoutine(new OpenFields(2.0/52.0));
 		
 		
@@ -168,8 +179,11 @@ public class Controls extends JFrame
 		cityDrawer.addLayer(stationLayer);
 		stationLayer.disable();
 		
-		cityDrawer.addLayer(tubeBuilder);
+	
 		
+		cityDrawer.addLayer(tubeBuilder);
+		cityDrawer.addLayer(stationBuilder);
+
 
 		
 		sim.addRoutine(blockLayer);
@@ -179,7 +193,17 @@ public class Controls extends JFrame
 		sim.addRoutine(katherineLayer);
 		
 
-    	Controls controls = new Controls(sim,cityDrawer);
+		List<MouseListener> modes = new ArrayList<MouseListener> ();
+		modes.add(tubeBuilder);
+		modes.add(stationBuilder);
+
+		MouseListenerManager manager = new MouseListenerManager();
+		cityDrawer.addMouseListener(manager);
+		manager.setListener(tubeBuilder);
+
+		
+		
+    	Controls controls = new Controls(sim,cityDrawer,modes,manager);
 
     	cityDrawer.run();
 

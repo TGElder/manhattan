@@ -29,9 +29,7 @@ public class SimulationControlPanel extends JPanel
 		sim = simulation;
 		setName("Simulation");
 		setBorder(BorderFactory.createTitledBorder(getName()));
-		
-		
-		
+
 		thread = new Thread(simulation);
 		
 		setLayout(new GridBagLayout());

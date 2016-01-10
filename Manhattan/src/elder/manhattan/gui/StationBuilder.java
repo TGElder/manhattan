@@ -3,33 +3,29 @@ package elder.manhattan.gui;
 import java.util.ArrayList;
 import java.util.List;
 
-import elder.geometry.Line;
 import elder.geometry.Point;
 import elder.manhattan.Block;
 import elder.manhattan.Routine;
 import elder.manhattan.SelectionListener;
 import elder.manhattan.Simulation;
-import elder.manhattan.Tube;
 import elder.manhattan.graphics.CityDrawerLayer;
 
-public class TubeBuilder extends CityDrawerLayer implements SelectionListener<Block>,MouseListener,Routine
+
+public class StationBuilder extends CityDrawerLayer implements SelectionListener<Block>,MouseListener,Routine
 {
 	
-	private final List<Tube> newTubes = new ArrayList<Tube> ();
-	private Block from=null;
+	private final List<Block> newStations = new ArrayList<Block> ();
 	private Block to=null;
-	
-	public TubeBuilder()
+
+	public StationBuilder()
 	{
-		super("Tube Builder");
+		super("Station Builder");
 	}
 	
 	@Override
 	public void onSelect(Block selection)
 	{
 		to = selection;
-		
-		refresh();
 	}
 
 	@Override
@@ -41,36 +37,21 @@ public class TubeBuilder extends CityDrawerLayer implements SelectionListener<Bl
 	@Override
 	public void onLeftClick(Point cityPoint)
 	{
-		if ( (from!=null&&to!=null) && (from!=to))
-		{
-			Tube fromTo = new Tube(from,to,10);
-			Tube toFrom = new Tube(to,from,10);
-			
-			fromTo.setReverse(toFrom);
-			toFrom.setReverse(fromTo);
-			
-			newTubes.add(fromTo);
-			newTubes.add(toFrom);
-		}
-		
-		from = to;
+		newStations.add(to);
 		
 		refresh();
+
 	}
 
 	@Override
 	public void onMiddleClick(Point cityPoint)
 	{
-
 	}
 
 	@Override
 	public void onRightClick(Point cityPoint)
 	{
-		from=null;
-		to=null;
 		
-		refresh();
 	}
 
 	@Override
@@ -106,15 +87,13 @@ public class TubeBuilder extends CityDrawerLayer implements SelectionListener<Bl
 	@Override
 	public String run(Simulation simulation)
 	{
-		
-		for (Tube tube : newTubes)
+		for (Block block : newStations )
 		{
-			tube.getFrom().addEdge(tube);
+			simulation.getCity().createStation(block);
 		}
 		
-		newTubes.clear();
-		
-		refresh();
+		newStations.clear();
+
 		
 		return null;
 	}
@@ -122,22 +101,12 @@ public class TubeBuilder extends CityDrawerLayer implements SelectionListener<Bl
 	@Override
 	public void draw()
 	{
-		
-		for (Tube tube : newTubes)
+		for (Block block : newStations)
 		{
-			drawLine(tube,0f,0f,1f,2f,false);
+			drawPoint(block,0f,0f,0f,6f);
+			drawPoint(block,1f,1f,1f,4f);
 		}
-		
-		
-		
-		if ( (from!=null&&to!=null) && (from!=to))
-		{
-			drawLine(new Line(from,to),0f,0f,1f,1f,false);
-		}
-		
-	
 	}
-
 
 
 }
