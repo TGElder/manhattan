@@ -2,6 +2,7 @@
 package elder.manhattan.gui;
 
 import java.awt.Checkbox;
+import java.awt.Color;
 import java.awt.GridBagLayout;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
@@ -14,6 +15,8 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 
 import elder.manhattan.City;
+import elder.manhattan.Line;
+import elder.manhattan.Service;
 import elder.manhattan.Simulation;
 import elder.manhattan.Tube;
 import elder.manhattan.graphics.CityDrawer;
@@ -24,14 +27,12 @@ import elder.manhattan.layers.KatherineLayer;
 import elder.manhattan.layers.PathfindTestLayer;
 import elder.manhattan.layers.SelectedBlockLayer;
 import elder.manhattan.layers.ServiceLayer;
-import elder.manhattan.layers.StationLayer;
+import elder.manhattan.layers.TimeLayer;
 import elder.manhattan.layers.TubeLayer;
 import elder.manhattan.layers.TubewayLayer;
 import elder.manhattan.routines.AddChildren;
 import elder.manhattan.routines.AddImmigrants;
 import elder.manhattan.routines.Allocate;
-import elder.manhattan.routines.ComputeTubeways;
-import elder.manhattan.routines.CreateTestTubes;
 import elder.manhattan.routines.Dijkstra;
 import elder.manhattan.routines.OpenFields;
 import elder.manhattan.routines.OpenRandomFields;
@@ -159,7 +160,6 @@ public class Controls extends JFrame
 		
 		SelectedBlockLayer selectedBlock = new SelectedBlockLayer();
 		selector.getSelectedBlock().addListener(selectedBlock);
-		cityDrawer.addLayer(selectedBlock);
 		
 		
 
@@ -174,17 +174,17 @@ public class Controls extends JFrame
 		cityDrawer.addLayer(pathfindTestLayer);
 		pathfindTestLayer.disable();
 		
+		
+		
+		TimeLayer timeLayer = new TimeLayer(sim.getCity(),dijkstra);
+		selector.getSelectedBlock().addListener(timeLayer);
+		cityDrawer.addLayer(timeLayer);
+		timeLayer.disable();
+		
 		cityDrawer.addLayer(tubeLayer);
 		
 		ServiceLayer serviceLayer = new ServiceLayer();
 		cityDrawer.addLayer(serviceLayer);
-		
-		StationLayer stationLayer = new StationLayer();
-		selector.getSelectedBlock().addListener(stationLayer);
-		cityDrawer.addLayer(stationLayer);
-		stationLayer.disable();
-		
-	
 		
 		cityDrawer.addLayer(tubeBuilder);
 		cityDrawer.addLayer(stationBuilder);
@@ -209,10 +209,28 @@ public class Controls extends JFrame
 		cityDrawer.addMouseListener(manager);
 		manager.setListener(tubeBuilder);
 
-		
+		cityDrawer.addLayer(selectedBlock);
 		
     	Controls controls = new Controls(sim,cityDrawer,modes,manager);
 
+    	Line red = new Line("Red",new Color(255,0,0));
+    	Service redService = new Service("Red");
+    	redService.setLine(red);
+    	
+    	Line green = new Line("Green",new Color(0,255,0));
+    	Service greenService = new Service("Green");
+    	greenService.setLine(green);
+    	
+    	Line blue = new Line("Blue",new Color(0,0,255));
+    	Service blueService = new Service("Blue");
+    	blueService.setLine(blue);
+    	
+
+    	sim.getCity().getLines().add(red);
+    	sim.getCity().getLines().add(green);
+    	sim.getCity().getLines().add(blue);
+    	
+    	
     	new LineFrame(sim.getCity(),serviceBuilder);
     	
     	cityDrawer.run();

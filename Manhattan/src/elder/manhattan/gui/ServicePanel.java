@@ -5,6 +5,7 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Collections;
 import java.util.List;
 import java.util.Vector;
 
@@ -129,7 +130,7 @@ public class ServicePanel extends JPanel
 
 		private final Selection<List<Service>> selection;
 		
-		private List<Line> lines;
+		private List<Line> lines = Collections.emptyList();
 		
 		ServiceList()
 		{

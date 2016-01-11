@@ -43,7 +43,7 @@ public class City
 				polygon.add(new Point((x+1)*scale,(y+1)*scale));
 				polygon.add(new Point(x*scale,(y+1)*scale));
 				
-				setBlock(x,y,new Block(x,y,(y*width)+x,polygon,new Point(x+(scale/2.0),y+(scale/2.0))));
+				setBlock(x,y,new Block(x,y,(y*width)+x,polygon,new Point(scale*(x+0.5),scale*(y+0.5))));
 				
 			}
 		}
@@ -157,10 +157,8 @@ public class City
 		Station platform = new Station(block,stations.size());
 		stations.add(platform);
 		
-		Tubeway down = new Tubeway(block.getStation(),platform,10, new Tube[] {});
-		down.length=.1;
-		Tubeway up = new Tubeway(platform,block.getStation(),10, new Tube[] {});
-		up.length=.1;
+		Tubeway down = new Tubeway(block.getStation(),platform,1, new Tube[] {},100);
+		Tubeway up = new Tubeway(platform,block.getStation(),1, new Tube[] {},100);
 		
 		up.setReverse(down);
 		down.setReverse(up);

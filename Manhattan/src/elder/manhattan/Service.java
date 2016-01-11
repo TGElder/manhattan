@@ -52,13 +52,14 @@ public class Service
 		return name;
 	}
 	
-	public void link(City city, Station a, Station b, Tube [] tubes, Tube [] reverse)
+	public void link(City city, Station a, Station b, Tube [] tubes, Tube [] reverse, double length)
 	{
 		Station platformA = platforms.get(a);
 		
 		if (platformA==null)
 		{
 			platformA = city.createPlatform(a.getBlock());
+			platforms.put(a,platformA);
 		}
 		
 		Station platformB = platforms.get(b);
@@ -66,10 +67,11 @@ public class Service
 		if (platformB==null)
 		{
 			platformB = city.createPlatform(b.getBlock());
+			platforms.put(b,platformB);
 		}
-		
-		Tubeway ab = new Tubeway(platformA,platformB,10,tubes);
-		Tubeway ba = new Tubeway(platformB,platformA,10,reverse);
+
+		Tubeway ab = new Tubeway(platformA,platformB,2,tubes,length);
+		Tubeway ba = new Tubeway(platformB,platformA,2,reverse,length);
 		
 		platformA.addEdge(ab);
 		platformB.addEdge(ba);

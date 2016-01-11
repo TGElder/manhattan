@@ -9,12 +9,13 @@ public class Tubeway extends SpeedEdge
 	private Tubeway reverse;
 	private Tube [] tubes;
 	
-	public double length;
+	public final double length;
 
-	public Tubeway(Station a, Station b, double speed, Tube[] tubes)
+	public Tubeway(Station a, Station b, double speed, Tube[] tubes, double length)
 	{
 		super(a, b, speed);
 		this.tubes = tubes;
+		this.length = length;
 	}
 	
 	public Station getFrom()

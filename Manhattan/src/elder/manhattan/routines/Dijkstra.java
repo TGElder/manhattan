@@ -87,7 +87,7 @@ public class Dijkstra implements Routine
 						Station neighbour  = tube.getTo();
 						
 						double focusDistance = distances[focus.getIndex()] + (tube.length/tube.getSpeed());
-						
+												
 						if (closed[neighbour.getIndex()]!=session)
 						{
 							if (focusDistance < distances[neighbour.getIndex()])

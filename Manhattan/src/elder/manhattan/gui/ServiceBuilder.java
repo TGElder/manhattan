@@ -75,15 +75,17 @@ public class ServiceBuilder extends CityDrawerLayer implements SelectionListener
 			{
 				Tube [] tubeArray = new Tube [tubes.size()];
 				Tube [] reverseArray = new Tube [tubes.size()];
+				double length=0;
 				
 				for (int t=0; t<tubes.size(); t++)
 				{
 					tubeArray[t] = tubes.get(t);
 					reverseArray[t] = tubes.get((tubes.size()-1)-t).getReverse();
+					length += tubes.get(t).length;
 				}
 				
 				System.out.println("Linking "+from+" to "+to+" on "+service);
-				service.link(city, from, to, tubeArray, reverseArray);
+				service.link(city, from, to, tubeArray, reverseArray,length);
 			}
 			
 			

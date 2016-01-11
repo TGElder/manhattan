@@ -35,6 +35,7 @@ public class LinePanel extends JPanel
 	{		
 		this.city = city;
 		
+		
 		setLayout(new GridBagLayout());
 		GridBagConstraints constraints = new GridBagConstraints();
 
@@ -64,6 +65,12 @@ public class LinePanel extends JPanel
 				new LineEditor(newLine,lineList);
 				
 			}});
+		
+		for (Line line : city.getLines())
+		{
+			lineList.addLine(line);
+		}
+		
 		
 		constraints.gridx = 0;
 		constraints.gridy = 1;
