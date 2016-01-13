@@ -143,13 +143,13 @@ public class Dijkstra implements Routine
 		return distances;
 	}
 	
-	public List<Edge> getPath(Station from, Station to)
+	public List<Tubeway> getPath(Station from, Station to)
 	{
 		int focus = from.getIndex();
 		
-		Edge edge;
+		Tubeway edge;
 		
-		List<Edge> out = new ArrayList<Edge> ();
+		List<Tubeway> out = new ArrayList<Tubeway> ();
 		
 		while ((edge = getDirections()[to.getIndex()][focus])!=null)
 		{

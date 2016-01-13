@@ -6,6 +6,8 @@ public class Tube extends SpeedEdge
 {
 	
 	private Tube reverse;
+	
+	int traffic=0;
 
 	public Tube(Block from, Block to, double speed)
 	{
@@ -37,5 +39,19 @@ public class Tube extends SpeedEdge
 		return super.toString();
 	}
 
+	public void addTraffic(int traffic)
+	{
+		this.traffic += traffic; 
+	}
+	
+	public int getTraffic()
+	{
+		return traffic;
+	}
+	
+	public void resetTraffic()
+	{
+		traffic=0;
+	}
 	
 }

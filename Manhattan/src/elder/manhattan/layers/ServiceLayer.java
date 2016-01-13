@@ -5,14 +5,17 @@ import elder.manhattan.Service;
 import elder.manhattan.Simulation;
 import elder.manhattan.Tube;
 import elder.manhattan.Tubeway;
+import elder.manhattan.routines.PlaceTraffic;
 
 
 public class ServiceLayer extends SimulationLayer
 {
+	private final PlaceTraffic traffic;
 	
-	public ServiceLayer()
+	public ServiceLayer(PlaceTraffic traffic)
 	{
 		super("Services");
+		this.traffic = traffic;
 	}
 
 	@Override
@@ -29,9 +32,18 @@ public class ServiceLayer extends SimulationLayer
 			{
 				for (Tubeway section : service.getSections())
 				{
+	
+					
 					for (Tube tube : section.getTubes())
 					{
-						drawLine(tube,R,G,B,4f,false);
+						float width=1;
+
+						if (traffic.getMaxTraffic()>0)
+						{
+							width += (tube.getTraffic()*9f)/(traffic.getMaxTraffic()*1f);
+						}
+						
+						drawLine(tube,R,G,B,width,false);
 					}
 				}
 			}

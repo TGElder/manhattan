@@ -36,6 +36,7 @@ import elder.manhattan.routines.Allocate;
 import elder.manhattan.routines.Dijkstra;
 import elder.manhattan.routines.OpenFields;
 import elder.manhattan.routines.OpenRandomFields;
+import elder.manhattan.routines.PlaceTraffic;
 import elder.manhattan.routines.Populate;
 import elder.manhattan.routines.UpdateStations;
 
@@ -138,11 +139,12 @@ public class Controls extends JFrame
 
 		sim.addRoutine(dijkstra);
 		sim.addRoutine(new Allocate(dijkstra));
+		PlaceTraffic placeTraffic = new PlaceTraffic(dijkstra);
+		sim.addRoutine(placeTraffic);
 		sim.addRoutine(new AddImmigrants(50));
 		sim.addRoutine(new AddChildren(50));
 		
 				
-		
 		
 		
 		
@@ -183,7 +185,7 @@ public class Controls extends JFrame
 		
 		cityDrawer.addLayer(tubeLayer);
 		
-		ServiceLayer serviceLayer = new ServiceLayer();
+		ServiceLayer serviceLayer = new ServiceLayer(placeTraffic);
 		cityDrawer.addLayer(serviceLayer);
 		
 		cityDrawer.addLayer(tubeBuilder);

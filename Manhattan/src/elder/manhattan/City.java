@@ -157,8 +157,8 @@ public class City
 		Station platform = new Station(block,stations.size());
 		stations.add(platform);
 		
-		Tubeway down = new Tubeway(block.getStation(),platform,1, new Tube[] {},100);
-		Tubeway up = new Tubeway(platform,block.getStation(),1, new Tube[] {},100);
+		Tubeway down = new Tubeway(block.getStation(),platform,1, new Tube[] {},1);
+		Tubeway up = new Tubeway(platform,block.getStation(),1, new Tube[] {},1);
 		
 		up.setReverse(down);
 		down.setReverse(up);

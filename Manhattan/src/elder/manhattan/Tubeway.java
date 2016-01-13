@@ -10,6 +10,7 @@ public class Tubeway extends SpeedEdge
 	private Tube [] tubes;
 	
 	public final double length;
+	
 
 	public Tubeway(Station a, Station b, double speed, Tube[] tubes, double length)
 	{
@@ -53,5 +54,7 @@ public class Tubeway extends SpeedEdge
 	{
 		return tubes;
 	}
+
+	
 
 }
