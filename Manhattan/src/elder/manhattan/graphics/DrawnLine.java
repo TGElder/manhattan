@@ -31,7 +31,7 @@ public class DrawnLine extends Drawable
 	public void draw2(CityDrawer cityDrawer)
 	{
 		
-			cityDrawer.setColor(R, G, B);
+			cityDrawer.setColor(R, G, B, 1);
 			cityDrawer.drawLine(line, thickness, scaled);
 		
 		

@@ -1,6 +1,7 @@
 package elder.manhattan.graphics;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.ConcurrentModificationException;
 import java.util.List;
 import java.util.Random;
 
@@ -14,6 +15,7 @@ public abstract class CityDrawerLayer
 {
 	
 	protected List<Drawable> next = Collections.emptyList();
+	protected List<Drawable> ready = Collections.emptyList();
 	protected List<Drawable> current = Collections.emptyList();
 	
 	protected boolean display=true;
@@ -21,6 +23,8 @@ public abstract class CityDrawerLayer
 	protected static Random random = new Random();
 
 	private String name;
+	
+	private boolean drawing=false;
 	
 	public CityDrawerLayer(String name)
 	{
@@ -31,18 +35,20 @@ public abstract class CityDrawerLayer
 	{
 		if (display)
 		{
+			current = ready;
+			
 			for (Drawable drawable : current)
 			{
 				drawable.draw(cityDrawer);
 			}
 			
+			
 		}
 	}
 	
-	protected void drawPolygon(Polygon polygon, float R, float G, float B, boolean fill)
+	protected void drawPolygon(Polygon polygon, float R, float G, float B, float alpha, boolean fill)
 	{
-		
-		next.add(new DrawnPolygon(polygon,R,G,B,fill));
+		next.add(new DrawnPolygon(polygon,R,G,B,alpha,fill));
 	}
 	
 	
@@ -89,22 +95,15 @@ public abstract class CityDrawerLayer
 	{
 		if (enabled())
 		{
+			
 			next = new ArrayList<Drawable> ();
 	
-			
 			draw();
+		
 			
-			SwingUtilities.invokeLater
-			(
-					new Runnable()
-					{
-						@Override
-						public void run()
-						{
-							current = next;
-						}
-					}
-			);
+			ready=next;
+			
+			
 		}
 		
 	}

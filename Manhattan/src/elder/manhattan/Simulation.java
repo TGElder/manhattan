@@ -12,17 +12,19 @@ public class Simulation implements Runnable
 
 	private final City city;
 
-	private boolean halt;
+	private boolean pause=true;
+	
 	private boolean verbose=true;
 	private int iterations=0;
-	private int steps;
+	private int limit;
 	
 	
 	private final Map<Routine,Long> runTime = new HashMap<Routine,Long> ();
 	private final Map<Routine,Integer> runCount = new HashMap<Routine,Integer> ();
 
 	private final List<Routine> routines = new ArrayList<Routine> ();
-	
+	private final List<Routine> pauseRoutines = new ArrayList<Routine> ();
+
 	private final Random random;
 	
 	public Simulation(City city, long seed, int BLOCK_POPULATION_LIMIT)
@@ -31,29 +33,7 @@ public class Simulation implements Runnable
 		random = new Random(seed);
 		this.BLOCK_POPULATION_LIMIT = BLOCK_POPULATION_LIMIT;
 	}
-	
-	public void step()
-	{
-		halt = false;
 
-		for (int s=0; s<steps; s++)
-		{
-			if (halt)
-			{
-				System.out.println("Simulation halted");
-				return;
-			}
-			iterations ++;
-			System.out.println(iterations+" ("+city.getPopulation()+")");
-        	
-        	for (Routine routine : routines)
-        	{
-        		run(routine,true);
-        	}
-        	        	
-		}
-	}
-	
 	private void print(String string)
 	{
 		if (verbose)
@@ -105,9 +85,9 @@ public class Simulation implements Runnable
 
 	}
 	
-	public void halt()
+	public void setPause(boolean pause)
 	{
-		halt = true;
+		this.pause = pause;
 	}
 
 	public City getCity()
@@ -117,13 +97,45 @@ public class Simulation implements Runnable
 
 	@Override
 	public void run()
-	{
-		step();
+	{		
+		while(true)
+		{
+		
+			if (pause)
+			{	
+				for (Routine routine : pauseRoutines)
+	        	{
+					verbose=false;
+	        		run(routine,true);
+	        		verbose=true;
+	        	}
+			}
+			else if (iterations<=limit)
+			{
+				
+				iterations ++;
+				
+				System.out.println(iterations+" ("+city.getPopulation()+")");
+				
+				for (Routine routine : routines)
+	        	{
+	        		run(routine,true);
+	        	}
+			}
+			else
+			{
+				setPause(true);
+			}
+	    	
+			
+		}
+	        	        	
+		
 	}
 
-	public void setSteps(int steps)
+	public void setLimit(int limit)
 	{
-		this.steps = steps;
+		this.limit = limit;
 	}
 	
 	public void update()
@@ -138,10 +150,20 @@ public class Simulation implements Runnable
 	{
 		routines.add(routine);
 	}
+	
+	public void addPauseRoutine(Routine routine)
+	{
+		pauseRoutines.add(routine);
+	}
 
 	public Random getRandom()
 	{
 		return random;
+	}
+
+	public boolean getPause()
+	{
+		return pause;
 	}
 
 

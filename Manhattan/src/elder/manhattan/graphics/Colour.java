@@ -12,6 +12,7 @@ public class Colour
 	public float R;
 	public float G;
 	public float B;
+	public float alpha;
 	
 	public Colour()
 	{
@@ -20,10 +21,11 @@ public class Colour
 		B = random.nextFloat();
 	}
 	
-	public Colour(float R, float G, float B)
+	public Colour(float R, float G, float B, float alpha)
 	{
 		this.R = R;
 		this.G = G;
 		this.B = B;
+		this.alpha = alpha;
 	}
 }

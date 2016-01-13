@@ -10,11 +10,11 @@ import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 
-public class MouseListenerPanel extends JPanel
+public class ModePanel extends JPanel
 {
-	private final MouseListenerManager manager;
+	private final ModeManager manager;
 		
-	public MouseListenerPanel(List<MouseListener> listeners, MouseListenerManager manager)
+	public ModePanel(List<Mode> modes, ModeManager manager)
 	{
 		setName("Mode");
 		setBorder(BorderFactory.createTitledBorder(getName()));
@@ -27,10 +27,14 @@ public class MouseListenerPanel extends JPanel
 		
 		constraints.gridy = 0;
 		
-		for (MouseListener listener : listeners)
+		for (Mode mode : modes)
 		{
+			if (mode!=manager.getMode())
+			{
+				mode.disable();
+			}
 			
-			JButton button = new JButton(listener.toString());
+			JButton button = new JButton(mode.toString());
 			button.addActionListener
 			(
 					new ActionListener()
@@ -38,7 +42,7 @@ public class MouseListenerPanel extends JPanel
 						@Override
 						public void actionPerformed(ActionEvent arg0)
 						{
-							manager.setListener(listener);
+							manager.setMode(mode);
 						}
 					}
 			);

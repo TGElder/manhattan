@@ -109,6 +109,7 @@ public class CityDrawer
  		GL11.glOrtho(0, width, 0, height, 1, -1);
  		GL11.glMatrixMode(GL11.GL_MODELVIEW);
  		GL11.glClearColor(1f, 1f, 1f, 1f);
+ 		GL11.glEnable(GL11.GL_BLEND);
  		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
  		GL11.glEnable(GL11.GL_ALPHA_TEST); 
         GL11.glAlphaFunc(GL11.GL_GREATER, 0.1f);
@@ -206,9 +207,9 @@ public class CityDrawer
     }
  
     
-    public void setColor(float R, float G, float B)
+    public void setColor(float R, float G, float B, float alpha)
     {
-    	 GL11.glColor3f(R,G,B);
+    	 GL11.glColor4f(R,G,B,alpha);
     }
     
     public void drawLine(Line line, float lineWidth, boolean scale)
@@ -506,7 +507,7 @@ public class CityDrawer
 		
 		Collection<Polygon> boxes = new HashSet<Polygon> ();
 		
-		setColor(1,1,1);
+		setColor(1,1,1,1);
 
 		
 		for (Integer size : sizes)

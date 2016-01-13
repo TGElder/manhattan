@@ -3,6 +3,7 @@ package elder.manhattan.gui;
 
 import java.awt.Checkbox;
 import java.awt.Color;
+import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
@@ -27,6 +28,8 @@ import elder.manhattan.layers.KatherineLayer;
 import elder.manhattan.layers.PathfindTestLayer;
 import elder.manhattan.layers.SelectedBlockLayer;
 import elder.manhattan.layers.ServiceLayer;
+import elder.manhattan.layers.StationCoverageLayer;
+import elder.manhattan.layers.StationLayer;
 import elder.manhattan.layers.TimeLayer;
 import elder.manhattan.layers.TubeLayer;
 import elder.manhattan.layers.TubewayLayer;
@@ -46,16 +49,30 @@ public class Controls extends JFrame
 {
 	
 	
-	Controls(Simulation simulation, CityDrawer cityDrawer, List<MouseListener> listeners, MouseListenerManager manager)
+	Controls(Simulation simulation, CityDrawer cityDrawer, List<Mode> modes, ModeManager manager, ServiceBuilder serviceBuilder)
 	{
 		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
 		setLayout(new GridBagLayout());
 		
-		add(new SimulationControlPanel(simulation));
+		GridBagConstraints constraints = new GridBagConstraints();
+		constraints.fill = GridBagConstraints.BOTH;
+		constraints.gridx = 0;
+		constraints.gridy = 0;
+		constraints.gridwidth=2;
+		constraints.gridheight=1;
+		constraints.weightx = 1;
+		constraints.weighty = 1;
 		
-		add(new MouseListenerPanel(listeners, manager));
+		add(new SimulationControlPanel(simulation),constraints);
+		
+		constraints.gridx = 0;
+		constraints.gridy = 1;
+		constraints.gridwidth=1;
+		constraints.gridheight=1;
+
+		add(new ModePanel(modes, manager),constraints);
 		
 		JPanel layerPanel = new JPanel();
 		layerPanel.setName("Layers");
@@ -85,8 +102,29 @@ public class Controls extends JFrame
 			layerPanel.add(checkbox);
 		}
 		
-		add(layerPanel);
+		constraints.gridx = 1;
+		constraints.gridy = 1;
+		constraints.gridwidth=1;
+		constraints.gridheight=1;
+		
+		add(layerPanel,constraints);
 				
+		
+
+		LinePanel linePanel = new LinePanel(simulation.getCity());
+		constraints.gridx = 0;
+		constraints.gridy = 2;
+		constraints.gridwidth=2;
+		constraints.gridheight=1;
+		add(linePanel,constraints);
+		
+		constraints.gridx = 0;
+		constraints.gridy = 3;
+		constraints.gridwidth=2;
+		constraints.gridheight=1;
+		
+		add(new ServicePanel(simulation.getCity(),linePanel.getSelection(),serviceBuilder),constraints);
+		
 		pack();
 		setVisible(true);
 	}
@@ -120,15 +158,12 @@ public class Controls extends JFrame
 		
 		TubeBuilder tubeBuilder = new TubeBuilder();
 		selector.getSelectedBlock().addListener(tubeBuilder);
-		sim.addRoutine(tubeBuilder);
 		
 		ServiceBuilder serviceBuilder = new ServiceBuilder(sim.getCity());
 		selector.getSelectedBlock().addListener(serviceBuilder);
-		sim.addRoutine(serviceBuilder);
 		
 		StationBuilder stationBuilder = new StationBuilder();
 		selector.getSelectedBlock().addListener(stationBuilder);
-		sim.addRoutine(stationBuilder);
 		
 		sim.addRoutine(new OpenFields(2.0/52.0));
 		
@@ -148,13 +183,14 @@ public class Controls extends JFrame
 		
 		
 		
-
+		
 		
 		BlockLayer blockLayer = new BlockLayer();
 		cityDrawer.addLayer(blockLayer);
 		
 		TubeLayer tubeLayer = new TubeLayer();
-
+		StationLayer stationLayer = new StationLayer();
+		StationCoverageLayer stationCoverageLayer = new StationCoverageLayer();
 		
 		KatherineLayer katherineLayer = new KatherineLayer();
 		cityDrawer.addLayer(katherineLayer);
@@ -183,39 +219,59 @@ public class Controls extends JFrame
 		cityDrawer.addLayer(timeLayer);
 		timeLayer.disable();
 		
-		cityDrawer.addLayer(tubeLayer);
-		
 		ServiceLayer serviceLayer = new ServiceLayer(placeTraffic);
+		
+		cityDrawer.addLayer(stationCoverageLayer);
+		cityDrawer.addLayer(tubeLayer);
 		cityDrawer.addLayer(serviceLayer);
+		cityDrawer.addLayer(stationLayer);
+		
+	
 		
 		cityDrawer.addLayer(tubeBuilder);
 		cityDrawer.addLayer(stationBuilder);
 		cityDrawer.addLayer(serviceBuilder);
 
 
-		
+		sim.addRoutine(tubeBuilder);
+		sim.addRoutine(stationBuilder);
+		sim.addRoutine(serviceBuilder);
+
+
 		sim.addRoutine(blockLayer);
+		sim.addRoutine(stationCoverageLayer);
 		sim.addRoutine(tubeLayer);
 		sim.addRoutine(serviceLayer);
+		sim.addRoutine(stationLayer);
 
-
+		
 		sim.addRoutine(katherineLayer);
 		
 
-		List<MouseListener> modes = new ArrayList<MouseListener> ();
+		List<Mode> modes = new ArrayList<Mode> ();
 		modes.add(tubeBuilder);
 		modes.add(stationBuilder);
 		modes.add(serviceBuilder);
+		
+		
+		sim.addPauseRoutine(tubeBuilder);
+		sim.addPauseRoutine(stationBuilder);
+		sim.addPauseRoutine(serviceBuilder);
+		
+		sim.addPauseRoutine(blockLayer);
+		sim.addPauseRoutine(stationCoverageLayer);
+		sim.addPauseRoutine(tubeLayer);
+		sim.addPauseRoutine(serviceLayer);
+		sim.addPauseRoutine(stationLayer);
 
-		MouseListenerManager manager = new MouseListenerManager();
+
+		ModeManager manager = new ModeManager();
 		cityDrawer.addMouseListener(manager);
-		manager.setListener(tubeBuilder);
+		manager.setMode(tubeBuilder);
 
 		cityDrawer.addLayer(selectedBlock);
 		
-    	Controls controls = new Controls(sim,cityDrawer,modes,manager);
-
-    	Line red = new Line("Red",new Color(255,0,0));
+		Line red = new Line("Red",new Color(255,0,0));
     	Service redService = new Service("Red");
     	redService.setLine(red);
     	
@@ -231,9 +287,13 @@ public class Controls extends JFrame
     	sim.getCity().getLines().add(red);
     	sim.getCity().getLines().add(green);
     	sim.getCity().getLines().add(blue);
+		
+    	Controls controls = new Controls(sim,cityDrawer,modes,manager,serviceBuilder);
+
     	
     	
-    	new LineFrame(sim.getCity(),serviceBuilder);
+    	
+    	//new LineFrame(sim.getCity(),serviceBuilder);
     	
     	cityDrawer.run();
     	

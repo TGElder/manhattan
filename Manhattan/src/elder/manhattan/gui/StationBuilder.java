@@ -1,6 +1,7 @@
 package elder.manhattan.gui;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import elder.geometry.Point;
@@ -11,10 +12,11 @@ import elder.manhattan.Simulation;
 import elder.manhattan.graphics.CityDrawerLayer;
 
 
-public class StationBuilder extends CityDrawerLayer implements SelectionListener<Block>,MouseListener,Routine
+public class StationBuilder extends Mode implements SelectionListener<Block>,Routine
 {
 	
-	private final List<Block> newStations = new ArrayList<Block> ();
+	private final List<Block> toBuild = new ArrayList<Block> ();
+	
 	private Block to=null;
 
 	public StationBuilder()
@@ -26,6 +28,8 @@ public class StationBuilder extends CityDrawerLayer implements SelectionListener
 	public void onSelect(Block selection)
 	{
 		to = selection;
+		
+		refresh();
 	}
 
 	@Override
@@ -37,7 +41,7 @@ public class StationBuilder extends CityDrawerLayer implements SelectionListener
 	@Override
 	public void onLeftClick(Point cityPoint)
 	{
-		newStations.add(to);
+		toBuild.add(to);
 		
 		refresh();
 
@@ -87,12 +91,12 @@ public class StationBuilder extends CityDrawerLayer implements SelectionListener
 	@Override
 	public String run(Simulation simulation)
 	{
-		for (Block block : newStations )
+		for (Block block : toBuild )
 		{
 			simulation.getCity().createStation(block);
 		}
 		
-		newStations.clear();
+		toBuild.clear();
 
 		
 		return null;
@@ -101,11 +105,20 @@ public class StationBuilder extends CityDrawerLayer implements SelectionListener
 	@Override
 	public void draw()
 	{
-		for (Block block : newStations)
+		
+		if (to!=null)
 		{
-			drawPoint(block,0f,0f,0f,6f);
-			drawPoint(block,1f,1f,1f,4f);
+			drawPolygon(to.getPolygon(),1f,1f,0,0.5f,true);
+			
+			for (Block block : to.getNeighbours())
+			{
+				
+				drawPolygon(block.getPolygon(),1f,1f,0,0.5f,true);
+				
+			}
 		}
+		
+		
 	}
 
 

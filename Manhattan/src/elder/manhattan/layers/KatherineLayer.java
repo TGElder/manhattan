@@ -35,7 +35,7 @@ public class KatherineLayer extends SimulationLayer
 					blocks.put(block,colour);
 				}
 						
-				drawPolygon(block.getPolygon(),colour.R,colour.G,colour.B,true);
+				drawPolygon(block.getPolygon(),colour.R,colour.G,colour.B,0.25f,true);
 				
 			}
 

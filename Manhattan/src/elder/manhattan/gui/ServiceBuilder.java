@@ -16,7 +16,7 @@ import elder.manhattan.TubePathfinder;
 import elder.manhattan.graphics.CityDrawerLayer;
 
 
-public class ServiceBuilder extends CityDrawerLayer implements SelectionListener<Block>,MouseListener,Routine
+public class ServiceBuilder extends Mode implements SelectionListener<Block>,Routine
 {
 	
 	private Station from=null;
@@ -171,6 +171,11 @@ public class ServiceBuilder extends CityDrawerLayer implements SelectionListener
 		}
 		
 	
+	}
+	
+	public Service getService()
+	{
+		return service;
 	}
 	
 	public void setService(Service service)

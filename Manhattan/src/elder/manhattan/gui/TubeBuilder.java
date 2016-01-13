@@ -12,7 +12,7 @@ import elder.manhattan.Simulation;
 import elder.manhattan.Tube;
 import elder.manhattan.graphics.CityDrawerLayer;
 
-public class TubeBuilder extends CityDrawerLayer implements SelectionListener<Block>,MouseListener,Routine
+public class TubeBuilder extends Mode implements SelectionListener<Block>,Routine
 {
 	
 	private final List<Tube> newTubes = new ArrayList<Tube> ();
@@ -122,12 +122,6 @@ public class TubeBuilder extends CityDrawerLayer implements SelectionListener<Bl
 	@Override
 	public void draw()
 	{
-		
-		for (Tube tube : newTubes)
-		{
-			drawLine(tube,0f,0f,1f,2f,false);
-		}
-		
 		
 		
 		if ( (from!=null&&to!=null) && (from!=to))

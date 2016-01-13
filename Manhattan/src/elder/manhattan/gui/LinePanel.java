@@ -18,12 +18,16 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
+import javax.swing.colorchooser.ColorSelectionModel;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
 import elder.manhattan.City;
 import elder.manhattan.Line;
 import elder.manhattan.Selection;
+import elder.manhattan.graphics.CityDrawer;
 
 public class LinePanel extends JPanel 
 {
@@ -204,6 +208,12 @@ public class LinePanel extends JPanel
 			add(textField,constraints);
 			
 			JColorChooser colorChooser = new JColorChooser();
+			ColorSelectionModel model = colorChooser.getSelectionModel();
+		    model.addChangeListener(new ChangeListener() {
+			      public void stateChanged(ChangeEvent changeEvent) {
+				        line.setColor(colorChooser.getColor());
+				      }
+				    });
 			colorChooser.setColor(line.getColor());
 			constraints.gridy = 1;
 			constraints.gridwidth=2;
@@ -217,7 +227,6 @@ public class LinePanel extends JPanel
 				public void actionPerformed(ActionEvent e)
 				{
 					line.setName(textField.getText());
-					line.setColor(colorChooser.getColor());
 					lineList.repaint();
 					dispose();
 				}});

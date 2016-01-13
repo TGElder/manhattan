@@ -4,73 +4,81 @@ package elder.manhattan.gui;
 import elder.geometry.Point;
 import elder.manhattan.graphics.CityDrawerLayer;
 
-public class MouseListenerManager implements MouseListener
+public class ModeManager implements MouseListener
 {
 	
-	private MouseListener listener;
+	private Mode mode;
 	
 	@Override
 	public void onMove(Point cityPoint)
 	{
-		listener.onMove(cityPoint);
+		mode.onMove(cityPoint);
 	}
 
 	@Override
 	public void onLeftClick(Point cityPoint)
 	{
-		listener.onLeftClick(cityPoint);
+		mode.onLeftClick(cityPoint);
 	}
 
 	@Override
 	public void onMiddleClick(Point cityPoint)
 	{
-		listener.onMiddleClick(cityPoint);
+		mode.onMiddleClick(cityPoint);
 	}
 
 	@Override
 	public void onRightClick(Point cityPoint)
 	{
-		listener.onRightClick(cityPoint);
+		mode.onRightClick(cityPoint);
 	}
 
 	@Override
 	public void onLeftDrag(Point screenOffset)
 	{
-		listener.onLeftDrag(screenOffset);
+		mode.onLeftDrag(screenOffset);
 	}
 
 	@Override
 	public void onMiddleDrag(Point screenOffset)
 	{
-		listener.onMiddleDrag(screenOffset);
+		mode.onMiddleDrag(screenOffset);
 	}
 
 	@Override
 	public void onRightDrag(Point screenOffset)
 	{
-		listener.onRightDrag(screenOffset);
+		mode.onRightDrag(screenOffset);
 	}
 
 	@Override
 	public void onWheelUp()
 	{
-		listener.onWheelUp();
+		mode.onWheelUp();
 	}
 
 	@Override
 	public void onWheelDown()
 	{
-		listener.onWheelDown();
+		mode.onWheelDown();
 	}
 
-	public MouseListener getListener()
+	public Mode getMode()
 	{
-		return listener;
+		return mode;
 	}
 	
-	public void setListener(MouseListener listener)
+	public void setMode(Mode mode)
 	{
-		this.listener = listener;
+		if (this.mode!=null)
+		{
+			this.mode.disable();
+		}
+		this.mode = mode;
+		if (mode!=null)
+		{
+			mode.enable();
+		}
 	}
 
 }

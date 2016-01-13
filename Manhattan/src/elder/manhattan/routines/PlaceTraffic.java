@@ -1,5 +1,8 @@
 package elder.manhattan.routines;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 
 import elder.manhattan.Block;
@@ -54,67 +57,77 @@ public class PlaceTraffic implements Routine
 				((Tube)edge).resetTraffic();
 			}
 			
-			int [] commuters = new int[city.getBlocks().length]; 
-			
-			for (Commute commute : block.getResidents())
+			if (!block.getResidents().isEmpty())
 			{
-				commuters[commute.getOffice().getIndex()] ++;
-			}
-			
-			
-			for (int b=0; b<commuters.length; b++)
-			{
-				if (b!=block.getIndex())
+				
+				
+				int [] commuters = new int[city.getBlocks().length]; 
+				
+				HashSet<Integer> commuted = new HashSet<Integer> ();
+				
+				for (Commute commute : block.getResidents())
 				{
-					if (commuters[b]>0)
+					int index = commute.getOffice().getIndex();
+					
+					if (index!=block.getIndex())
+					{	
+						commuters[index] ++;
+						commuted.add(index);
+					}
+				}
+				
+				
+				for (Integer b : commuted)
+				{
+					
+					count++;
+					Block focus = city.getBlocks()[b];
+					
+					double distance = (Math.abs(block.x - focus.x) + Math.abs(block.y - focus.y));
+					//double distance = Double.POSITIVE_INFINITY;
+					
+					Station from=null;
+					Station to=null;
+					
+					for (Station s : block.getStations())
 					{
-						count++;
-						Block focus = city.getBlocks()[b];
-						
-						double distance = (Math.abs(block.x - focus.x) + Math.abs(block.y - focus.y));
-						
-						Station from=null;
-						Station to=null;
-						
-						for (Station s : block.getStations())
+						for (Station s2: focus.getStations())
 						{
-							for (Station s2: focus.getStations())
+							double focusDistance = dijkstra.getDistances()[s.getIndex()][s2.getIndex()];
+															
+							if (focusDistance<distance)
 							{
-								double focusDistance = dijkstra.getDistances()[s.getIndex()][s2.getIndex()];
-																
-								if (focusDistance<distance)
-								{
-									from = s;
-									to = s2;
-									distance = focusDistance;
-								}
-								
+								from = s;
+								to = s2;
+								distance = focusDistance;
 							}
+							
 						}
-						
-						if (from!=null)
+					}
+					
+					if (from!=null)
+					{
+						List<Tubeway> path = dijkstra.getPath(from, to);
+						//List<Tubeway> path = Collections.emptyList();
+													
+						if (path!=null)
 						{
-							List<Tubeway> path = dijkstra.getPath(from, to);
-														
-							if (path!=null)
+							
+							for (Tubeway tubeway : path)
 							{
-								
-								for (Tubeway tubeway : path)
+								for (Tube tube : tubeway.getTubes())
 								{
-									for (Tube tube : tubeway.getTubes())
-									{
-										tube.addTraffic(commuters[b]);
-										maxTraffic = Math.max(maxTraffic, tube.getTraffic());
+									tube.addTraffic(commuters[b]);
+									maxTraffic = Math.max(maxTraffic, tube.getTraffic());
 	
-									}
-									
 								}
+								
 							}
 						}
 					}
 				}
+				
 			}
-			
 		}
 		
 		return count+"";

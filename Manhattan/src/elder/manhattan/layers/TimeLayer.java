@@ -58,7 +58,7 @@ public class TimeLayer extends CityDrawerLayer implements SelectionListener<Bloc
 				
 				if (distance!=Double.POSITIVE_INFINITY)
 				{
-					drawPolygon(focus.getPolygon(),(float)(distance/maxDistance),(float)(distance/maxDistance),(float)(distance/maxDistance),true);
+					drawPolygon(focus.getPolygon(),(float)(distance/maxDistance),(float)(distance/maxDistance),(float)(distance/maxDistance),0.25f,true);
 				}
 			}
 				

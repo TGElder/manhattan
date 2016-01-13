@@ -29,8 +29,7 @@ public class SelectedBlockLayer extends CityDrawerLayer implements SelectionList
 		
 		if (selectedBlock!=null)
 		{
-			drawPolygon(selectedBlock.getPolygon(),1f,1f,1f,false);
-
+			drawPolygon(selectedBlock.getPolygon(),1f,1f,1f,1f,false);
 		}
 		
 		

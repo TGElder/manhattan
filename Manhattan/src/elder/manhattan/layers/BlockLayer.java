@@ -25,12 +25,12 @@ public class BlockLayer extends SimulationLayer
 				occupancy *= 0.75;
 				occupancy = 0.75f - occupancy;
 				
-				drawPolygon(block.getPolygon(),occupancy,occupancy,occupancy,true);
+				drawPolygon(block.getPolygon(),occupancy,occupancy,occupancy,1,true);
 				
 			}
 			else
 			{
-				drawPolygon(block.getPolygon(),0f,1f,0f,true);
+				drawPolygon(block.getPolygon(),0f,1f,0f,1,true);
 			}
 
 		}

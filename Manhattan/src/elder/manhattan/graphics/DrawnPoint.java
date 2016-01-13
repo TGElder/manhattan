@@ -22,7 +22,7 @@ public class DrawnPoint extends Drawable
 	@Override
 	public void draw2(CityDrawer cityDrawer)
 	{
-		cityDrawer.setColor(R, G, B);
+		cityDrawer.setColor(R, G, B,1);
 		cityDrawer.drawPoint(point, size);
 	}
 	

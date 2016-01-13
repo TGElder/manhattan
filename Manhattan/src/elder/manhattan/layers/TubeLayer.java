@@ -29,12 +29,6 @@ public class TubeLayer extends SimulationLayer
 
 		}
 		
-		for (Station station : simulation.getCity().getStations())
-		{
-			drawPoint(station,0f,0f,0f,6f);
-			drawPoint(station,1f,1f,1f,4f);
-		}
-		
 	}
 
 }

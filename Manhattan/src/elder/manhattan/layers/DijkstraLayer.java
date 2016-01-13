@@ -39,23 +39,27 @@ public class DijkstraLayer extends CityDrawerLayer implements SelectionListener<
 			{
 				if (dijkstra.getDirections()!=null)
 				{
-				
-					Tubeway [] tubeways = dijkstra.getDirections()[selectedBlock.getStation().getIndex()];
-					
-					if (tubeways!=null)
+					if (selectedBlock.getStation().getIndex()<dijkstra.getDirections().length)
 					{
 					
-						for (Tubeway tubeway : tubeways)
+						Tubeway [] tubeways = dijkstra.getDirections()[selectedBlock.getStation().getIndex()];
+						
+						if (tubeways!=null)
 						{
-							if (tubeway!=null)
+						
+							for (Tubeway tubeway : tubeways)
 							{
-								for (Tube tube : tubeway.getTubes())
+								if (tubeway!=null)
 								{
-										drawLine(tube,1f,1f,1f,6f,false);
+									for (Tube tube : tubeway.getTubes())
+									{
+											drawLine(tube,1f,1f,1f,6f,false);
+									}
 								}
 							}
+						
 						}
-					
+						
 					}
 					
 				}

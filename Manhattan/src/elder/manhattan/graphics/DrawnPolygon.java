@@ -9,11 +9,12 @@ public class DrawnPolygon extends Drawable
 	float R;
 	float G;
 	float B;
+	float alpha;
 	boolean fill;
 	final Point min;
 	final Point max;
 	
-	public DrawnPolygon(Polygon polygon, float R, float G, float B, boolean fill)
+	public DrawnPolygon(Polygon polygon, float R, float G, float B, float alpha, boolean fill)
 	{
 		this.polygon = polygon;
 		this.min = polygon.getMin();
@@ -21,13 +22,14 @@ public class DrawnPolygon extends Drawable
 		this.R = R;
 		this.G = G;
 		this.B = B;
+		this.alpha = alpha;
 		this.fill = fill;
 	}
 
 	@Override
 	public void draw2(CityDrawer cityDrawer)
 	{
-		cityDrawer.setColor(R, G, B);
+		cityDrawer.setColor(R, G, B, alpha);
 		cityDrawer.drawPolygon(polygon, fill);
 	}
 

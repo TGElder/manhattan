@@ -31,6 +31,7 @@ public class SimulationControlPanel extends JPanel
 		setBorder(BorderFactory.createTitledBorder(getName()));
 
 		thread = new Thread(simulation);
+		thread.start();
 		
 		setLayout(new GridBagLayout());
 		GridBagConstraints constraints = new GridBagConstraints();
@@ -41,7 +42,7 @@ public class SimulationControlPanel extends JPanel
 		constraints.weightx = 1;
 		constraints.weighty = 1;
 		
-		stepButton = new JButton("Step");
+		stepButton = new JButton("Go");
 		spinnerNumberModel = new SpinnerNumberModel(1000000,1,1000000,1);
 		iterationsSpinner = new JSpinner(spinnerNumberModel);
 		stepButton.addActionListener
@@ -51,17 +52,13 @@ public class SimulationControlPanel extends JPanel
 					@Override
 					public void actionPerformed(ActionEvent arg0)
 					{
-						sim.setSteps(spinnerNumberModel.getNumber().intValue());
-						if (!thread.isAlive())
-						{
-							thread = new Thread(sim);
-							thread.start();
-						}
+						sim.setLimit(spinnerNumberModel.getNumber().intValue());
+						sim.setPause(false);
 					}
 				}
 		);
 		
-		stop = new JButton("Stop");
+		stop = new JButton("Pause");
 		stop.addActionListener
 		(
 				new ActionListener()
@@ -70,7 +67,7 @@ public class SimulationControlPanel extends JPanel
 					@Override
 					public void actionPerformed(ActionEvent arg0)
 					{
-						sim.halt();
+						sim.setPause(!sim.getPause());
 					}
 					
 				}
