@@ -9,6 +9,8 @@ public abstract class Mode extends CityDrawerLayer implements MouseListener
 	{
 		super(name);
 	}
+	
+	public abstract void reset();
 
 
 }

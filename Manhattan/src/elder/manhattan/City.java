@@ -152,6 +152,33 @@ public class City
 		}
 	}
 	
+	public boolean deleteStation(Block block)
+	{
+		if (block.hasStation())
+		{
+			Station station = block.getStation();
+			if (station.getEdges().isEmpty())
+			{
+				System.out.println("Removing station from "+block);
+				assert(stations.contains(station));
+				stations.remove(station);
+				System.out.println(stations);
+				block.setStation(null);
+
+			}
+			else
+			{
+				System.out.println("Can't remove station, service calling at station.");
+
+				return false;
+			}
+
+		}
+		
+		return true;
+	}
+	
+	
 	public Station createPlatform(Block block)
 	{
 		Station platform = new Station(block,stations.size());
@@ -167,6 +194,25 @@ public class City
 		platform.addEdge(up);
 		
 		return platform;
+	}
+	
+	public boolean deletePlatform(Station platform)
+	{
+		if (platform.getEdges().size()==1)
+		{
+			Station station = platform.getBlock().getStation();
+			platform.removeEdge(platform.getEdge(station));
+			station.removeEdge(station.getEdge(platform));
+			stations.remove(platform);
+			System.out.println("Removing platform from "+station);
+			System.out.println(stations);
+			return true;
+		}
+		else
+		{
+			System.out.println("Can't remove platform, service calling at platform.");
+			return false;
+		}
 	}
 
 	public List<Line> getLines()

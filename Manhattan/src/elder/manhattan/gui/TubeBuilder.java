@@ -9,8 +9,11 @@ import elder.manhattan.Block;
 import elder.manhattan.Routine;
 import elder.manhattan.SelectionListener;
 import elder.manhattan.Simulation;
+import elder.manhattan.Station;
 import elder.manhattan.Tube;
+import elder.manhattan.Tubeway;
 import elder.manhattan.graphics.CityDrawerLayer;
+import elder.network.Edge;
 
 public class TubeBuilder extends Mode implements SelectionListener<Block>,Routine
 {
@@ -109,7 +112,20 @@ public class TubeBuilder extends Mode implements SelectionListener<Block>,Routin
 		
 		for (Tube tube : newTubes)
 		{
-			tube.getFrom().addEdge(tube);
+			Edge existing;
+			if ((existing = tube.getFrom().getEdge(tube.getTo()))!=null)
+			{
+				if (!hasService(tube,simulation))
+				{
+					tube.getFrom().removeEdge(existing);
+				}
+				
+				
+			}
+			else
+			{
+				tube.getFrom().addEdge(tube);
+			}
 		}
 		
 		newTubes.clear();
@@ -117,6 +133,25 @@ public class TubeBuilder extends Mode implements SelectionListener<Block>,Routin
 		refresh();
 		
 		return null;
+	}
+	
+	private boolean hasService(Tube tube, Simulation simulation)
+	{
+		for (Station station : simulation.getCity().getStations())
+		{
+			for (Edge edge : station.getEdges())
+			{
+				Tubeway tubeway = (Tubeway)edge;
+				for (Tube tubewayTube: tubeway.getTubes())
+				{
+					if (tubewayTube.equals(tube))
+					{
+						return true;
+					}
+				}
+			}
+		}
+		return false;
 	}
 
 	@Override
@@ -132,6 +167,11 @@ public class TubeBuilder extends Mode implements SelectionListener<Block>,Routin
 	
 	}
 
+	@Override
+	public void reset()
+	{
+		from=null;
+	}
 
 
 }

@@ -24,13 +24,16 @@ public class StationCoverageLayer extends SimulationLayer
 		
 		for (Station station : simulation.getCity().getStations())
 		{
-			coverage.add(station.getBlock());
-			
-			for (Block block : station.getBlock().getNeighbours())
+			if (station.getBlock().getStation()==station)
 			{
-				if (block.isBuilt())
+				coverage.add(station.getBlock());
+				
+				for (Block block : station.getBlock().getNeighbours())
 				{
-					coverage.add(block);
+					if (block.isBuilt())
+					{
+						coverage.add(block);
+					}
 				}
 			}
 			

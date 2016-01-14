@@ -14,6 +14,7 @@ import elder.manhattan.Station;
 import elder.manhattan.Tube;
 import elder.manhattan.TubePathfinder;
 import elder.manhattan.graphics.CityDrawerLayer;
+import elder.network.Edge;
 
 
 public class ServiceBuilder extends Mode implements SelectionListener<Block>,Routine
@@ -66,34 +67,50 @@ public class ServiceBuilder extends Mode implements SelectionListener<Block>,Rou
 	@Override
 	public void onLeftClick(Point cityPoint)
 	{
-		
-		if ( (from!=null&&to!=null) && (from!=to))
+		if (service!=null)
 		{
-			List<Tube> tubes = tubePathfinder.findPath(from.getBlock(), to.getBlock());
-			
-			if (tubes!=null)
+			if ( (from!=null&&to!=null) && (from!=to))
 			{
-				Tube [] tubeArray = new Tube [tubes.size()];
-				Tube [] reverseArray = new Tube [tubes.size()];
-				double length=0;
+				Station fromPlatform = service.getPlatform(from);
+				Station toPlatform = service.getPlatform(to);
 				
-				for (int t=0; t<tubes.size(); t++)
+				Edge edge;
+				
+				if (fromPlatform!=null&&toPlatform!=null&&(edge = fromPlatform.getEdge(toPlatform))!=null)
 				{
-					tubeArray[t] = tubes.get(t);
-					reverseArray[t] = tubes.get((tubes.size()-1)-t).getReverse();
-					length += tubes.get(t).length;
+					service.unlink(city, fromPlatform, toPlatform);
+				}
+				else
+				{
+				
+					List<Tube> tubes = tubePathfinder.findPath(from.getBlock(), to.getBlock());
+					
+					if (tubes!=null)
+					{
+						Tube [] tubeArray = new Tube [tubes.size()];
+						Tube [] reverseArray = new Tube [tubes.size()];
+						double length=0;
+						
+						for (int t=0; t<tubes.size(); t++)
+						{
+							tubeArray[t] = tubes.get(t);
+							reverseArray[t] = tubes.get((tubes.size()-1)-t).getReverse();
+							length += tubes.get(t).length;
+						}
+						
+						System.out.println("Linking "+from+" to "+to+" on "+service);
+						service.link(city, from, to, tubeArray, reverseArray,length);
+					}
+					
 				}
 				
-				System.out.println("Linking "+from+" to "+to+" on "+service);
-				service.link(city, from, to, tubeArray, reverseArray,length);
+				
 			}
 			
-			
+			from = to;
+		
+			refresh();
 		}
-		
-		from = to;
-		
-		refresh();
 	}
 
 	@Override
@@ -181,6 +198,12 @@ public class ServiceBuilder extends Mode implements SelectionListener<Block>,Rou
 	public void setService(Service service)
 	{
 		this.service = service;
+	}
+
+	@Override
+	public void reset()
+	{
+		from=null;
 	}
 
 

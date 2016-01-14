@@ -42,6 +42,8 @@ public class ModePanel extends JPanel
 						@Override
 						public void actionPerformed(ActionEvent arg0)
 						{
+							mode.reset();
+
 							manager.setMode(mode);
 						}
 					}

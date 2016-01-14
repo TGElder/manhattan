@@ -27,8 +27,7 @@ public class Dijkstra implements Routine
 		
 		int [] open = new int[noStations];
 		int [] closed = new int[noStations];
-		
-		
+	
 		final double [] distances = new double[noStations];
 		
 		this.directions = new Tubeway[noStations][noStations];

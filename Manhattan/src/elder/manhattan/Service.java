@@ -5,6 +5,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import elder.network.Edge;
+
 public class Service
 {
 
@@ -52,6 +54,11 @@ public class Service
 		return name;
 	}
 	
+	public Station getPlatform(Station station)
+	{
+		return platforms.get(station);
+	}
+	
 	public void link(City city, Station a, Station b, Tube [] tubes, Tube [] reverse, double length)
 	{
 		Station platformA = platforms.get(a);
@@ -82,6 +89,58 @@ public class Service
 		sections.add(ab);
 		sections.add(ba);
 	}
+	
+	public boolean unlink(City city, Station from, Station to)
+	{
+		Edge edge = from.getEdge(to);
+		Edge reverseEdge = to.getEdge(from);
+		
+		if (edge!=null)
+		{
+			Tubeway tubeway = (Tubeway)edge;
+			Tubeway reverseTubeway = (Tubeway)reverseEdge;
+			
+			if (sections.contains(tubeway))
+			{
+				System.out.println("Unlinking "+tubeway);
+				
+				assert(sections.contains(reverseEdge));
+				sections.remove(tubeway);
+				sections.remove(reverseTubeway);
+				
+				from.removeEdge(tubeway);
+				to.removeEdge(reverseTubeway);
+				
+				if (from.getEdges().size()==1)
+				{
+					city.deletePlatform(from);
+					assert(platforms.containsKey(from.getBlock().getStation()));
+					platforms.remove(from.getBlock().getStation());
+				}
+				
+				if (to.getEdges().size()==1)
+				{
+					city.deletePlatform(to);
+					assert(platforms.containsKey(to.getBlock().getStation()));
+					platforms.remove(to.getBlock().getStation());
+				}
+				
+				return true;
+			}
+			else
+			{
+				System.out.println("Cannot remove section, stations not connected by this service");
+			}
+		}
+		else
+		{
+			System.out.println("Cannot remove section, stations not connected");
+		}
+		return false;
+		
+		
+	}
+	
 	public List<Tubeway> getSections()
 	{
 		return sections;

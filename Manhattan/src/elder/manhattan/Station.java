@@ -6,7 +6,7 @@ public class Station extends Node
 {
 
 	private final Block block;
-	private final int index;
+	private int index;
 	
 	public Station(Block block, int index)
 	{
@@ -23,6 +23,17 @@ public class Station extends Node
 	public int getIndex()
 	{
 		return index;
+	}
+
+	public void setIndex(int index)
+	{
+		this.index = index;
+	}
+	
+	@Override
+	public boolean equals(Object obj)
+	{
+		return this==obj;
 	}
 
 }

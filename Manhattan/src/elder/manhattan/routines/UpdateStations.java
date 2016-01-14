@@ -15,6 +15,11 @@ public class UpdateStations implements Routine
 	{
 		ArrayList<Station> stations = new ArrayList<Station> ();
 		
+		for (int s=0; s<stations.size(); s++)
+		{
+			stations.get(s).setIndex(s);
+		}
+		
 		for (Block block : simulation.getCity().getBlocks())
 		{
 			
