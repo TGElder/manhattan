@@ -14,6 +14,7 @@ import elder.manhattan.Tube;
 import elder.manhattan.Tubeway;
 import elder.manhattan.graphics.CityDrawerLayer;
 import elder.network.Edge;
+import elder.network.Node;
 
 public class TubeBuilder extends Mode implements SelectionListener<Block>,Routine
 {
@@ -137,9 +138,9 @@ public class TubeBuilder extends Mode implements SelectionListener<Block>,Routin
 	
 	private boolean hasService(Tube tube, Simulation simulation)
 	{
-		for (Station station : simulation.getCity().getStations())
+		for (Node node : simulation.getCity().getRailwayNodes())
 		{
-			for (Edge edge : station.getEdges())
+			for (Edge edge : node.getEdges())
 			{
 				Tubeway tubeway = (Tubeway)edge;
 				for (Tube tubewayTube: tubeway.getTubes())

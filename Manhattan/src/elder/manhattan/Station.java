@@ -1,39 +1,52 @@
 package elder.manhattan;
 
-import elder.network.Node;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 
-public class Station extends Node
+public class Station extends RailwayNode
 {
 
 	private final Block block;
-	private int index;
+	private final Map<Service,Platform> platforms = new HashMap<Service,Platform> ();
 	
-	public Station(Block block, int index)
+	public Station(Block block)
 	{
 		super(block.x, block.y);
 		this.block = block;
-		this.index = index;
+	
 	}
 
 	public Block getBlock()
 	{
 		return block;
 	}
-
-	public int getIndex()
+	
+	public Platform getPlatform(Service service)
 	{
-		return index;
-	}
-
-	public void setIndex(int index)
-	{
-		this.index = index;
+		return platforms.get(service);
 	}
 	
-	@Override
-	public boolean equals(Object obj)
+	public Platform addPlatform(Service service)
 	{
-		return this==obj;
+		Platform platform = new Platform(this,service);
+		assert(!platforms.containsKey(service));
+		platforms.put(service, platform);
+		return platform;
 	}
+	
+	public void removePlatform(Service service) throws Exception
+	{
+		Platform platform = platforms.get(service);
+		assert(platforms.containsKey(service));
+		platforms.remove(service);
+		platform.remove();
+	}
+
+	public Collection<Platform> getPlatforms()
+	{
+		return platforms.values();
+	}
+
 
 }

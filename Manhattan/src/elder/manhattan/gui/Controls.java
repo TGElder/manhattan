@@ -26,6 +26,7 @@ import elder.manhattan.layers.BlockLayer;
 import elder.manhattan.layers.DijkstraLayer;
 import elder.manhattan.layers.KatherineLayer;
 import elder.manhattan.layers.PathfindTestLayer;
+import elder.manhattan.layers.PlatformLayer;
 import elder.manhattan.layers.SelectedBlockLayer;
 import elder.manhattan.layers.ServiceLayer;
 import elder.manhattan.layers.StationCoverageLayer;
@@ -190,6 +191,7 @@ public class Controls extends JFrame
 		
 		TubeLayer tubeLayer = new TubeLayer();
 		StationLayer stationLayer = new StationLayer();
+		PlatformLayer platformLayer = new PlatformLayer();
 		StationCoverageLayer stationCoverageLayer = new StationCoverageLayer();
 		
 		KatherineLayer katherineLayer = new KatherineLayer();
@@ -225,6 +227,9 @@ public class Controls extends JFrame
 		cityDrawer.addLayer(tubeLayer);
 		cityDrawer.addLayer(serviceLayer);
 		cityDrawer.addLayer(stationLayer);
+		cityDrawer.addLayer(platformLayer);
+		platformLayer.disable();
+
 		
 	
 		
@@ -243,6 +248,7 @@ public class Controls extends JFrame
 		sim.addRoutine(tubeLayer);
 		sim.addRoutine(serviceLayer);
 		sim.addRoutine(stationLayer);
+		sim.addRoutine(platformLayer);
 
 		
 		sim.addRoutine(katherineLayer);
@@ -263,6 +269,7 @@ public class Controls extends JFrame
 		sim.addPauseRoutine(tubeLayer);
 		sim.addPauseRoutine(serviceLayer);
 		sim.addPauseRoutine(stationLayer);
+		sim.addPauseRoutine(platformLayer);
 
 
 		ModeManager manager = new ModeManager();

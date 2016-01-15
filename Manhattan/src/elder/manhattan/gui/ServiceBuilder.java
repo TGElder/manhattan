@@ -6,6 +6,7 @@ import java.util.List;
 import elder.geometry.Point;
 import elder.manhattan.Block;
 import elder.manhattan.City;
+import elder.manhattan.Platform;
 import elder.manhattan.Routine;
 import elder.manhattan.SelectionListener;
 import elder.manhattan.Service;
@@ -71,14 +72,19 @@ public class ServiceBuilder extends Mode implements SelectionListener<Block>,Rou
 		{
 			if ( (from!=null&&to!=null) && (from!=to))
 			{
-				Station fromPlatform = service.getPlatform(from);
-				Station toPlatform = service.getPlatform(to);
-				
-				Edge edge;
-				
-				if (fromPlatform!=null&&toPlatform!=null&&(edge = fromPlatform.getEdge(toPlatform))!=null)
+				Platform fromPlatform = from.getPlatform(service);
+				Platform toPlatform = to.getPlatform(service);
+								
+				if (fromPlatform!=null&&toPlatform!=null&&(fromPlatform.getEdge(toPlatform))!=null)
 				{
-					service.unlink(city, fromPlatform, toPlatform);
+					try 
+					{
+						service.unlink(city, fromPlatform, toPlatform);
+					}
+					catch (Exception e)
+					{
+						System.out.println(e.getMessage());
+					}
 				}
 				else
 				{

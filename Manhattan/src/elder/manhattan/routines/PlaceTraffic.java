@@ -8,6 +8,7 @@ import java.util.List;
 import elder.manhattan.Block;
 import elder.manhattan.City;
 import elder.manhattan.Commute;
+import elder.manhattan.RailwayNode;
 import elder.manhattan.Routine;
 import elder.manhattan.Simulation;
 import elder.manhattan.Station;
@@ -32,9 +33,9 @@ public class PlaceTraffic implements Routine
 	{
 		City city = simulation.getCity();
 		
-		for (Station station : city.getStations())
+		for (RailwayNode node : city.getRailwayNodes())
 		{
-			for (Edge edge : station.getEdges())
+			for (Edge edge : node.getEdges())
 			{
 				for (Tube tube : ((Tubeway)edge).getTubes())
 				{

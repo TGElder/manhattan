@@ -12,7 +12,7 @@ public class Tubeway extends SpeedEdge
 	public final double length;
 	
 
-	public Tubeway(Station a, Station b, double speed, Tube[] tubes, double length)
+	public Tubeway(RailwayNode a, RailwayNode b, double speed, Tube[] tubes, double length)
 	{
 		super(a, b, speed);
 		this.tubes = tubes;

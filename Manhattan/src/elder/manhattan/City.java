@@ -5,6 +5,7 @@ import java.util.List;
 
 import elder.geometry.Point;
 import elder.geometry.Polygon;
+import elder.network.Node;
 
 public class City
 {
@@ -21,7 +22,7 @@ public class City
 	private static int [] neighbourXs = { 0,-1, 0, 1,-2,-1,1,2,-1,0,1,0};
 	private static int [] neighbourYs = {-2,-1,-1,-1, 0, 0,0,0, 1,1,1,2};
 	
-	private final List<Station> stations = new ArrayList<Station> ();
+	private final List<RailwayNode> railwayNodes = new ArrayList<RailwayNode> ();
 	
 	private final List<Line> lines = new ArrayList<Line> ();
 	
@@ -129,9 +130,9 @@ public class City
 		return population;
 	}
 	
-	public List<Station> getStations()
+	public List<RailwayNode> getRailwayNodes()
 	{
-		return stations;
+		return railwayNodes;
 	}
 	
 	public void createStation(Block block)
@@ -144,9 +145,9 @@ public class City
 				block.setBuilt(true);
 			}
 			
-			Station station = new Station(block,stations.size());
+			Station station = new Station(block);
 			block.setStation(station);
-			stations.add(station);
+			railwayNodes.add(station);
 			
 			
 		}
@@ -160,9 +161,9 @@ public class City
 			if (station.getEdges().isEmpty())
 			{
 				System.out.println("Removing station from "+block);
-				assert(stations.contains(station));
-				stations.remove(station);
-				System.out.println(stations);
+				assert(railwayNodes.contains(station));
+				railwayNodes.remove(station);
+				System.out.println(railwayNodes);
 				block.setStation(null);
 
 			}
@@ -178,42 +179,6 @@ public class City
 		return true;
 	}
 	
-	
-	public Station createPlatform(Block block)
-	{
-		Station platform = new Station(block,stations.size());
-		stations.add(platform);
-		
-		Tubeway down = new Tubeway(block.getStation(),platform,1, new Tube[] {},1);
-		Tubeway up = new Tubeway(platform,block.getStation(),1, new Tube[] {},1);
-		
-		up.setReverse(down);
-		down.setReverse(up);
-		
-		block.getStation().addEdge(down);
-		platform.addEdge(up);
-		
-		return platform;
-	}
-	
-	public boolean deletePlatform(Station platform)
-	{
-		if (platform.getEdges().size()==1)
-		{
-			Station station = platform.getBlock().getStation();
-			platform.removeEdge(platform.getEdge(station));
-			station.removeEdge(station.getEdge(platform));
-			stations.remove(platform);
-			System.out.println("Removing platform from "+station);
-			System.out.println(stations);
-			return true;
-		}
-		else
-		{
-			System.out.println("Can't remove platform, service calling at platform.");
-			return false;
-		}
-	}
 
 	public List<Line> getLines()
 	{

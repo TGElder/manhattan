@@ -13,7 +13,6 @@ public class Service
 	private String name;
 	private Line line;
 	
-	private final Map<Station,Station> platforms = new HashMap<Station,Station> ();
 	private final List<Tubeway> sections = new ArrayList<Tubeway> ();
 	
 	public Service(String string)
@@ -54,27 +53,20 @@ public class Service
 		return name;
 	}
 	
-	public Station getPlatform(Station station)
-	{
-		return platforms.get(station);
-	}
-	
 	public void link(City city, Station a, Station b, Tube [] tubes, Tube [] reverse, double length)
 	{
-		Station platformA = platforms.get(a);
+		Platform platformA = a.getPlatform(this);
 		
 		if (platformA==null)
 		{
-			platformA = city.createPlatform(a.getBlock());
-			platforms.put(a,platformA);
+			platformA = a.addPlatform(this);
 		}
 		
-		Station platformB = platforms.get(b);
+		Platform platformB = b.getPlatform(this);
 		
 		if (platformB==null)
 		{
-			platformB = city.createPlatform(b.getBlock());
-			platforms.put(b,platformB);
+			platformB = b.addPlatform(this);
 		}
 
 		Tubeway ab = new Tubeway(platformA,platformB,2,tubes,length);
@@ -90,55 +82,56 @@ public class Service
 		sections.add(ba);
 	}
 	
-	public boolean unlink(City city, Station from, Station to)
+	public void unlink(City city, Platform a, Platform b) throws Exception
 	{
-		Edge edge = from.getEdge(to);
-		Edge reverseEdge = to.getEdge(from);
+		Edge edge = a.getEdge(b);
 		
 		if (edge!=null)
 		{
 			Tubeway tubeway = (Tubeway)edge;
-			Tubeway reverseTubeway = (Tubeway)reverseEdge;
+			Tubeway reverseTubeway = ((Tubeway)edge).getReverse();
 			
 			if (sections.contains(tubeway))
-			{
-				System.out.println("Unlinking "+tubeway);
-				
-				assert(sections.contains(reverseEdge));
+			{					
+				assert(sections.contains(reverseTubeway));
 				sections.remove(tubeway);
 				sections.remove(reverseTubeway);
 				
-				from.removeEdge(tubeway);
-				to.removeEdge(reverseTubeway);
+				a.removeEdge(tubeway);
+				b.removeEdge(reverseTubeway);
 				
-				if (from.getEdges().size()==1)
+				if (a.getEdges().size()==1)
 				{
-					city.deletePlatform(from);
-					assert(platforms.containsKey(from.getBlock().getStation()));
-					platforms.remove(from.getBlock().getStation());
+					a.getStation().removePlatform(this);
 				}
 				
-				if (to.getEdges().size()==1)
+				if (b.getEdges().size()==1)
 				{
-					city.deletePlatform(to);
-					assert(platforms.containsKey(to.getBlock().getStation()));
-					platforms.remove(to.getBlock().getStation());
+					b.getStation().removePlatform(this);
 				}
 				
-				return true;
-			}
-			else
-			{
-				System.out.println("Cannot remove section, stations not connected by this service");
+				return;
 			}
 		}
-		else
+		
+		throw new Exception("These platforms are not linked by this service.");
+
+	}
+	
+	public void unlink(City city, Station a, Station b) throws Exception
+	{
+		Platform platformA = a.getPlatform(this);
+		Platform platformB = b.getPlatform(this);
+		
+		if (platformA!=null||platformB!=null)
 		{
-			System.out.println("Cannot remove section, stations not connected");
+		
+			unlink(city,platformA,platformB);
+			return;
 		}
-		return false;
 		
-		
+		throw new Exception("This service does not serve both of these stations.");
+
 	}
 	
 	public List<Tubeway> getSections()

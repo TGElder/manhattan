@@ -5,6 +5,7 @@ import java.util.HashSet;
 import elder.manhattan.Block;
 import elder.manhattan.Simulation;
 import elder.manhattan.Station;
+import elder.network.Node;
 
 
 public class StationCoverageLayer extends SimulationLayer
@@ -22,10 +23,12 @@ public class StationCoverageLayer extends SimulationLayer
 		HashSet<Block> coverage = new HashSet<Block> ();
 	
 		
-		for (Station station : simulation.getCity().getStations())
+		for (Node node : simulation.getCity().getRailwayNodes())
 		{
-			if (station.getBlock().getStation()==station)
+			if (node instanceof Station)
 			{
+				Station station = (Station)node; 
+				
 				coverage.add(station.getBlock());
 				
 				for (Block block : station.getBlock().getNeighbours())

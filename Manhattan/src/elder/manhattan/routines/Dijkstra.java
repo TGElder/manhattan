@@ -5,11 +5,13 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.PriorityQueue;
 
+import elder.manhattan.RailwayNode;
 import elder.manhattan.Routine;
 import elder.manhattan.Simulation;
 import elder.manhattan.Station;
 import elder.manhattan.Tubeway;
 import elder.network.Edge;
+import elder.network.Node;
 
 public class Dijkstra implements Routine
 {
@@ -21,23 +23,23 @@ public class Dijkstra implements Routine
 	@Override
 	public String run(Simulation simulation)
 	{
-		int noStations = simulation.getCity().getStations().size();
+		int noNodes = simulation.getCity().getRailwayNodes().size();
 		
-		List<Station> stations = simulation.getCity().getStations();
+		List<RailwayNode> nodes = simulation.getCity().getRailwayNodes();
 		
-		int [] open = new int[noStations];
-		int [] closed = new int[noStations];
+		int [] open = new int[noNodes];
+		int [] closed = new int[noNodes];
 	
-		final double [] distances = new double[noStations];
+		final double [] distances = new double[noNodes];
 		
-		this.directions = new Tubeway[noStations][noStations];
-		this.distances = new double[noStations][noStations];
+		this.directions = new Tubeway[noNodes][noNodes];
+		this.distances = new double[noNodes][noNodes];
 		
-		PriorityQueue<Station> openList = new PriorityQueue<Station> (new Comparator<Station>() 
+		PriorityQueue<RailwayNode> openList = new PriorityQueue<RailwayNode> (new Comparator<RailwayNode>() 
 		{
 
 			@Override
-			public int compare(Station a, Station b)
+			public int compare(RailwayNode a, RailwayNode b)
 			{
 				if (distances[a.getIndex()]<distances[b.getIndex()])
 				{
@@ -58,25 +60,25 @@ public class Dijkstra implements Routine
 		
 		int session=0;
 		
-		for (int s=0; s<noStations; s++)
+		for (int s=0; s<noNodes; s++)
 		{
-			if (stations.get(s).getBlock().getStation()==stations.get(s)) // Not a platform
+			if (nodes.get(s) instanceof Station) // Not a platform
 			{
 			
 				session++;
 				
 				init(distances,Double.POSITIVE_INFINITY);
-				final Tubeway [] directions = new Tubeway[noStations];
+				final Tubeway [] directions = new Tubeway[noNodes];
 	
 				openList.clear();
 				
-				openList.add(stations.get(s));
+				openList.add(nodes.get(s));
 				open[s] = session;
 	
 				distances[s] = 0;
 				directions[s] = null;
 				
-				Station focus;
+				RailwayNode focus;
 				
 				while ((focus = openList.poll())!=null)
 				{
@@ -112,7 +114,7 @@ public class Dijkstra implements Routine
 					closed[focus.getIndex()] = session;
 				}
 				
-				for (int s2=0; s2<noStations; s2++)
+				for (int s2=0; s2<noNodes; s2++)
 				{
 					this.directions[s][s2] = directions[s2];
 					this.distances[s][s2] = distances[s2];

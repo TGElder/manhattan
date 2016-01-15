@@ -3,6 +3,7 @@ package elder.manhattan.layers;
 import elder.manhattan.Simulation;
 import elder.manhattan.Station;
 import elder.network.Edge;
+import elder.network.Node;
 
 
 public class TubewayLayer extends SimulationLayer
@@ -17,11 +18,10 @@ public class TubewayLayer extends SimulationLayer
 	public void draw(Simulation simulation)
 	{
 				
-		
-		
-		for (Station station : simulation.getCity().getStations())
+
+		for (Node node : simulation.getCity().getRailwayNodes())
 		{
-			for (Edge edge : station.getEdges())
+			for (Edge edge : node.getEdges())
 			{
 				drawLine(edge,0f,0f,1f,3f,false);
 			}

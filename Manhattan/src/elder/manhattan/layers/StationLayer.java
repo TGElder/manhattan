@@ -2,6 +2,7 @@ package elder.manhattan.layers;
 
 import elder.manhattan.Simulation;
 import elder.manhattan.Station;
+import elder.network.Node;
 
 
 public class StationLayer extends SimulationLayer
@@ -16,13 +17,20 @@ public class StationLayer extends SimulationLayer
 	public void draw(Simulation simulation)
 	{
 				
-		for (Station station : simulation.getCity().getStations())
+		for (Node node : simulation.getCity().getRailwayNodes())
 		{
-			if (station.getBlock().getStation()==station)
+			if (node instanceof Station)
 			{
-				drawPoint(station,0f,0f,0f,6f);
-				drawPoint(station,1f,1f,1f,4f);
+				Station station = (Station)node;
+				
+				if (station.getBlock().getStation()==station)
+				{
+					drawPoint(station,0f,0f,0f,6f);
+					drawPoint(station,1f,1f,1f,4f);
+				}
 			}
+			
+			
 		}
 		
 	}
