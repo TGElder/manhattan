@@ -19,7 +19,7 @@ import elder.manhattan.City;
 import elder.manhattan.Line;
 import elder.manhattan.Service;
 import elder.manhattan.Simulation;
-import elder.manhattan.Tube;
+import elder.manhattan.Track;
 import elder.manhattan.graphics.CityDrawer;
 import elder.manhattan.graphics.CityDrawerLayer;
 import elder.manhattan.layers.BlockLayer;
@@ -157,8 +157,8 @@ public class Controls extends JFrame
 		
 		//sim.run(new CreateTestTubes(),false);
 		
-		TubeBuilder tubeBuilder = new TubeBuilder();
-		selector.getSelectedBlock().addListener(tubeBuilder);
+		TrackBuilder trackBuilder = new TrackBuilder();
+		selector.getSelectedBlock().addListener(trackBuilder);
 		
 		ServiceBuilder serviceBuilder = new ServiceBuilder(sim.getCity());
 		selector.getSelectedBlock().addListener(serviceBuilder);
@@ -233,12 +233,12 @@ public class Controls extends JFrame
 		
 	
 		
-		cityDrawer.addLayer(tubeBuilder);
+		cityDrawer.addLayer(trackBuilder);
 		cityDrawer.addLayer(stationBuilder);
 		cityDrawer.addLayer(serviceBuilder);
 
 
-		sim.addRoutine(tubeBuilder);
+		sim.addRoutine(trackBuilder);
 		sim.addRoutine(stationBuilder);
 		sim.addRoutine(serviceBuilder);
 
@@ -255,12 +255,12 @@ public class Controls extends JFrame
 		
 
 		List<Mode> modes = new ArrayList<Mode> ();
-		modes.add(tubeBuilder);
+		modes.add(trackBuilder);
 		modes.add(stationBuilder);
 		modes.add(serviceBuilder);
 		
 		
-		sim.addPauseRoutine(tubeBuilder);
+		sim.addPauseRoutine(trackBuilder);
 		sim.addPauseRoutine(stationBuilder);
 		sim.addPauseRoutine(serviceBuilder);
 		
@@ -274,7 +274,7 @@ public class Controls extends JFrame
 
 		ModeManager manager = new ModeManager();
 		cityDrawer.addMouseListener(manager);
-		manager.setMode(tubeBuilder);
+		manager.setMode(trackBuilder);
 
 		cityDrawer.addLayer(selectedBlock);
 		

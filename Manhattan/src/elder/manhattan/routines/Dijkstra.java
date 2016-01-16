@@ -9,14 +9,14 @@ import elder.manhattan.RailwayNode;
 import elder.manhattan.Routine;
 import elder.manhattan.Simulation;
 import elder.manhattan.Station;
-import elder.manhattan.Tubeway;
+import elder.manhattan.Section;
 import elder.network.Edge;
 import elder.network.Node;
 
 public class Dijkstra implements Routine
 {
 
-	private Tubeway [][] directions;
+	private Section [][] directions;
 	private double [][] distances;
 
 	
@@ -32,7 +32,7 @@ public class Dijkstra implements Routine
 	
 		final double [] distances = new double[noNodes];
 		
-		this.directions = new Tubeway[noNodes][noNodes];
+		this.directions = new Section[noNodes][noNodes];
 		this.distances = new double[noNodes][noNodes];
 		
 		PriorityQueue<RailwayNode> openList = new PriorityQueue<RailwayNode> (new Comparator<RailwayNode>() 
@@ -68,7 +68,7 @@ public class Dijkstra implements Routine
 				session++;
 				
 				init(distances,Double.POSITIVE_INFINITY);
-				final Tubeway [] directions = new Tubeway[noNodes];
+				final Section [] directions = new Section[noNodes];
 	
 				openList.clear();
 				
@@ -84,7 +84,7 @@ public class Dijkstra implements Routine
 				{
 					for (Edge edge : focus.getEdges())
 					{
-						Tubeway tube = (Tubeway)edge;
+						Section tube = (Section)edge;
 						Station neighbour  = tube.getTo();
 						
 						double focusDistance = distances[focus.getIndex()] + (tube.length/tube.getSpeed());
@@ -133,7 +133,7 @@ public class Dijkstra implements Routine
 		}
 	}
 	
-	public Tubeway [][] getDirections()
+	public Section [][] getDirections()
 	{
 		return directions;
 	}
@@ -144,13 +144,13 @@ public class Dijkstra implements Routine
 		return distances;
 	}
 	
-	public List<Tubeway> getPath(Station from, Station to)
+	public List<Section> getPath(Station from, Station to)
 	{
 		int focus = from.getIndex();
 		
-		Tubeway edge;
+		Section edge;
 		
-		List<Tubeway> out = new ArrayList<Tubeway> ();
+		List<Section> out = new ArrayList<Section> ();
 		
 		while ((edge = getDirections()[to.getIndex()][focus])!=null)
 		{

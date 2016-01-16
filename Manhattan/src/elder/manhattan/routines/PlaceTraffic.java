@@ -12,8 +12,8 @@ import elder.manhattan.RailwayNode;
 import elder.manhattan.Routine;
 import elder.manhattan.Simulation;
 import elder.manhattan.Station;
-import elder.manhattan.Tube;
-import elder.manhattan.Tubeway;
+import elder.manhattan.Track;
+import elder.manhattan.Section;
 import elder.network.Edge;
 
 public class PlaceTraffic implements Routine
@@ -37,9 +37,9 @@ public class PlaceTraffic implements Routine
 		{
 			for (Edge edge : node.getEdges())
 			{
-				for (Tube tube : ((Tubeway)edge).getTubes())
+				for (Track track : ((Section)edge).getTubes())
 				{
-					tube.resetTraffic();
+					track.resetTraffic();
 				}
 				
 			}
@@ -55,7 +55,7 @@ public class PlaceTraffic implements Routine
 		{
 			for (Edge edge : block.getEdges())
 			{
-				((Tube)edge).resetTraffic();
+				((Track)edge).resetTraffic();
 			}
 			
 			if (!block.getResidents().isEmpty())
@@ -108,18 +108,18 @@ public class PlaceTraffic implements Routine
 					
 					if (from!=null)
 					{
-						List<Tubeway> path = dijkstra.getPath(from, to);
+						List<Section> path = dijkstra.getPath(from, to);
 						//List<Tubeway> path = Collections.emptyList();
 													
 						if (path!=null)
 						{
 							
-							for (Tubeway tubeway : path)
+							for (Section section : path)
 							{
-								for (Tube tube : tubeway.getTubes())
+								for (Track track : section.getTubes())
 								{
-									tube.addTraffic(commuters[b]);
-									maxTraffic = Math.max(maxTraffic, tube.getTraffic());
+									track.addTraffic(commuters[b]);
+									maxTraffic = Math.max(maxTraffic, track.getTraffic());
 	
 								}
 								

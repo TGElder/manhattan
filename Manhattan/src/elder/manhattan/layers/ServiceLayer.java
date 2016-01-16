@@ -3,8 +3,8 @@ package elder.manhattan.layers;
 import elder.manhattan.Line;
 import elder.manhattan.Service;
 import elder.manhattan.Simulation;
-import elder.manhattan.Tube;
-import elder.manhattan.Tubeway;
+import elder.manhattan.Track;
+import elder.manhattan.Section;
 import elder.manhattan.routines.PlaceTraffic;
 
 
@@ -30,20 +30,20 @@ public class ServiceLayer extends SimulationLayer
 			
 			for (Service service : line.getServices())
 			{
-				for (Tubeway section : service.getSections())
+				for (Section section : service.getSections())
 				{
 	
 					
-					for (Tube tube : section.getTubes())
+					for (Track track : section.getTubes())
 					{
 						float width=1;
 
 						if (traffic.getMaxTraffic()>0)
 						{
-							width += (tube.getTraffic()*9f)/(traffic.getMaxTraffic()*1f);
+							width += (track.getTraffic()*9f)/(traffic.getMaxTraffic()*1f);
 						}
 						
-						drawLine(tube,R,G,B,width,false);
+						drawLine(track,R,G,B,width,false);
 					}
 				}
 			}

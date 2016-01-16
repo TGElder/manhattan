@@ -7,17 +7,17 @@ import java.util.PriorityQueue;
 
 import elder.network.Edge;
 
-public class TubePathfinder
+public class TrackPathfinder
 {
 
 	private final City city;
 	
-	public TubePathfinder(City city)
+	public TrackPathfinder(City city)
 	{
 		this.city = city;
 	}
 	
-	public List<Tube> findPath (Block from, Block to)
+	public List<Track> findPath (Block from, Block to)
 	{
 			
 		if (from==to)
@@ -31,7 +31,7 @@ public class TubePathfinder
 		boolean [] open = new boolean[noBlocks];
 		boolean [] closed = new boolean[noBlocks];
 		
-		final Tube [] directions = new Tube[noBlocks];
+		final Track [] directions = new Track[noBlocks];
 		final double [] distances = new double[noBlocks];
 		
 		PriorityQueue<Block> openList = new PriorityQueue<Block> (new Comparator<Block>() 
@@ -78,10 +78,10 @@ public class TubePathfinder
 			
 			for (Edge edge : focus.getEdges())
 			{
-				Tube tube = (Tube)edge;
-				Block neighbour  = tube.getTo();
+				Track track = (Track)edge;
+				Block neighbour  = track.getTo();
 				
-				double focusDistance = distances[focus.getIndex()] + (tube.length/tube.getSpeed());
+				double focusDistance = distances[focus.getIndex()] + (track.length/track.getSpeed());
 				
 				if (!closed[neighbour.getIndex()])
 				{
@@ -96,7 +96,7 @@ public class TubePathfinder
 							open[neighbour.getIndex()] = true;
 						}
 						
-						directions[neighbour.getIndex()] = tube.getReverse();
+						directions[neighbour.getIndex()] = track.getReverse();
 						distances[neighbour.getIndex()] = focusDistance;
 						
 						openList.add(neighbour);
@@ -119,22 +119,22 @@ public class TubePathfinder
 
 	}
 	
-	private List<Tube> getPath(Block from, Block to, Tube[] directions, double[] distances)
+	private List<Track> getPath(Block from, Block to, Track[] directions, double[] distances)
 	{
 
-		List<Tube> tubes = new ArrayList<Tube> ();
+		List<Track> tracks = new ArrayList<Track> ();
 		
 		Block focus = to;
 
 		while (focus!=from)
 		{
-			Tube tube = directions[focus.getIndex()];
-			focus = tube.getTo();
+			Track track = directions[focus.getIndex()];
+			focus = track.getTo();
 			
-			tubes.add(tube);
+			tracks.add(track);
 		}
 		
-		return tubes;
+		return tracks;
 
 	}
 	

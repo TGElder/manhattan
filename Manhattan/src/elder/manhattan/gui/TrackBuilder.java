@@ -10,22 +10,23 @@ import elder.manhattan.Routine;
 import elder.manhattan.SelectionListener;
 import elder.manhattan.Simulation;
 import elder.manhattan.Station;
-import elder.manhattan.Tube;
-import elder.manhattan.Tubeway;
+import elder.manhattan.Track;
+import elder.manhattan.Section;
 import elder.manhattan.graphics.CityDrawerLayer;
 import elder.network.Edge;
 import elder.network.Node;
 
-public class TubeBuilder extends Mode implements SelectionListener<Block>,Routine
+public class TrackBuilder extends Mode implements SelectionListener<Block>, Routine
 {
 	
-	private final List<Tube> newTubes = new ArrayList<Tube> ();
+	private final List<Block> fromBlocks = new ArrayList<Block> ();
+	private final List<Block> toBlocks = new ArrayList<Block> ();
 	private Block from=null;
 	private Block to=null;
 	
-	public TubeBuilder()
+	public TrackBuilder()
 	{
-		super("Tube Builder");
+		super("Track Builder");
 	}
 	
 	@Override
@@ -47,14 +48,8 @@ public class TubeBuilder extends Mode implements SelectionListener<Block>,Routin
 	{
 		if ( (from!=null&&to!=null) && (from!=to))
 		{
-			Tube fromTo = new Tube(from,to,1);
-			Tube toFrom = new Tube(to,from,1);
-			
-			fromTo.setReverse(toFrom);
-			toFrom.setReverse(fromTo);
-			
-			newTubes.add(fromTo);
-			newTubes.add(toFrom);
+			fromBlocks.add(from);
+			toBlocks.add(to);
 		}
 		
 		from = to;
@@ -111,49 +106,27 @@ public class TubeBuilder extends Mode implements SelectionListener<Block>,Routin
 	public String run(Simulation simulation)
 	{
 		
-		for (Tube tube : newTubes)
+		for (int b=0; b<fromBlocks.size(); b++)
 		{
-			Edge existing;
-			if ((existing = tube.getFrom().getEdge(tube.getTo()))!=null)
+			try
 			{
-				if (!hasService(tube,simulation))
-				{
-					tube.getFrom().removeEdge(existing);
-				}
-				
-				
-			}
-			else
+				simulation.getCity().toggleTrack(fromBlocks.get(b), toBlocks.get(b));
+			} 
+			catch (Exception e)
 			{
-				tube.getFrom().addEdge(tube);
+				System.out.println(e.getMessage());
 			}
 		}
 		
-		newTubes.clear();
+		fromBlocks.clear();
+		toBlocks.clear();
 		
 		refresh();
 		
 		return null;
 	}
 	
-	private boolean hasService(Tube tube, Simulation simulation)
-	{
-		for (Node node : simulation.getCity().getRailwayNodes())
-		{
-			for (Edge edge : node.getEdges())
-			{
-				Tubeway tubeway = (Tubeway)edge;
-				for (Tube tubewayTube: tubeway.getTubes())
-				{
-					if (tubewayTube.equals(tube))
-					{
-						return true;
-					}
-				}
-			}
-		}
-		return false;
-	}
+	
 
 	@Override
 	public void draw()

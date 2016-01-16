@@ -93,22 +93,16 @@ public class StationBuilder extends Mode implements SelectionListener<Block>,Rou
 	{
 		for (Block block : toBuild )
 		{
-			if (!block.hasStation())
+			
+			try
 			{
-				simulation.getCity().createStation(block);
+				simulation.getCity().toggleStation(block);
 			}
-			else
+			catch (Exception e)
 			{
-				if (block.getStation().getEdges().isEmpty())
-				{
-					System.out.println("Deleting station at "+block);
-					simulation.getCity().deleteStation(block);
-				}
-				else
-				{
-					System.out.println("Cannot delete station, service calls here");
-				}
+				System.out.println(e);
 			}
+		
 		}
 		
 		toBuild.clear();

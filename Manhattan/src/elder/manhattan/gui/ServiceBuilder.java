@@ -12,8 +12,8 @@ import elder.manhattan.SelectionListener;
 import elder.manhattan.Service;
 import elder.manhattan.Simulation;
 import elder.manhattan.Station;
-import elder.manhattan.Tube;
-import elder.manhattan.TubePathfinder;
+import elder.manhattan.Track;
+import elder.manhattan.TrackPathfinder;
 import elder.manhattan.graphics.CityDrawerLayer;
 import elder.network.Edge;
 
@@ -26,7 +26,7 @@ public class ServiceBuilder extends Mode implements SelectionListener<Block>,Rou
 
 	
 	private final City city;
-	private final TubePathfinder tubePathfinder;
+	private final TrackPathfinder trackPathfinder;
 		
 	private Service service;
 	
@@ -34,7 +34,7 @@ public class ServiceBuilder extends Mode implements SelectionListener<Block>,Rou
 	{
 		super("Service Builder");
 		this.city = city;
-		tubePathfinder = new TubePathfinder(city);
+		trackPathfinder = new TrackPathfinder(city);
 	}
 	
 	@Override
@@ -89,23 +89,18 @@ public class ServiceBuilder extends Mode implements SelectionListener<Block>,Rou
 				else
 				{
 				
-					List<Tube> tubes = tubePathfinder.findPath(from.getBlock(), to.getBlock());
+					List<Track> tracks = trackPathfinder.findPath(from.getBlock(), to.getBlock());
 					
-					if (tubes!=null)
+					if (tracks!=null)
 					{
-						Tube [] tubeArray = new Tube [tubes.size()];
-						Tube [] reverseArray = new Tube [tubes.size()];
-						double length=0;
-						
-						for (int t=0; t<tubes.size(); t++)
+						try
 						{
-							tubeArray[t] = tubes.get(t);
-							reverseArray[t] = tubes.get((tubes.size()-1)-t).getReverse();
-							length += tubes.get(t).length;
+							service.link(city, from, to, tracks);
 						}
-						
-						System.out.println("Linking "+from+" to "+to+" on "+service);
-						service.link(city, from, to, tubeArray, reverseArray,length);
+						catch (Exception e)
+						{
+							System.out.println(e.getMessage());
+						}
 					}
 					
 				}
@@ -177,16 +172,16 @@ public class ServiceBuilder extends Mode implements SelectionListener<Block>,Rou
 	
 			if ( (from!=null&&to!=null) && (from!=to))
 			{
-				List<Tube> tubes = tubePathfinder.findPath(from.getBlock(), to.getBlock());
+				List<Track> tracks = trackPathfinder.findPath(from.getBlock(), to.getBlock());
 				
-				if (tubes!=null)
+				if (tracks!=null)
 				{
-					for (Tube tube: tubes)
+					for (Track track: tracks)
 					{
 						float R=service.getLine().getColor().getRed()/255f;
 						float G=service.getLine().getColor().getGreen()/255f;
 						float B=service.getLine().getColor().getBlue()/255f;
-						drawLine(tube,R,G,B,4f,false);
+						drawLine(track,R,G,B,4f,false);
 					}
 				}
 			}
@@ -204,6 +199,7 @@ public class ServiceBuilder extends Mode implements SelectionListener<Block>,Rou
 	public void setService(Service service)
 	{
 		this.service = service;
+		reset();
 	}
 
 	@Override

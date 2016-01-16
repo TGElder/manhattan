@@ -5,6 +5,7 @@ import java.util.List;
 
 import elder.geometry.Point;
 import elder.geometry.Polygon;
+import elder.network.Edge;
 import elder.network.Node;
 
 public class City
@@ -135,48 +136,117 @@ public class City
 		return railwayNodes;
 	}
 	
-	public void createStation(Block block)
+	public void createTrack(Block from, Block to)
 	{
-		if (!block.hasStation())
-		{
+		assert(!from.hasEdge(to));
 		
-			if (!block.isBuilt())
-			{
-				block.setBuilt(true);
-			}
-			
-			Station station = new Station(block);
-			block.setStation(station);
-			railwayNodes.add(station);
-			
-			
+		Track fromTo = new Track(from,to,1);
+		Track toFrom = new Track(to,from,1);
+		
+		fromTo.setReverse(toFrom);
+		toFrom.setReverse(fromTo);
+		
+		from.addEdge(fromTo);
+		to.addEdge(toFrom);
+		
+	}
+	
+	public void removeTrack(Block from, Block to) throws Exception
+	{		
+		Track track = (Track)(from.getEdge(to));
+		
+		assert(track!=null);
+		
+		if (!hasService(track))
+		{
+			from.removeEdge(track);
+			to.removeEdge(track.getReverse());
+		}
+		else
+		{
+			throw new Exception("Cannot remove track with service running over it.");
+		}
+		
+		
+	}
+	
+	public void toggleTrack(Block from, Block to) throws Exception
+	{
+		Track track = (Track)(from.getEdge(to));
+		
+		if (track==null)
+		{
+			createTrack(from,to);
+		}
+		else
+		{
+			removeTrack(from,to);
 		}
 	}
 	
-	public boolean deleteStation(Block block)
+	public void createStation(Block block)
 	{
-		if (block.hasStation())
+		assert(!block.hasStation());
+		
+		if (!block.isBuilt())
 		{
-			Station station = block.getStation();
-			if (station.getEdges().isEmpty())
-			{
-				System.out.println("Removing station from "+block);
-				assert(railwayNodes.contains(station));
-				railwayNodes.remove(station);
-				System.out.println(railwayNodes);
-				block.setStation(null);
+			block.setBuilt(true);
+		}
+		
+		Station station = new Station(block);
+		block.setStation(station);
+		railwayNodes.add(station);
+	}
+	
+	public void removeStation(Block block) throws Exception
+	{
+		assert(block.hasStation());
+		
+		Station station = block.getStation();
+		if (station.getEdges().isEmpty())
+		{
+			assert(railwayNodes.contains(station));
+			railwayNodes.remove(station);
+			block.setStation(null);
 
-			}
-			else
-			{
-				System.out.println("Can't remove station, service calling at station.");
-
-				return false;
-			}
+		}
+		else
+		{
+			throw new Exception("Cannot remove station with services calling at it.");
 
 		}
 		
-		return true;
+	}
+	
+	public void toggleStation(Block block) throws Exception
+	{
+		if (!block.hasStation())
+		{
+			createStation(block);
+		}
+		else
+		{
+			removeStation(block);
+		}
+	}
+	
+	private boolean hasService(Track track)
+	{
+		for (RailwayNode node : getRailwayNodes())
+		{
+			for (Edge edge : node.getEdges())
+			{
+				Section section = (Section)edge;
+				for (Track other : section.getTubes())
+				{
+					if (other.equals(track))
+					{
+						return true;
+					}
+				}
+			}
+		}
+		return false;
 	}
 	
 

@@ -2,14 +2,14 @@ package elder.manhattan;
 
 import elder.network.SpeedEdge;
 
-public class Tube extends SpeedEdge
+public class Track extends SpeedEdge
 {
 	
-	private Tube reverse;
+	private Track reverse;
 	
 	int traffic=0;
 
-	public Tube(Block from, Block to, double speed)
+	public Track(Block from, Block to, double speed)
 	{
 		super(from,to,speed);
 	}
@@ -24,12 +24,12 @@ public class Tube extends SpeedEdge
 		return (Block)b;
 	}
 
-	public Tube getReverse()
+	public Track getReverse()
 	{
 		return reverse;
 	}
 
-	public void setReverse(Tube reverse)
+	public void setReverse(Track reverse)
 	{
 		this.reverse = reverse;
 	}
