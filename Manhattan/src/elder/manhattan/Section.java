@@ -1,9 +1,10 @@
 package elder.manhattan;
 
 
+import elder.network.Edge;
 import elder.network.SpeedEdge;
 
-public class Section extends SpeedEdge
+public class Section extends Edge
 {
 	
 	
@@ -14,12 +15,14 @@ public class Section extends SpeedEdge
 	public final double length;
 	
 	private double delay;	
+	private double speed;
 
 	public Section(RailwayNode a, RailwayNode b, Service service, double speed, Track[] track)
 	{
-		super(a, b, speed);
+		super(a, b);
 		this.track = track;
 		this.service = service;
+		this.speed = speed;
 		
 		double length=0;
 		
@@ -38,7 +41,7 @@ public class Section extends SpeedEdge
 	
 	public double getTime()
 	{
-		return (length/getSpeed()) + delay;
+		return (length/speed) + delay;
 	}
 	
 	public Section createReverse()
@@ -50,7 +53,7 @@ public class Section extends SpeedEdge
 			reverse[t] = track[(track.length - 1) - t];
 		}
 		
-		return new Section((RailwayNode)b,(RailwayNode)a,service,getSpeed(),reverse);
+		return new Section((RailwayNode)b,(RailwayNode)a,service,speed,reverse);
 	}
 	
 	public Station getFrom()
