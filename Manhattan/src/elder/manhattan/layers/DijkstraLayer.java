@@ -2,7 +2,7 @@ package elder.manhattan.layers;
 
 import elder.manhattan.Block;
 import elder.manhattan.SelectionListener;
-import elder.manhattan.Track;
+import elder.manhattan.SingleEdge;
 import elder.manhattan.Section;
 import elder.manhattan.graphics.CityDrawerLayer;
 import elder.manhattan.routines.Dijkstra;
@@ -51,9 +51,9 @@ public class DijkstraLayer extends CityDrawerLayer implements SelectionListener<
 							{
 								if (section!=null)
 								{
-									for (Track track : section.getTubes())
+									for (SingleEdge singleEdge : section.getEdges())
 									{
-											drawLine(track,1f,1f,1f,6f,false);
+											drawLine(singleEdge,1f,1f,1f,6f,false);
 									}
 								}
 							}

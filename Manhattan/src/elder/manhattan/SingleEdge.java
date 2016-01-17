@@ -1,36 +1,26 @@
 package elder.manhattan;
 
 import elder.network.Edge;
-import elder.network.SpeedEdge;
+import elder.network.Node;
 
-public class Track extends Edge
+public class SingleEdge extends Edge
 {
 	
-	private Track reverse;
+	private SingleEdge reverse;
 	
-	int traffic=0;
+	private int traffic=0;
 
-	public Track(Block from, Block to)
+	public SingleEdge(Node from, Node to)
 	{
 		super(from,to);
 	}
 
-	public Block getFrom()
-	{
-		return (Block)a;
-	}
-
-	public Block getTo()
-	{
-		return (Block)b;
-	}
-
-	public Track getReverse()
+	public SingleEdge getReverse()
 	{
 		return reverse;
 	}
 
-	public void setReverse(Track reverse)
+	public void setReverse(SingleEdge reverse)
 	{
 		this.reverse = reverse;
 	}

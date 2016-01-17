@@ -3,7 +3,7 @@ package elder.manhattan.layers;
 import elder.manhattan.Line;
 import elder.manhattan.Service;
 import elder.manhattan.Simulation;
-import elder.manhattan.Track;
+import elder.manhattan.SingleEdge;
 import elder.manhattan.Section;
 import elder.manhattan.routines.PlaceTraffic;
 
@@ -34,16 +34,16 @@ public class ServiceLayer extends SimulationLayer
 				{
 	
 					
-					for (Track track : section.getTubes())
+					for (SingleEdge singleEdge : section.getEdges())
 					{
 						float width=1;
 
 						if (traffic.getMaxTraffic()>0)
 						{
-							width += (track.getTraffic()*9f)/(traffic.getMaxTraffic()*1f);
+							width += (singleEdge.getTraffic()*9f)/(traffic.getMaxTraffic()*1f);
 						}
 						
-						drawLine(track,R,G,B,width,false);
+						drawLine(singleEdge,R,G,B,width,false);
 					}
 				}
 			}

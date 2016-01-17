@@ -12,8 +12,8 @@ import elder.manhattan.SelectionListener;
 import elder.manhattan.Service;
 import elder.manhattan.Simulation;
 import elder.manhattan.Station;
-import elder.manhattan.Track;
-import elder.manhattan.TrackPathfinder;
+import elder.manhattan.SingleEdge;
+import elder.manhattan.Pathfinder;
 import elder.manhattan.graphics.CityDrawerLayer;
 import elder.network.Edge;
 
@@ -26,7 +26,7 @@ public class ServiceBuilder extends Mode implements SelectionListener<Block>,Rou
 
 	
 	private final City city;
-	private final TrackPathfinder trackPathfinder;
+	private final Pathfinder pathfinder;
 		
 	private Service service;
 	
@@ -34,7 +34,7 @@ public class ServiceBuilder extends Mode implements SelectionListener<Block>,Rou
 	{
 		super("Service Builder");
 		this.city = city;
-		trackPathfinder = new TrackPathfinder(city);
+		pathfinder = new Pathfinder(city);
 	}
 	
 	@Override
@@ -89,13 +89,13 @@ public class ServiceBuilder extends Mode implements SelectionListener<Block>,Rou
 				else
 				{
 				
-					List<Track> tracks = trackPathfinder.findPath(from.getBlock(), to.getBlock());
+					List<SingleEdge> singleEdges = pathfinder.findPath(from.getBlock(), to.getBlock());
 					
-					if (tracks!=null)
+					if (singleEdges!=null)
 					{
 						try
 						{
-							service.link(city, from, to, tracks);
+							service.link(city, from, to, singleEdges);
 						}
 						catch (Exception e)
 						{
@@ -172,16 +172,16 @@ public class ServiceBuilder extends Mode implements SelectionListener<Block>,Rou
 	
 			if ( (from!=null&&to!=null) && (from!=to))
 			{
-				List<Track> tracks = trackPathfinder.findPath(from.getBlock(), to.getBlock());
+				List<SingleEdge> singleEdges = pathfinder.findPath(from.getBlock(), to.getBlock());
 				
-				if (tracks!=null)
+				if (singleEdges!=null)
 				{
-					for (Track track: tracks)
+					for (SingleEdge singleEdge: singleEdges)
 					{
 						float R=service.getLine().getColor().getRed()/255f;
 						float G=service.getLine().getColor().getGreen()/255f;
 						float B=service.getLine().getColor().getBlue()/255f;
-						drawLine(track,R,G,B,4f,false);
+						drawLine(singleEdge,R,G,B,4f,false);
 					}
 				}
 			}

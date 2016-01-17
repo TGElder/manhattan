@@ -75,7 +75,7 @@ public class Service
 		return name;
 	}
 	
-	public void link(City city, Station a, Station b, List<Track> track) throws Exception
+	public void link(City city, Station a, Station b, List<SingleEdge> singleEdge) throws Exception
 	{
 		
 		
@@ -95,7 +95,7 @@ public class Service
 				platformB = b.addPlatform(this);
 			}
 
-			Section ab = new Section(platformA,platformB,this,2,track.toArray(new Track[track.size()]));
+			Section ab = new Section(platformA,platformB,this,2,singleEdge.toArray(new SingleEdge[singleEdge.size()]));
 			Section ba = ab.createReverse();
 			
 			platformA.addEdge(ab);

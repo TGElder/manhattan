@@ -140,8 +140,8 @@ public class City
 	{
 		assert(!from.hasEdge(to));
 		
-		Track fromTo = new Track(from,to);
-		Track toFrom = new Track(to,from);
+		SingleEdge fromTo = new SingleEdge(from,to);
+		SingleEdge toFrom = new SingleEdge(to,from);
 		
 		fromTo.setReverse(toFrom);
 		toFrom.setReverse(fromTo);
@@ -153,14 +153,14 @@ public class City
 	
 	public void removeTrack(Block from, Block to) throws Exception
 	{		
-		Track track = (Track)(from.getEdge(to));
+		SingleEdge singleEdge = (SingleEdge)(from.getEdge(to));
 		
-		assert(track!=null);
+		assert(singleEdge!=null);
 		
-		if (!hasService(track))
+		if (!hasService(singleEdge))
 		{
-			from.removeEdge(track);
-			to.removeEdge(track.getReverse());
+			from.removeEdge(singleEdge);
+			to.removeEdge(singleEdge.getReverse());
 		}
 		else
 		{
@@ -172,9 +172,9 @@ public class City
 	
 	public void toggleTrack(Block from, Block to) throws Exception
 	{
-		Track track = (Track)(from.getEdge(to));
+		SingleEdge singleEdge = (SingleEdge)(from.getEdge(to));
 		
-		if (track==null)
+		if (singleEdge==null)
 		{
 			createTrack(from,to);
 		}
@@ -230,16 +230,16 @@ public class City
 		}
 	}
 	
-	private boolean hasService(Track track)
+	private boolean hasService(SingleEdge singleEdge)
 	{
 		for (RailwayNode node : getRailwayNodes())
 		{
 			for (Edge edge : node.getEdges())
 			{
 				Section section = (Section)edge;
-				for (Track other : section.getTubes())
+				for (SingleEdge other : section.getEdges())
 				{
-					if (other.equals(track))
+					if (other.equals(singleEdge))
 					{
 						return true;
 					}

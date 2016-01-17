@@ -21,9 +21,9 @@ public class Platform extends RailwayNode
 		this.station = station;
 		this.service = service;
 		
-		down = new Section(station,this,service,1, new Track[] {});
+		down = new Section(station,this,service,1, new SingleEdge[] {});
 		down.setDelay(1);
-		up = new Section(this,station,service,1, new Track[] {});
+		up = new Section(this,station,service,1, new SingleEdge[] {});
 		up.setDelay(1);
 		
 		up.setReverse(down);

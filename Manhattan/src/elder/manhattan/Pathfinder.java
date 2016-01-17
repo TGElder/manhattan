@@ -7,17 +7,17 @@ import java.util.PriorityQueue;
 
 import elder.network.Edge;
 
-public class TrackPathfinder
+public class Pathfinder
 {
 
 	private final City city;
 	
-	public TrackPathfinder(City city)
+	public Pathfinder(City city)
 	{
 		this.city = city;
 	}
 	
-	public List<Track> findPath (Block from, Block to)
+	public List<SingleEdge> findPath (Block from, Block to)
 	{
 			
 		if (from==to)
@@ -31,7 +31,7 @@ public class TrackPathfinder
 		boolean [] open = new boolean[noBlocks];
 		boolean [] closed = new boolean[noBlocks];
 		
-		final Track [] directions = new Track[noBlocks];
+		final SingleEdge [] directions = new SingleEdge[noBlocks];
 		final double [] distances = new double[noBlocks];
 		
 		PriorityQueue<Block> openList = new PriorityQueue<Block> (new Comparator<Block>() 
@@ -78,10 +78,10 @@ public class TrackPathfinder
 			
 			for (Edge edge : focus.getEdges())
 			{
-				Track track = (Track)edge;
-				Block neighbour  = track.getTo();
+				SingleEdge singleEdge = (SingleEdge)edge;
+				Block neighbour  = (Block)(singleEdge.b);
 				
-				double focusDistance = distances[focus.getIndex()] + (track.length);
+				double focusDistance = distances[focus.getIndex()] + (singleEdge.length);
 				
 				if (!closed[neighbour.getIndex()])
 				{
@@ -96,7 +96,7 @@ public class TrackPathfinder
 							open[neighbour.getIndex()] = true;
 						}
 						
-						directions[neighbour.getIndex()] = track.getReverse();
+						directions[neighbour.getIndex()] = singleEdge.getReverse();
 						distances[neighbour.getIndex()] = focusDistance;
 						
 						openList.add(neighbour);
@@ -119,22 +119,22 @@ public class TrackPathfinder
 
 	}
 	
-	private List<Track> getPath(Block from, Block to, Track[] directions, double[] distances)
+	private List<SingleEdge> getPath(Block from, Block to, SingleEdge[] directions, double[] distances)
 	{
 
-		List<Track> tracks = new ArrayList<Track> ();
+		List<SingleEdge> singleEdges = new ArrayList<SingleEdge> ();
 		
 		Block focus = to;
 
 		while (focus!=from)
 		{
-			Track track = directions[focus.getIndex()];
-			focus = track.getTo();
+			SingleEdge singleEdge = directions[focus.getIndex()];
+			focus = (Block)(singleEdge.b);
 			
-			tracks.add(track);
+			singleEdges.add(singleEdge);
 		}
 		
-		return tracks;
+		return singleEdges;
 
 	}
 	

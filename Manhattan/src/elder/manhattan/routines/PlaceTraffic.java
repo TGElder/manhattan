@@ -12,7 +12,7 @@ import elder.manhattan.RailwayNode;
 import elder.manhattan.Routine;
 import elder.manhattan.Simulation;
 import elder.manhattan.Station;
-import elder.manhattan.Track;
+import elder.manhattan.SingleEdge;
 import elder.manhattan.Section;
 import elder.network.Edge;
 
@@ -37,9 +37,9 @@ public class PlaceTraffic implements Routine
 		{
 			for (Edge edge : node.getEdges())
 			{
-				for (Track track : ((Section)edge).getTubes())
+				for (SingleEdge singleEdge : ((Section)edge).getEdges())
 				{
-					track.resetTraffic();
+					singleEdge.resetTraffic();
 				}
 				
 			}
@@ -55,7 +55,7 @@ public class PlaceTraffic implements Routine
 		{
 			for (Edge edge : block.getEdges())
 			{
-				((Track)edge).resetTraffic();
+				((SingleEdge)edge).resetTraffic();
 			}
 			
 			if (!block.getResidents().isEmpty())
@@ -116,10 +116,10 @@ public class PlaceTraffic implements Routine
 							
 							for (Section section : path)
 							{
-								for (Track track : section.getTubes())
+								for (SingleEdge singleEdge : section.getEdges())
 								{
-									track.addTraffic(commuters[b]);
-									maxTraffic = Math.max(maxTraffic, track.getTraffic());
+									singleEdge.addTraffic(commuters[b]);
+									maxTraffic = Math.max(maxTraffic, singleEdge.getTraffic());
 	
 								}
 								
