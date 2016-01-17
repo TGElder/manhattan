@@ -1,7 +1,6 @@
 package elder.manhattan.layers;
 
 import elder.manhattan.Simulation;
-import elder.manhattan.Station;
 import elder.network.Edge;
 import elder.network.Node;
 

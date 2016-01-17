@@ -9,12 +9,6 @@ import elder.manhattan.Block;
 import elder.manhattan.Routine;
 import elder.manhattan.SelectionListener;
 import elder.manhattan.Simulation;
-import elder.manhattan.Station;
-import elder.manhattan.SingleEdge;
-import elder.manhattan.Section;
-import elder.manhattan.graphics.CityDrawerLayer;
-import elder.network.Edge;
-import elder.network.Node;
 
 public class TrackBuilder extends Mode implements SelectionListener<Block>, Routine
 {

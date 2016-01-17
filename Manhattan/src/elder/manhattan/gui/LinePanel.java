@@ -6,7 +6,6 @@ import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.List;
-import java.util.Vector;
 
 import javax.swing.BorderFactory;
 import javax.swing.DefaultListModel;
@@ -27,7 +26,6 @@ import javax.swing.event.ListSelectionListener;
 import elder.manhattan.City;
 import elder.manhattan.Line;
 import elder.manhattan.Selection;
-import elder.manhattan.graphics.CityDrawer;
 
 public class LinePanel extends JPanel 
 {

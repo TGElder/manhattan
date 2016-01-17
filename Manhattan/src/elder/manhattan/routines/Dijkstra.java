@@ -5,18 +5,17 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.PriorityQueue;
 
+import elder.manhattan.RailwayEdge;
 import elder.manhattan.RailwayNode;
 import elder.manhattan.Routine;
 import elder.manhattan.Simulation;
 import elder.manhattan.Station;
-import elder.manhattan.Section;
 import elder.network.Edge;
-import elder.network.Node;
 
 public class Dijkstra implements Routine
 {
 
-	private Section [][] directions;
+	private RailwayEdge [][] directions;
 	private double [][] distances;
 
 	
@@ -32,7 +31,7 @@ public class Dijkstra implements Routine
 	
 		final double [] distances = new double[noNodes];
 		
-		this.directions = new Section[noNodes][noNodes];
+		this.directions = new RailwayEdge[noNodes][noNodes];
 		this.distances = new double[noNodes][noNodes];
 		
 		PriorityQueue<RailwayNode> openList = new PriorityQueue<RailwayNode> (new Comparator<RailwayNode>() 
@@ -68,7 +67,7 @@ public class Dijkstra implements Routine
 				session++;
 				
 				init(distances,Double.POSITIVE_INFINITY);
-				final Section [] directions = new Section[noNodes];
+				final RailwayEdge [] directions = new RailwayEdge[noNodes];
 	
 				openList.clear();
 				
@@ -84,7 +83,7 @@ public class Dijkstra implements Routine
 				{
 					for (Edge edge : focus.getEdges())
 					{
-						Section tube = (Section)edge;
+						RailwayEdge tube = (RailwayEdge)edge;
 						Station neighbour  = tube.getTo();
 						
 						double focusDistance = distances[focus.getIndex()] + (tube.getTime());
@@ -133,7 +132,7 @@ public class Dijkstra implements Routine
 		}
 	}
 	
-	public Section [][] getDirections()
+	public RailwayEdge [][] getDirections()
 	{
 		return directions;
 	}
@@ -144,13 +143,13 @@ public class Dijkstra implements Routine
 		return distances;
 	}
 	
-	public List<Section> getPath(Station from, Station to)
+	public List<RailwayEdge> getPath(Station from, Station to)
 	{
 		int focus = from.getIndex();
 		
-		Section edge;
+		RailwayEdge edge;
 		
-		List<Section> out = new ArrayList<Section> ();
+		List<RailwayEdge> out = new ArrayList<RailwayEdge> ();
 		
 		while ((edge = getDirections()[to.getIndex()][focus])!=null)
 		{

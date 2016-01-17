@@ -1,5 +1,7 @@
 package bobjob;
 
+import java.awt.Font;
+
 import org.lwjgl.Sys;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
@@ -7,9 +9,6 @@ import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.DisplayMode;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.util.glu.GLU;
- 
- 
-import java.awt.Font;
  
 public class TTFTest {
     public static int width = 800, height = 600;

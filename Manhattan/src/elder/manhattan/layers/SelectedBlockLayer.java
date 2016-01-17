@@ -3,7 +3,6 @@ package elder.manhattan.layers;
 import elder.manhattan.Block;
 import elder.manhattan.SelectionListener;
 import elder.manhattan.graphics.CityDrawerLayer;
-import elder.network.Edge;
 
 public class SelectedBlockLayer extends CityDrawerLayer implements SelectionListener<Block>
 {

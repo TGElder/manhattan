@@ -6,7 +6,6 @@ import java.util.List;
 import elder.geometry.Point;
 import elder.geometry.Polygon;
 import elder.network.Edge;
-import elder.network.Node;
 
 public class City
 {
@@ -236,8 +235,8 @@ public class City
 		{
 			for (Edge edge : node.getEdges())
 			{
-				Section section = (Section)edge;
-				for (SingleEdge other : section.getEdges())
+				RailwayEdge railwayEdge = (RailwayEdge)edge;
+				for (SingleEdge other : railwayEdge.getEdges())
 				{
 					if (other.equals(singleEdge))
 					{

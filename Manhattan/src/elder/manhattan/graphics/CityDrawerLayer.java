@@ -1,11 +1,8 @@
 package elder.manhattan.graphics;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.ConcurrentModificationException;
 import java.util.List;
 import java.util.Random;
-
-import javax.swing.SwingUtilities;
 
 import elder.geometry.Line;
 import elder.geometry.Point;

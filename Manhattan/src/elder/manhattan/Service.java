@@ -11,7 +11,7 @@ public class Service
 	private String name;
 	private Line line;
 	
-	private final List<Section> sections = new ArrayList<Section> ();
+	private final List<RailwayEdge> railwayEdges = new ArrayList<RailwayEdge> ();
 	
 	public Service(String string)
 	{
@@ -48,9 +48,9 @@ public class Service
 	
 	public Platform getStart()
 	{
-		if (!sections.isEmpty())
+		if (!railwayEdges.isEmpty())
 		{
-			return (Platform)(sections.get(0).a);
+			return (Platform)(railwayEdges.get(0).a);
 		}
 		else
 		{
@@ -60,9 +60,9 @@ public class Service
 	
 	public Platform getEnd()
 	{
-		if (!sections.isEmpty())
+		if (!railwayEdges.isEmpty())
 		{
-			return (Platform)(sections.get(sections.size()-1).b);
+			return (Platform)(railwayEdges.get(railwayEdges.size()-1).b);
 		}
 		else
 		{
@@ -79,7 +79,7 @@ public class Service
 	{
 		
 		
-		if (sections.isEmpty()||a==getStart().getStation()||a==getEnd().getStation()||b==getStart().getStation()||b==getEnd().getStation())
+		if (railwayEdges.isEmpty()||a==getStart().getStation()||a==getEnd().getStation()||b==getStart().getStation()||b==getEnd().getStation())
 		{
 			Platform platformA = a.getPlatform(this);
 			
@@ -95,8 +95,8 @@ public class Service
 				platformB = b.addPlatform(this);
 			}
 
-			Section ab = new Section(platformA,platformB,this,2,singleEdge.toArray(new SingleEdge[singleEdge.size()]));
-			Section ba = ab.createReverse();
+			RailwayEdge ab = new RailwayEdge(platformA,platformB,this,2,singleEdge.toArray(new SingleEdge[singleEdge.size()]));
+			RailwayEdge ba = ab.createReverse();
 			
 			platformA.addEdge(ab);
 			platformB.addEdge(ba);
@@ -104,28 +104,28 @@ public class Service
 			ab.setReverse(ba);
 			ba.setReverse(ab);
 			
-			if (sections.isEmpty())
+			if (railwayEdges.isEmpty())
 			{
-				sections.add(ab);
+				railwayEdges.add(ab);
 			}
 			else if(a==getStart().getStation())
 			{
-				sections.add(0,ba);
+				railwayEdges.add(0,ba);
 			}
 			else if (a==getEnd().getStation())
 			{
-				sections.add(ab);
+				railwayEdges.add(ab);
 			}
 			else if (b==getStart().getStation())
 			{
-				sections.add(0,ab);
+				railwayEdges.add(0,ab);
 			}
 			else if(b==getEnd().getStation())
 			{
-				sections.add(ba);
+				railwayEdges.add(ba);
 			}
 			
-			System.out.println(sections);
+			System.out.println(railwayEdges);
 		}
 		else
 		{
@@ -140,20 +140,20 @@ public class Service
 		
 		if (edge!=null)
 		{
-			Section section = (Section)edge;
-			Section reverse = ((Section)edge).getReverse();
+			RailwayEdge railwayEdge = (RailwayEdge)edge;
+			RailwayEdge reverse = ((RailwayEdge)edge).getReverse();
 
-			Section ab;
+			RailwayEdge ab;
 			
-			if (sections.contains(section))
+			if (railwayEdges.contains(railwayEdge))
 			{
-				ab = section;
-				assert(!sections.contains(reverse));
+				ab = railwayEdge;
+				assert(!railwayEdges.contains(reverse));
 			}
-			else if (sections.contains(reverse))
+			else if (railwayEdges.contains(reverse))
 			{
 				ab = reverse;
-				assert(!sections.contains(section));
+				assert(!railwayEdges.contains(railwayEdge));
 			}
 			else
 			{
@@ -161,15 +161,15 @@ public class Service
 				assert(false);
 			}
 			
-			int index = sections.indexOf(ab);
+			int index = railwayEdges.indexOf(ab);
 			
-			if (index==0||index==sections.size()-1)
+			if (index==0||index==railwayEdges.size()-1)
 			{
-				sections.remove(ab);
+				railwayEdges.remove(ab);
 				
-				System.out.println(sections);
+				System.out.println(railwayEdges);
 				
-				a.removeEdge(section);
+				a.removeEdge(railwayEdge);
 				b.removeEdge(reverse);
 				
 				if (a.getEdges().size()==1)
@@ -213,9 +213,9 @@ public class Service
 
 	}
 	
-	public List<Section> getSections()
+	public List<RailwayEdge> getSections()
 	{
-		return sections;
+		return railwayEdges;
 	}
 	
 	

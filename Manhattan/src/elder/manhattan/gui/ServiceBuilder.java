@@ -6,16 +6,14 @@ import java.util.List;
 import elder.geometry.Point;
 import elder.manhattan.Block;
 import elder.manhattan.City;
+import elder.manhattan.Pathfinder;
 import elder.manhattan.Platform;
 import elder.manhattan.Routine;
 import elder.manhattan.SelectionListener;
 import elder.manhattan.Service;
 import elder.manhattan.Simulation;
-import elder.manhattan.Station;
 import elder.manhattan.SingleEdge;
-import elder.manhattan.Pathfinder;
-import elder.manhattan.graphics.CityDrawerLayer;
-import elder.network.Edge;
+import elder.manhattan.Station;
 
 
 public class ServiceBuilder extends Mode implements SelectionListener<Block>,Routine

@@ -9,10 +9,10 @@ public class Platform extends RailwayNode
 	private final Station station;
 	private final Service service;
 	
-	private final Section down;
-	private final Section up;
+	private final RailwayEdge down;
+	private final RailwayEdge up;
 	
-	private final List<Section> tubeways = new ArrayList<Section> ();
+	private final List<RailwayEdge> tubeways = new ArrayList<RailwayEdge> ();
 	
 	
 	public Platform(Station station, Service service)
@@ -21,9 +21,9 @@ public class Platform extends RailwayNode
 		this.station = station;
 		this.service = service;
 		
-		down = new Section(station,this,service,1, new SingleEdge[] {});
+		down = new RailwayEdge(station,this,service,1, new SingleEdge[] {});
 		down.setDelay(1);
-		up = new Section(this,station,service,1, new SingleEdge[] {});
+		up = new RailwayEdge(this,station,service,1, new SingleEdge[] {});
 		up.setDelay(1);
 		
 		up.setReverse(down);

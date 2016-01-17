@@ -1,10 +1,10 @@
 package elder.manhattan.layers;
 
 import elder.manhattan.Line;
+import elder.manhattan.RailwayEdge;
 import elder.manhattan.Service;
 import elder.manhattan.Simulation;
 import elder.manhattan.SingleEdge;
-import elder.manhattan.Section;
 import elder.manhattan.routines.PlaceTraffic;
 
 
@@ -30,11 +30,11 @@ public class ServiceLayer extends SimulationLayer
 			
 			for (Service service : line.getServices())
 			{
-				for (Section section : service.getSections())
+				for (RailwayEdge railwayEdge : service.getSections())
 				{
 	
 					
-					for (SingleEdge singleEdge : section.getEdges())
+					for (SingleEdge singleEdge : railwayEdge.getEdges())
 					{
 						float width=1;
 

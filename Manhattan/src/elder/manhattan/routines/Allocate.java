@@ -1,6 +1,5 @@
 package elder.manhattan.routines;
 
-import java.util.ArrayList;
 import java.util.Collection;
 
 import elder.manhattan.Block;

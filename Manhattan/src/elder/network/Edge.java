@@ -1,7 +1,5 @@
 package elder.network;
 
-import java.util.HashSet;
-
 import elder.geometry.Line;
 
 public class Edge extends Line

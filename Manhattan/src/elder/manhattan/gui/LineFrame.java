@@ -3,7 +3,6 @@ package elder.manhattan.gui;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 
-import javax.swing.BorderFactory;
 import javax.swing.JFrame;
 
 import elder.manhattan.City;

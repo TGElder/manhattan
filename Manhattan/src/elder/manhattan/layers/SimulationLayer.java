@@ -1,7 +1,7 @@
 package elder.manhattan.layers;
 
-import elder.manhattan.Simulation;
 import elder.manhattan.Routine;
+import elder.manhattan.Simulation;
 import elder.manhattan.graphics.CityDrawerLayer;
 
 public abstract class SimulationLayer extends CityDrawerLayer implements Routine

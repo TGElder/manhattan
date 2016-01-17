@@ -2,7 +2,6 @@ package elder.manhattan.gui;
 
 
 import elder.geometry.Point;
-import elder.manhattan.graphics.CityDrawerLayer;
 
 public class ModeManager implements MouseListener
 {

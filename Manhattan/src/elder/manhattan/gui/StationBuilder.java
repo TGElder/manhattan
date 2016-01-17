@@ -1,7 +1,6 @@
 package elder.manhattan.gui;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import elder.geometry.Point;
@@ -9,7 +8,6 @@ import elder.manhattan.Block;
 import elder.manhattan.Routine;
 import elder.manhattan.SelectionListener;
 import elder.manhattan.Simulation;
-import elder.manhattan.graphics.CityDrawerLayer;
 
 
 public class StationBuilder extends Mode implements SelectionListener<Block>,Routine

@@ -2,7 +2,6 @@ package elder.manhattan.graphics;
 
 import elder.geometry.Line;
 import elder.geometry.Point;
-import elder.geometry.Polygon;
 
 public class DrawnLine extends Drawable
 {

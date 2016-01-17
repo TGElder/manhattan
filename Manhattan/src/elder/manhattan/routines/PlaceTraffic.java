@@ -1,19 +1,17 @@
 package elder.manhattan.routines;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 
 import elder.manhattan.Block;
 import elder.manhattan.City;
 import elder.manhattan.Commute;
+import elder.manhattan.RailwayEdge;
 import elder.manhattan.RailwayNode;
 import elder.manhattan.Routine;
 import elder.manhattan.Simulation;
-import elder.manhattan.Station;
 import elder.manhattan.SingleEdge;
-import elder.manhattan.Section;
+import elder.manhattan.Station;
 import elder.network.Edge;
 
 public class PlaceTraffic implements Routine
@@ -37,7 +35,7 @@ public class PlaceTraffic implements Routine
 		{
 			for (Edge edge : node.getEdges())
 			{
-				for (SingleEdge singleEdge : ((Section)edge).getEdges())
+				for (SingleEdge singleEdge : ((RailwayEdge)edge).getEdges())
 				{
 					singleEdge.resetTraffic();
 				}
@@ -108,15 +106,15 @@ public class PlaceTraffic implements Routine
 					
 					if (from!=null)
 					{
-						List<Section> path = dijkstra.getPath(from, to);
+						List<RailwayEdge> path = dijkstra.getPath(from, to);
 						//List<Tubeway> path = Collections.emptyList();
 													
 						if (path!=null)
 						{
 							
-							for (Section section : path)
+							for (RailwayEdge railwayEdge : path)
 							{
-								for (SingleEdge singleEdge : section.getEdges())
+								for (SingleEdge singleEdge : railwayEdge.getEdges())
 								{
 									singleEdge.addTraffic(commuters[b]);
 									maxTraffic = Math.max(maxTraffic, singleEdge.getTraffic());
