@@ -1,17 +1,18 @@
 package elder.manhattan;
 
+import elder.network.Edge;
 import elder.network.SpeedEdge;
 
-public class Track extends SpeedEdge
+public class Track extends Edge
 {
 	
 	private Track reverse;
 	
 	int traffic=0;
 
-	public Track(Block from, Block to, double speed)
+	public Track(Block from, Block to)
 	{
-		super(from,to,speed);
+		super(from,to);
 	}
 
 	public Block getFrom()

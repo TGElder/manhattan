@@ -140,8 +140,8 @@ public class City
 	{
 		assert(!from.hasEdge(to));
 		
-		Track fromTo = new Track(from,to,1);
-		Track toFrom = new Track(to,from,1);
+		Track fromTo = new Track(from,to);
+		Track toFrom = new Track(to,from);
 		
 		fromTo.setReverse(toFrom);
 		toFrom.setReverse(fromTo);

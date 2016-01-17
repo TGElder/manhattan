@@ -81,7 +81,7 @@ public class TrackPathfinder
 				Track track = (Track)edge;
 				Block neighbour  = track.getTo();
 				
-				double focusDistance = distances[focus.getIndex()] + (track.length/track.getSpeed());
+				double focusDistance = distances[focus.getIndex()] + (track.length);
 				
 				if (!closed[neighbour.getIndex()])
 				{
