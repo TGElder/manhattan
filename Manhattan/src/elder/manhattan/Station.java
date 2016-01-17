@@ -12,7 +12,7 @@ public class Station extends RailwayNode
 	
 	public Station(Block block)
 	{
-		super(block.x, block.y);
+		super(block.getTrackNode().x, block.getTrackNode().y);
 		this.block = block;
 	
 	}

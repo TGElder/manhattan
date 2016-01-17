@@ -7,7 +7,7 @@ import elder.geometry.Point;
 import elder.geometry.Polygon;
 import elder.network.Node;
 
-public class Block extends IndexNode
+public class Block
 {
 	
 	private final int cityX;
@@ -25,9 +25,15 @@ public class Block extends IndexNode
 	
 	private Station station;
 	
+	private final IndexNode roadNode;
+	private final IndexNode trackNode;
+	private HighwayNode highwayNode;
+	
 	public Block(int x, int y, int index, Polygon polygon, Point centre)
 	{
-		super(centre.x,centre.y,index);
+		roadNode = new IndexNode(centre.x,centre.y,index);
+		trackNode = new IndexNode(centre.x,centre.y,index);
+		
 		this.cityX = x;
 		this.cityY = y;
 		this.polygon = polygon;
@@ -126,5 +132,30 @@ public class Block extends IndexNode
 		this.stations = stations;
 	}
 
+	public IndexNode getRoadNode()
+	{
+		return roadNode;
+	}
 
+	public IndexNode getTrackNode()
+	{
+		return trackNode;
+	}
+	
+	public HighwayNode getHighwayNode()
+	{
+		return highwayNode;
+	}
+
+	public void setHighwayNode(HighwayNode node)
+	{
+		this.highwayNode = node;
+	}
+	
+	public boolean isCentreOfHighwayNode()
+	{
+		return highwayNode.getCentre()==this;
+	}
+
+	
 }

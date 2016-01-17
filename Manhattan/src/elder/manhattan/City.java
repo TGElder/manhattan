@@ -6,6 +6,7 @@ import java.util.List;
 import elder.geometry.Point;
 import elder.geometry.Polygon;
 import elder.network.Edge;
+import elder.network.Node;
 
 public class City
 {
@@ -26,6 +27,9 @@ public class City
 	
 	private final List<Line> lines = new ArrayList<Line> ();
 	
+	private HighwayNode [] highwayNodes;
+	
+	
 	public City(int width, int height, double scale)
 	{
 		this.width = width;
@@ -33,6 +37,7 @@ public class City
 		this.scale = scale;
 		
 		blocks = new Block[width*height];
+
 		
 		for (int x=0;x<width;x++)
 		{
@@ -60,7 +65,7 @@ public class City
 					int nx = x+neighbourXs[n];
 					int ny = y+neighbourYs[n];
 					
-					if (nx>0 && nx<width && ny>0 && ny<height)
+					if (nx>=0 && nx<width && ny>=0 && ny<height)
 					{
 						neighbours1.add(getBlock(nx,ny));
 					}
@@ -137,29 +142,29 @@ public class City
 	
 	public void createTrack(Block from, Block to)
 	{
-		assert(!from.hasEdge(to));
+		assert(!from.getTrackNode().hasEdge(to.getTrackNode()));
 		
-		SingleEdge fromTo = new SingleEdge(from,to);
-		SingleEdge toFrom = new SingleEdge(to,from);
+		SingleEdge fromTo = new SingleEdge(from.getTrackNode(),to.getTrackNode());
+		SingleEdge toFrom = new SingleEdge(to.getTrackNode(),from.getTrackNode());
 		
 		fromTo.setReverse(toFrom);
 		toFrom.setReverse(fromTo);
 		
-		from.addEdge(fromTo);
-		to.addEdge(toFrom);
+		from.getTrackNode().addEdge(fromTo);
+		to.getTrackNode().addEdge(toFrom);
 		
 	}
 	
 	public void removeTrack(Block from, Block to) throws Exception
 	{		
-		SingleEdge singleEdge = (SingleEdge)(from.getEdge(to));
+		SingleEdge singleEdge = (SingleEdge)(from.getTrackNode().getEdge(to.getTrackNode()));
 		
 		assert(singleEdge!=null);
 		
 		if (!hasService(singleEdge))
 		{
-			from.removeEdge(singleEdge);
-			to.removeEdge(singleEdge.getReverse());
+			from.getTrackNode().removeEdge(singleEdge);
+			to.getTrackNode().removeEdge(singleEdge.getReverse());
 		}
 		else
 		{
@@ -171,7 +176,7 @@ public class City
 	
 	public void toggleTrack(Block from, Block to) throws Exception
 	{
-		SingleEdge singleEdge = (SingleEdge)(from.getEdge(to));
+		SingleEdge singleEdge = (SingleEdge)(from.getTrackNode().getEdge(to.getTrackNode()));
 		
 		if (singleEdge==null)
 		{
@@ -267,6 +272,17 @@ public class City
 	{
 		return lines;
 	}
+
+	public HighwayNode [] getHighwayNodes()
+	{
+		return highwayNodes;
+	}
+
+	public void setHighwayNodes(HighwayNode [] highwayNodes)
+	{
+		this.highwayNodes = highwayNodes;
+	}
+
 
 
 }

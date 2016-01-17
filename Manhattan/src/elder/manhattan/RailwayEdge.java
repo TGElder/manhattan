@@ -5,7 +5,6 @@ package elder.manhattan;
 public class RailwayEdge extends MultiEdge
 {
 	
-	private RailwayEdge reverse;
 	private Service service;
 		
 	private double delay;	
@@ -41,16 +40,6 @@ public class RailwayEdge extends MultiEdge
 	public RailwayNode getTo()
 	{
 		return (RailwayNode)b;
-	}
-	
-	public RailwayEdge getReverse()
-	{
-		return reverse;
-	}
-
-	public void setReverse(RailwayEdge reverse)
-	{
-		this.reverse = reverse;
 	}
 	
 	public Service getService()

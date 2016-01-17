@@ -141,7 +141,7 @@ public class Service
 		if (edge!=null)
 		{
 			RailwayEdge railwayEdge = (RailwayEdge)edge;
-			RailwayEdge reverse = ((RailwayEdge)edge).getReverse();
+			RailwayEdge reverse = (RailwayEdge)(railwayEdge.getReverse());
 
 			RailwayEdge ab;
 			

@@ -87,7 +87,7 @@ public class ServiceBuilder extends Mode implements SelectionListener<Block>,Rou
 				else
 				{
 				
-					List<SingleEdge> singleEdges = pathfinder.findPath(from.getBlock(), to.getBlock());
+					List<SingleEdge> singleEdges = pathfinder.findPath(from.getBlock().getTrackNode(), to.getBlock().getTrackNode(), city.getBlocks().length);
 					
 					if (singleEdges!=null)
 					{
@@ -170,7 +170,7 @@ public class ServiceBuilder extends Mode implements SelectionListener<Block>,Rou
 	
 			if ( (from!=null&&to!=null) && (from!=to))
 			{
-				List<SingleEdge> singleEdges = pathfinder.findPath(from.getBlock(), to.getBlock());
+				List<SingleEdge> singleEdges = pathfinder.findPath(from.getBlock().getTrackNode(), to.getBlock().getTrackNode(), city.getBlocks().length);
 				
 				if (singleEdges!=null)
 				{

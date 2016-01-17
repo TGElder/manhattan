@@ -106,7 +106,7 @@ public class Allocate implements Routine
 					
 					if (focus.isBuilt()&&focus.getPopulation()<simulation.BLOCK_POPULATION_LIMIT)
 					{
-						double distance = (Math.abs(block.x - focus.x) + Math.abs(block.y - focus.y));
+						double distance = (Math.abs(block.getRoadNode().x - focus.getRoadNode().x) + Math.abs(block.getRoadNode().y - focus.getRoadNode().y));
 						
 						for (Station s : block.getStations())
 						{

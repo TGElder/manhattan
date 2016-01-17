@@ -5,12 +5,12 @@ import elder.manhattan.Simulation;
 import elder.network.Edge;
 
 
-public class TubeLayer extends SimulationLayer
+public class TrackLayer extends SimulationLayer
 {
 	
-	public TubeLayer()
+	public TrackLayer()
 	{
-		super("Tubes");
+		super("Track");
 	}
 
 	@Override
@@ -21,7 +21,7 @@ public class TubeLayer extends SimulationLayer
 		
 		for (Block block : simulation.getCity().getBlocks())
 		{
-			for (Edge edge : block.getEdges())
+			for (Edge edge : block.getTrackNode().getEdges())
 			{
 				drawLine(edge,0f,0f,0f,3f,false);
 			}

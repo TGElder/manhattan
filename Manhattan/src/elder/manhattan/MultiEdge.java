@@ -11,6 +11,8 @@ public class MultiEdge extends Edge
 	private final SingleEdge [] edges;
 	public final double length;
 	
+	private MultiEdge reverse;
+	
 	public MultiEdge(Node a, Node b, SingleEdge[] edges)
 	{
 		super(a, b);
@@ -50,6 +52,20 @@ public class MultiEdge extends Edge
 		
 		return reverse;
 		
+	}
+
+
+
+	public MultiEdge getReverse()
+	{
+		return reverse;
+	}
+
+
+
+	public void setReverse(MultiEdge reverse)
+	{
+		this.reverse = reverse;
 	}
 	
 	

@@ -17,28 +17,25 @@ public class Pathfinder
 		this.city = city;
 	}
 	
-	public List<SingleEdge> findPath (Block from, Block to)
+	public List<SingleEdge> findPath (IndexNode from, IndexNode to, int max)
 	{
 			
 		if (from==to)
 		{
 			return null;
 		}
+				
+		boolean [] open = new boolean[max];
+		boolean [] closed = new boolean[max];
 		
-		Block [] blocks = city.getBlocks();
-		int noBlocks = blocks.length;
+		final SingleEdge [] directions = new SingleEdge[max];
+		final double [] distances = new double[max];
 		
-		boolean [] open = new boolean[noBlocks];
-		boolean [] closed = new boolean[noBlocks];
-		
-		final SingleEdge [] directions = new SingleEdge[noBlocks];
-		final double [] distances = new double[noBlocks];
-		
-		PriorityQueue<Block> openList = new PriorityQueue<Block> (new Comparator<Block>() 
+		PriorityQueue<IndexNode> openList = new PriorityQueue<IndexNode> (new Comparator<IndexNode>() 
 		{
 
 			@Override
-			public int compare(Block a, Block b)
+			public int compare(IndexNode a, IndexNode b)
 			{
 				if (distances[a.getIndex()]<distances[b.getIndex()])
 				{
@@ -56,19 +53,19 @@ public class Pathfinder
 			}
 		});
 		
-		Block block = from;
-		int b=block.getIndex();		
+		IndexNode node = from;
+		int b=node.getIndex();		
 		
 		init(distances,Double.POSITIVE_INFINITY);
 		openList.clear();
 		
-		openList.add(blocks[b]);
+		openList.add(node);
 		open[b] = true;
 
 		distances[b] = 0;
 		directions[b] = null;
 		
-		Block focus;
+		IndexNode focus;
 		
 		while ((focus = openList.poll())!=null)
 		{
@@ -76,7 +73,7 @@ public class Pathfinder
 			for (Edge edge : focus.getEdges())
 			{
 				SingleEdge singleEdge = (SingleEdge)edge;
-				Block neighbour  = (Block)(singleEdge.b);
+				IndexNode neighbour  = (IndexNode)(singleEdge.b);
 				
 				double focusDistance = distances[focus.getIndex()] + (singleEdge.length);
 				
@@ -116,17 +113,17 @@ public class Pathfinder
 
 	}
 	
-	private List<SingleEdge> getPath(Block from, Block to, SingleEdge[] directions, double[] distances)
+	private List<SingleEdge> getPath(IndexNode from, IndexNode to, SingleEdge[] directions, double[] distances)
 	{
 
 		List<SingleEdge> singleEdges = new ArrayList<SingleEdge> ();
 		
-		Block focus = to;
+		IndexNode focus = to;
 
 		while (focus!=from)
 		{
 			SingleEdge singleEdge = directions[focus.getIndex()];
-			focus = (Block)(singleEdge.b);
+			focus = (IndexNode)(singleEdge.b);
 			
 			singleEdges.add(singleEdge);
 		}

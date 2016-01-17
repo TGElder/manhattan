@@ -129,7 +129,7 @@ public class TrackBuilder extends Mode implements SelectionListener<Block>, Rout
 		
 		if ( (from!=null&&to!=null) && (from!=to))
 		{
-			drawLine(new Line(from,to),0f,0f,1f,1f,false);
+			drawLine(new Line(from.getTrackNode(),to.getTrackNode()),0f,0f,1f,1f,false);
 		}
 		
 	

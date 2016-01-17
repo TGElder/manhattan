@@ -23,18 +23,24 @@ import elder.manhattan.graphics.CityDrawer;
 import elder.manhattan.graphics.CityDrawerLayer;
 import elder.manhattan.layers.BlockLayer;
 import elder.manhattan.layers.DijkstraLayer;
+import elder.manhattan.layers.HighwayLayer;
+import elder.manhattan.layers.HighwayNodeLayer;
 import elder.manhattan.layers.KatherineLayer;
 import elder.manhattan.layers.PathfindTestLayer;
 import elder.manhattan.layers.PlatformLayer;
+import elder.manhattan.layers.RoadLayer;
 import elder.manhattan.layers.SelectedBlockLayer;
 import elder.manhattan.layers.ServiceLayer;
 import elder.manhattan.layers.StationCoverageLayer;
 import elder.manhattan.layers.StationLayer;
 import elder.manhattan.layers.TimeLayer;
-import elder.manhattan.layers.TubeLayer;
+import elder.manhattan.layers.TrackLayer;
 import elder.manhattan.routines.AddChildren;
 import elder.manhattan.routines.AddImmigrants;
 import elder.manhattan.routines.Allocate;
+import elder.manhattan.routines.CreateHighwayNodes;
+import elder.manhattan.routines.CreateHighways;
+import elder.manhattan.routines.CreateRoads;
 import elder.manhattan.routines.Dijkstra;
 import elder.manhattan.routines.OpenFields;
 import elder.manhattan.routines.OpenRandomFields;
@@ -137,7 +143,7 @@ public class Controls extends JFrame
 	{
 		
 		
-		Simulation sim = new Simulation(new City(160,160,1),1986,500);
+		Simulation sim = new Simulation(new City(180,180,1),1986,500);
 
 		CityDrawer cityDrawer = new CityDrawer(sim,1024,1024);
 		
@@ -152,7 +158,10 @@ public class Controls extends JFrame
 		
 		sim.run(new OpenRandomFields(0.005),false);
 		sim.run(new Populate(1000),false);
-		
+		sim.run(new CreateHighwayNodes(),false);
+		sim.run(new CreateRoads(),false);
+		sim.run(new CreateHighways(),false);
+
 		//sim.run(new CreateTestTubes(),false);
 		
 		TrackBuilder trackBuilder = new TrackBuilder();
@@ -187,10 +196,15 @@ public class Controls extends JFrame
 		BlockLayer blockLayer = new BlockLayer();
 		cityDrawer.addLayer(blockLayer);
 		
-		TubeLayer tubeLayer = new TubeLayer();
+		// LAYERS
+		TrackLayer trackLayer = new TrackLayer();
+		RoadLayer roadLayer = new RoadLayer();
+		roadLayer.disable();
 		StationLayer stationLayer = new StationLayer();
 		PlatformLayer platformLayer = new PlatformLayer();
 		StationCoverageLayer stationCoverageLayer = new StationCoverageLayer();
+		HighwayNodeLayer highwayNodes = new HighwayNodeLayer();
+		highwayNodes.disable();
 		
 		KatherineLayer katherineLayer = new KatherineLayer();
 		cityDrawer.addLayer(katherineLayer);
@@ -199,10 +213,9 @@ public class Controls extends JFrame
 		SelectedBlockLayer selectedBlock = new SelectedBlockLayer();
 		selector.getSelectedBlock().addListener(selectedBlock);
 		
-		
+		HighwayLayer highwayLayer = new HighwayLayer();
+		selector.getSelectedBlock().addListener(highwayLayer);
 
-		
-		
 		DijkstraLayer dijkstraLayer = new DijkstraLayer(dijkstra);
 		selector.getSelectedBlock().addListener(dijkstraLayer);
 		cityDrawer.addLayer(dijkstraLayer);
@@ -222,10 +235,13 @@ public class Controls extends JFrame
 		ServiceLayer serviceLayer = new ServiceLayer(placeTraffic);
 		
 		cityDrawer.addLayer(stationCoverageLayer);
-		cityDrawer.addLayer(tubeLayer);
+		cityDrawer.addLayer(trackLayer);
+		cityDrawer.addLayer(roadLayer);
 		cityDrawer.addLayer(serviceLayer);
 		cityDrawer.addLayer(stationLayer);
 		cityDrawer.addLayer(platformLayer);
+		cityDrawer.addLayer(highwayNodes);
+
 		platformLayer.disable();
 
 		
@@ -243,10 +259,12 @@ public class Controls extends JFrame
 
 		sim.addRoutine(blockLayer);
 		sim.addRoutine(stationCoverageLayer);
-		sim.addRoutine(tubeLayer);
+		sim.addRoutine(trackLayer);
+		sim.addRoutine(roadLayer);
 		sim.addRoutine(serviceLayer);
 		sim.addRoutine(stationLayer);
 		sim.addRoutine(platformLayer);
+		sim.addRoutine(highwayNodes);
 
 		
 		sim.addRoutine(katherineLayer);
@@ -264,16 +282,19 @@ public class Controls extends JFrame
 		
 		sim.addPauseRoutine(blockLayer);
 		sim.addPauseRoutine(stationCoverageLayer);
-		sim.addPauseRoutine(tubeLayer);
+		sim.addPauseRoutine(trackLayer);
+		sim.addPauseRoutine(roadLayer);
 		sim.addPauseRoutine(serviceLayer);
 		sim.addPauseRoutine(stationLayer);
 		sim.addPauseRoutine(platformLayer);
+		sim.addPauseRoutine(highwayNodes);
 
 
 		ModeManager manager = new ModeManager();
 		cityDrawer.addMouseListener(manager);
 		manager.setMode(trackBuilder);
 
+		cityDrawer.addLayer(highwayLayer);
 		cityDrawer.addLayer(selectedBlock);
 		
 		Line red = new Line("Red",new Color(255,0,0));

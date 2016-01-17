@@ -101,7 +101,7 @@ public class Dijkstra implements Routine
 									open[neighbour.getIndex()] = session;
 								}
 								
-								directions[neighbour.getIndex()] = tube.getReverse();
+								directions[neighbour.getIndex()] = (RailwayEdge)tube.getReverse();
 								distances[neighbour.getIndex()] = focusDistance;
 								
 								openList.add(neighbour);

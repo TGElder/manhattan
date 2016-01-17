@@ -51,7 +51,7 @@ public class PlaceTraffic implements Routine
 		
 		for (Block block : city.getBlocks())
 		{
-			for (Edge edge : block.getEdges())
+			for (Edge edge : block.getTrackNode().getEdges())
 			{
 				((SingleEdge)edge).resetTraffic();
 			}
@@ -66,9 +66,9 @@ public class PlaceTraffic implements Routine
 				
 				for (Commute commute : block.getResidents())
 				{
-					int index = commute.getOffice().getIndex();
+					int index = commute.getOffice().getTrackNode().getIndex();
 					
-					if (index!=block.getIndex())
+					if (index!=block.getTrackNode().getIndex())
 					{	
 						commuters[index] ++;
 						commuted.add(index);
@@ -82,7 +82,7 @@ public class PlaceTraffic implements Routine
 					count++;
 					Block focus = city.getBlocks()[b];
 					
-					double distance = (Math.abs(block.x - focus.x) + Math.abs(block.y - focus.y));
+					double distance = (Math.abs(block.getRoadNode().x - focus.getRoadNode().x) + Math.abs(block.getRoadNode().y - focus.getRoadNode().y));
 					//double distance = Double.POSITIVE_INFINITY;
 					
 					Station from=null;

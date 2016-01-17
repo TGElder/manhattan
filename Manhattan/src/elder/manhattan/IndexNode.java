@@ -1,10 +1,9 @@
 package elder.manhattan;
 
-import java.util.List;
 
 import elder.network.Node;
 
-public abstract class IndexNode extends Node
+public class IndexNode extends Node
 {
 	
 	private Integer index;
