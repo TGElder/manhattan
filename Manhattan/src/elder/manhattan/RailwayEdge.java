@@ -33,14 +33,14 @@ public class RailwayEdge extends MultiEdge
 		return new RailwayEdge((RailwayNode)b,(RailwayNode)a,service,speed,computeReverse());
 	}
 	
-	public Station getFrom()
+	public RailwayNode getFrom()
 	{
-		return (Station)a;
+		return (RailwayNode)a;
 	}
 
-	public Station getTo()
+	public RailwayNode getTo()
 	{
-		return (Station)b;
+		return (RailwayNode)b;
 	}
 	
 	public RailwayEdge getReverse()

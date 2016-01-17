@@ -85,14 +85,14 @@ public class Service
 			
 			if (platformA==null)
 			{
-				platformA = a.addPlatform(this);
+				platformA = city.createPlatform(a,this);
 			}
 			
 			Platform platformB = b.getPlatform(this);
 			
 			if (platformB==null)
 			{
-				platformB = b.addPlatform(this);
+				platformB = city.createPlatform(b,this);
 			}
 
 			RailwayEdge ab = new RailwayEdge(platformA,platformB,this,2,singleEdge.toArray(new SingleEdge[singleEdge.size()]));
@@ -174,12 +174,12 @@ public class Service
 				
 				if (a.getEdges().size()==1)
 				{
-					a.getStation().removePlatform(this);
+					city.removePlatform(a.getStation(),this);
 				}
 				
 				if (b.getEdges().size()==1)
 				{
-					b.getStation().removePlatform(this);
+					city.removePlatform(b.getStation(),this);
 				}
 
 			}

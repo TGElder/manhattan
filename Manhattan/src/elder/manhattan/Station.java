@@ -35,12 +35,13 @@ public class Station extends RailwayNode
 		return platform;
 	}
 	
-	public void removePlatform(Service service) throws Exception
+	public Platform removePlatform(Service service) throws Exception
 	{
 		Platform platform = platforms.get(service);
-		assert(platforms.containsKey(service));
+		assert(platform!=null);
 		platforms.remove(service);
 		platform.remove();
+		return platform;
 	}
 
 	public Collection<Platform> getPlatforms()

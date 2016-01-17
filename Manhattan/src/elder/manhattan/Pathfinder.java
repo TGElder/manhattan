@@ -56,9 +56,6 @@ public class Pathfinder
 			}
 		});
 		
-			
-		
-		
 		Block block = from;
 		int b=block.getIndex();		
 		

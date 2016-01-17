@@ -229,6 +229,20 @@ public class City
 		}
 	}
 	
+	public Platform createPlatform(Station station, Service service)
+	{
+		Platform platform = station.addPlatform(service);
+		railwayNodes.add(platform);
+		return platform;
+	}
+	
+	public Platform removePlatform(Station station, Service service) throws Exception
+	{
+		Platform platform = station.removePlatform(service);
+		railwayNodes.remove(platform);
+		return platform;
+	}
+	
 	private boolean hasService(SingleEdge singleEdge)
 	{
 		for (RailwayNode node : getRailwayNodes())

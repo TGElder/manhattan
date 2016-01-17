@@ -13,12 +13,14 @@ public class UpdateStations implements Routine
 	@Override
 	public String run(Simulation simulation)
 	{
-		ArrayList<Station> stations = new ArrayList<Station> ();
 		
-		for (int s=0; s<stations.size(); s++)
+		
+		for (int s=0; s<simulation.getCity().getRailwayNodes().size(); s++)
 		{
-			stations.get(s).setIndex(s);
+			simulation.getCity().getRailwayNodes().get(s).setIndex(s);
 		}
+		
+		ArrayList<Station> stations = new ArrayList<Station> ();
 		
 		for (Block block : simulation.getCity().getBlocks())
 		{

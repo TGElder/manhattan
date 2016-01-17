@@ -7,14 +7,12 @@ import elder.geometry.Point;
 import elder.geometry.Polygon;
 import elder.network.Node;
 
-public class Block extends Node
+public class Block extends IndexNode
 {
 	
 	private final int cityX;
 	private final int cityY;
-	
-	private final int index;
-	
+		
 	private boolean built=false;
 	
 	private final Polygon polygon;
@@ -29,10 +27,9 @@ public class Block extends Node
 	
 	public Block(int x, int y, int index, Polygon polygon, Point centre)
 	{
-		super(centre.x,centre.y);
+		super(centre.x,centre.y,index);
 		this.cityX = x;
 		this.cityY = y;
-		this.index = index;
 		this.polygon = polygon;
 	}
 
@@ -129,10 +126,5 @@ public class Block extends Node
 		this.stations = stations;
 	}
 
-	public int getIndex()
-	{
-		return index;
-	}
-	
 
 }

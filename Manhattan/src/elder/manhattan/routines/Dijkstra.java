@@ -84,7 +84,7 @@ public class Dijkstra implements Routine
 					for (Edge edge : focus.getEdges())
 					{
 						RailwayEdge tube = (RailwayEdge)edge;
-						Station neighbour  = tube.getTo();
+						RailwayNode neighbour  = tube.getTo();
 						
 						double focusDistance = distances[focus.getIndex()] + (tube.getTime());
 												
@@ -154,7 +154,7 @@ public class Dijkstra implements Routine
 		while ((edge = getDirections()[to.getIndex()][focus])!=null)
 		{
 			out.add(edge);
-			focus = ((Station)edge.b).getIndex();
+			focus = ((RailwayNode)edge.b).getIndex();
 		}
 		
 		return out;

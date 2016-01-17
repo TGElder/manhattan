@@ -39,7 +39,7 @@ public class DijkstraLayer extends CityDrawerLayer implements SelectionListener<
 			{
 				if (dijkstra.getDirections()!=null)
 				{
-					if (selectedBlock.getStation().getIndex()<dijkstra.getDirections().length)
+					if (selectedBlock.getStation().getIndex()!=null||selectedBlock.getStation().getIndex()<dijkstra.getDirections().length)
 					{
 					
 						RailwayEdge [] tubeways = dijkstra.getDirections()[selectedBlock.getStation().getIndex()];
