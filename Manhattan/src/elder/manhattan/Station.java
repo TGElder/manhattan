@@ -4,7 +4,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
-public class Station extends RailwayNode
+public class Station extends IndexNode
 {
 
 	private final Block block;
@@ -12,7 +12,7 @@ public class Station extends RailwayNode
 	
 	public Station(Block block)
 	{
-		super(block.getTrackNode().x, block.getTrackNode().y);
+		super(block.getTrackNode().x, block.getTrackNode().y, null);
 		this.block = block;
 	
 	}

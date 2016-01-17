@@ -2,15 +2,20 @@ package elder.manhattan.layers;
 
 import elder.manhattan.Block;
 import elder.manhattan.Simulation;
+import elder.manhattan.SingleEdge;
+import elder.manhattan.routines.PlaceTraffic;
 import elder.network.Edge;
 
 
 public class RoadLayer extends SimulationLayer
 {
 	
-	public RoadLayer()
+	private final PlaceTraffic traffic;
+	
+	public RoadLayer(PlaceTraffic traffic)
 	{
 		super("Roads");
+		this.traffic = traffic;
 	}
 
 	@Override
@@ -23,7 +28,17 @@ public class RoadLayer extends SimulationLayer
 		{
 			for (Edge edge : block.getRoadNode().getEdges())
 			{
-				drawLine(edge,0f,0f,0f,3f,false);
+				SingleEdge singleEdge = (SingleEdge) edge;
+				
+				if (traffic.getMaxTraffic()>0)
+				{
+					if (singleEdge.getTraffic()>0)
+					{
+						float width = 1 + (singleEdge.getTraffic()*9f)/(traffic.getMaxTraffic()*1f);
+						drawLine(edge,0f,0f,0f,width,false);
+					}
+				}
+				
 			}
 
 		}

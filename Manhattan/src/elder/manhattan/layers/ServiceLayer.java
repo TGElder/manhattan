@@ -1,7 +1,7 @@
 package elder.manhattan.layers;
 
 import elder.manhattan.Line;
-import elder.manhattan.RailwayEdge;
+import elder.manhattan.Railway;
 import elder.manhattan.Service;
 import elder.manhattan.Simulation;
 import elder.manhattan.SingleEdge;
@@ -30,11 +30,11 @@ public class ServiceLayer extends SimulationLayer
 			
 			for (Service service : line.getServices())
 			{
-				for (RailwayEdge railwayEdge : service.getSections())
+				for (Railway railway : service.getSections())
 				{
 	
 					
-					for (SingleEdge singleEdge : railwayEdge.getEdges())
+					for (SingleEdge singleEdge : railway.getEdges())
 					{
 						float width=1;
 

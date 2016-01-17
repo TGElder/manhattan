@@ -3,27 +3,27 @@ package elder.manhattan;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Platform extends RailwayNode
+public class Platform extends IndexNode
 {
 
 	private final Station station;
 	private final Service service;
 	
-	private final RailwayEdge down;
-	private final RailwayEdge up;
+	private final Railway down;
+	private final Railway up;
 	
-	private final List<RailwayEdge> tubeways = new ArrayList<RailwayEdge> ();
+	private final List<Railway> tubeways = new ArrayList<Railway> ();
 	
 	
 	public Platform(Station station, Service service)
 	{
-		super(station.x, station.y);
+		super(station.x, station.y, null);
 		this.station = station;
 		this.service = service;
 		
-		down = new RailwayEdge(station,this,service,1, new SingleEdge[] {});
+		down = new Railway(station,this,service,1, new SingleEdge[] {});
 		down.setDelay(1);
-		up = new RailwayEdge(this,station,service,1, new SingleEdge[] {});
+		up = new Railway(this,station,service,1, new SingleEdge[] {});
 		up.setDelay(1);
 		
 		up.setReverse(down);

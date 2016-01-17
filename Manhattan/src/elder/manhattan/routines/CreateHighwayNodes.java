@@ -48,7 +48,7 @@ public class CreateHighwayNodes implements Routine
 			}
 		}
 		
-		city.setHighwayNodes(nodes.toArray(new HighwayNode[nodes.size()]));
+		city.setHighwayNodes(nodes);
 		
 		return null;
 	}

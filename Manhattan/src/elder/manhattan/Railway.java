@@ -1,8 +1,6 @@
 package elder.manhattan;
 
-
-
-public class RailwayEdge extends MultiEdge
+public class Railway extends TimeEdge
 {
 	
 	private Service service;
@@ -10,7 +8,7 @@ public class RailwayEdge extends MultiEdge
 	private double delay;	
 	private double speed;
 
-	public RailwayEdge(RailwayNode a, RailwayNode b, Service service, double speed, SingleEdge[] track)
+	public Railway(IndexNode a, IndexNode b, Service service, double speed, SingleEdge[] track)
 	{
 		super(a, b,track);
 		this.service = service;
@@ -27,20 +25,11 @@ public class RailwayEdge extends MultiEdge
 		return (length/speed) + delay;
 	}
 	
-	public RailwayEdge createReverse()
+	public Railway createReverse()
 	{
-		return new RailwayEdge((RailwayNode)b,(RailwayNode)a,service,speed,computeReverse());
-	}
-	
-	public RailwayNode getFrom()
-	{
-		return (RailwayNode)a;
+		return new Railway((IndexNode)b,(IndexNode)a,service,speed,computeReverse());
 	}
 
-	public RailwayNode getTo()
-	{
-		return (RailwayNode)b;
-	}
 	
 	public Service getService()
 	{

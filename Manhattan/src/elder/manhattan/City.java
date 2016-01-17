@@ -23,11 +23,11 @@ public class City
 	private static int [] neighbourXs = { 0,-1, 0, 1,-2,-1,1,2,-1,0,1,0};
 	private static int [] neighbourYs = {-2,-1,-1,-1, 0, 0,0,0, 1,1,1,2};
 	
-	private final List<RailwayNode> railwayNodes = new ArrayList<RailwayNode> ();
+	private final List<IndexNode> railwayNodes = new ArrayList<IndexNode> ();
 	
 	private final List<Line> lines = new ArrayList<Line> ();
 	
-	private HighwayNode [] highwayNodes;
+	private List<HighwayNode> highwayNodes;
 	
 	
 	public City(int width, int height, double scale)
@@ -135,7 +135,7 @@ public class City
 		return population;
 	}
 	
-	public List<RailwayNode> getRailwayNodes()
+	public List<IndexNode> getRailwayNodes()
 	{
 		return railwayNodes;
 	}
@@ -250,12 +250,12 @@ public class City
 	
 	private boolean hasService(SingleEdge singleEdge)
 	{
-		for (RailwayNode node : getRailwayNodes())
+		for (IndexNode node : getRailwayNodes())
 		{
 			for (Edge edge : node.getEdges())
 			{
-				RailwayEdge railwayEdge = (RailwayEdge)edge;
-				for (SingleEdge other : railwayEdge.getEdges())
+				Railway railway = (Railway)edge;
+				for (SingleEdge other : railway.getEdges())
 				{
 					if (other.equals(singleEdge))
 					{
@@ -273,12 +273,12 @@ public class City
 		return lines;
 	}
 
-	public HighwayNode [] getHighwayNodes()
+	public List<HighwayNode> getHighwayNodes()
 	{
 		return highwayNodes;
 	}
 
-	public void setHighwayNodes(HighwayNode [] highwayNodes)
+	public void setHighwayNodes(List<HighwayNode> highwayNodes)
 	{
 		this.highwayNodes = highwayNodes;
 	}

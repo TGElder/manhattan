@@ -29,12 +29,6 @@ public class MultiEdge extends Edge
 
 	}
 	
-	
-	
-	public MultiEdge(Node a, Node b, List<SingleEdge> edges)
-	{
-		this(a, b,edges.toArray(new SingleEdge[edges.size()]));
-	}
 
 	public SingleEdge [] getEdges()
 	{

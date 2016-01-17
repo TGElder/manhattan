@@ -1,7 +1,8 @@
 package elder.manhattan.layers;
 
 import elder.manhattan.Block;
-import elder.manhattan.RailwayEdge;
+import elder.manhattan.MultiEdge;
+import elder.manhattan.Railway;
 import elder.manhattan.SelectionListener;
 import elder.manhattan.SingleEdge;
 import elder.manhattan.graphics.CityDrawerLayer;
@@ -42,12 +43,12 @@ public class DijkstraLayer extends CityDrawerLayer implements SelectionListener<
 					if (selectedBlock.getStation().getIndex()!=null&&selectedBlock.getStation().getIndex()<dijkstra.getDirections().length)
 					{
 					
-						RailwayEdge [] tubeways = dijkstra.getDirections()[selectedBlock.getStation().getIndex()];
+						MultiEdge [] tubeways = dijkstra.getDirections()[selectedBlock.getStation().getIndex()];
 						
 						if (tubeways!=null)
 						{
 						
-							for (RailwayEdge railwayEdge : tubeways)
+							for (MultiEdge railwayEdge : tubeways)
 							{
 								if (railwayEdge!=null)
 								{

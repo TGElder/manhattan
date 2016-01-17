@@ -5,40 +5,47 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.PriorityQueue;
 
-import elder.manhattan.RailwayEdge;
-import elder.manhattan.RailwayNode;
+import elder.manhattan.IndexNode;
+import elder.manhattan.MultiEdge;
+import elder.manhattan.Railway;
 import elder.manhattan.Routine;
 import elder.manhattan.Simulation;
 import elder.manhattan.Station;
+import elder.manhattan.TimeEdge;
 import elder.network.Edge;
 
 public class Dijkstra implements Routine
 {
 
-	private RailwayEdge [][] directions;
+	private MultiEdge [][] directions;
 	private double [][] distances;
+	
+	private final List<? extends IndexNode> nodes;
+	
+	public Dijkstra(List<? extends IndexNode> nodes)
+	{
+		this.nodes = nodes;
+	}
 
 	
 	@Override
 	public String run(Simulation simulation)
 	{
-		int noNodes = simulation.getCity().getRailwayNodes().size();
-		
-		List<RailwayNode> nodes = simulation.getCity().getRailwayNodes();
-		
+		int noNodes = nodes.size();
+				
 		int [] open = new int[noNodes];
 		int [] closed = new int[noNodes];
 	
 		final double [] distances = new double[noNodes];
 		
-		this.directions = new RailwayEdge[noNodes][noNodes];
+		this.directions = new MultiEdge[noNodes][noNodes];
 		this.distances = new double[noNodes][noNodes];
 		
-		PriorityQueue<RailwayNode> openList = new PriorityQueue<RailwayNode> (new Comparator<RailwayNode>() 
+		PriorityQueue<IndexNode> openList = new PriorityQueue<IndexNode> (new Comparator<IndexNode>() 
 		{
 
 			@Override
-			public int compare(RailwayNode a, RailwayNode b)
+			public int compare(IndexNode a, IndexNode b)
 			{
 				if (distances[a.getIndex()]<distances[b.getIndex()])
 				{
@@ -61,13 +68,13 @@ public class Dijkstra implements Routine
 		
 		for (int s=0; s<noNodes; s++)
 		{
-			if (nodes.get(s) instanceof Station) // Not a platform
-			{
+//			if (nodes.get(s) instanceof Station) // Not a platform
+//			{
 			
 				session++;
 				
 				init(distances,Double.POSITIVE_INFINITY);
-				final RailwayEdge [] directions = new RailwayEdge[noNodes];
+				final MultiEdge [] directions = new MultiEdge[noNodes];
 	
 				openList.clear();
 				
@@ -77,14 +84,14 @@ public class Dijkstra implements Routine
 				distances[s] = 0;
 				directions[s] = null;
 				
-				RailwayNode focus;
+				IndexNode focus;
 				
 				while ((focus = openList.poll())!=null)
 				{
 					for (Edge edge : focus.getEdges())
 					{
-						RailwayEdge tube = (RailwayEdge)edge;
-						RailwayNode neighbour  = tube.getTo();
+						TimeEdge tube = (TimeEdge)edge;
+						IndexNode neighbour  = (IndexNode)tube.b;
 						
 						double focusDistance = distances[focus.getIndex()] + (tube.getTime());
 												
@@ -101,7 +108,7 @@ public class Dijkstra implements Routine
 									open[neighbour.getIndex()] = session;
 								}
 								
-								directions[neighbour.getIndex()] = (RailwayEdge)tube.getReverse();
+								directions[neighbour.getIndex()] = (MultiEdge)tube.getReverse();
 								distances[neighbour.getIndex()] = focusDistance;
 								
 								openList.add(neighbour);
@@ -119,7 +126,7 @@ public class Dijkstra implements Routine
 					this.distances[s][s2] = distances[s2];
 				}
 			}
-		}
+//		}
 		
 		return null;
 	}
@@ -132,7 +139,7 @@ public class Dijkstra implements Routine
 		}
 	}
 	
-	public RailwayEdge [][] getDirections()
+	public MultiEdge [][] getDirections()
 	{
 		return directions;
 	}
@@ -143,18 +150,18 @@ public class Dijkstra implements Routine
 		return distances;
 	}
 	
-	public List<RailwayEdge> getPath(Station from, Station to)
+	public List<MultiEdge> getPath(IndexNode from, IndexNode to)
 	{
 		int focus = from.getIndex();
 		
-		RailwayEdge edge;
+		MultiEdge edge;
 		
-		List<RailwayEdge> out = new ArrayList<RailwayEdge> ();
+		List<MultiEdge> out = new ArrayList<MultiEdge> ();
 		
 		while ((edge = getDirections()[to.getIndex()][focus])!=null)
 		{
 			out.add(edge);
-			focus = ((RailwayNode)edge.b).getIndex();
+			focus = ((IndexNode)edge.b).getIndex();
 		}
 		
 		return out;

@@ -23,5 +23,11 @@ public class IndexNode extends Node
 	{
 		this.index = index;
 	}
+	
+	@Override
+	public boolean equals(Object other)
+	{
+		return this==other;
+	}
 
 }

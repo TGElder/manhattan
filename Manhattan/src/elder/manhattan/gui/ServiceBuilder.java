@@ -1,6 +1,7 @@
 package elder.manhattan.gui;
 
 
+import java.util.ArrayList;
 import java.util.List;
 
 import elder.geometry.Point;
@@ -22,6 +23,9 @@ public class ServiceBuilder extends Mode implements SelectionListener<Block>,Rou
 	private Station from=null;
 	private Station to=null;
 
+	private final List<Station> fromStations = new ArrayList<Station> ();
+	private final List<Station> toStations = new ArrayList<Station> ();
+	
 	
 	private final City city;
 	private final Pathfinder pathfinder;
@@ -70,40 +74,8 @@ public class ServiceBuilder extends Mode implements SelectionListener<Block>,Rou
 		{
 			if ( (from!=null&&to!=null) && (from!=to))
 			{
-				Platform fromPlatform = from.getPlatform(service);
-				Platform toPlatform = to.getPlatform(service);
-								
-				if (fromPlatform!=null&&toPlatform!=null&&(fromPlatform.getEdge(toPlatform))!=null)
-				{
-					try 
-					{
-						service.unlink(city, fromPlatform, toPlatform);
-					}
-					catch (Exception e)
-					{
-						System.out.println(e.getMessage());
-					}
-				}
-				else
-				{
-				
-					List<SingleEdge> singleEdges = pathfinder.findPath(from.getBlock().getTrackNode(), to.getBlock().getTrackNode(), city.getBlocks().length);
-					
-					if (singleEdges!=null)
-					{
-						try
-						{
-							service.link(city, from, to, singleEdges);
-						}
-						catch (Exception e)
-						{
-							System.out.println(e.getMessage());
-						}
-					}
-					
-				}
-				
-				
+				fromStations.add(from);
+				toStations.add(to);
 			}
 			
 			from = to;
@@ -157,7 +129,48 @@ public class ServiceBuilder extends Mode implements SelectionListener<Block>,Rou
 	@Override
 	public String run(Simulation simulation)
 	{
+		for (int s=0; s<fromStations.size(); s++)
+		{
+			Station from = fromStations.get(s);
+			Station to = toStations.get(s);
+			
+			Platform fromPlatform = from.getPlatform(service);
+			Platform toPlatform = to.getPlatform(service);
+							
+			if (fromPlatform!=null&&toPlatform!=null&&(fromPlatform.getEdge(toPlatform))!=null)
+			{
+				try 
+				{
+					service.unlink(city, fromPlatform, toPlatform);
+				}
+				catch (Exception e)
+				{
+					System.out.println(e.getMessage());
+				}
+			}
+			else
+			{
+			
+				List<SingleEdge> singleEdges = pathfinder.findPath(from.getBlock().getTrackNode(), to.getBlock().getTrackNode(), city.getBlocks().length);
+				
+				if (singleEdges!=null)
+				{
+					try
+					{
+						service.link(city, from, to, singleEdges);
+					}
+					catch (Exception e)
+					{
+						System.out.println(e.getMessage());
+					}
+				}
+				
+			}
+		}
 		
+		fromStations.clear();
+		toStations.clear();
+
 		
 		return null;
 	}

@@ -9,6 +9,7 @@ import java.util.PriorityQueue;
 
 import elder.manhattan.Block;
 import elder.manhattan.City;
+import elder.manhattan.Highway;
 import elder.manhattan.HighwayNode;
 import elder.manhattan.IndexNode;
 import elder.manhattan.MultiEdge;
@@ -158,8 +159,8 @@ public class CreateHighways implements Routine
 			edges.add(edge);
 		}
 		
-		MultiEdge out = new MultiEdge(from,to,edges);
-		MultiEdge reverse = new MultiEdge(to,from,out.computeReverse());
+		Highway out = new Highway(from,to,edges.toArray(new SingleEdge[edges.size()]),1f);
+		Highway reverse = new Highway(to,from,out.computeReverse(),1f);
 	
 		out.setReverse(reverse);
 		reverse.setReverse(out);

@@ -6,8 +6,9 @@ import java.util.List;
 import elder.manhattan.Block;
 import elder.manhattan.City;
 import elder.manhattan.Commute;
-import elder.manhattan.RailwayEdge;
-import elder.manhattan.RailwayNode;
+import elder.manhattan.IndexNode;
+import elder.manhattan.MultiEdge;
+import elder.manhattan.Railway;
 import elder.manhattan.Routine;
 import elder.manhattan.Simulation;
 import elder.manhattan.SingleEdge;
@@ -17,13 +18,15 @@ import elder.network.Edge;
 public class PlaceTraffic implements Routine
 {
 
-	private final Dijkstra dijkstra;
+	private final Dijkstra roadDijkstra;
+	private final Dijkstra railDijkstra;
 	
 	private int maxTraffic=0;
 	
-	public PlaceTraffic(Dijkstra dijkstra)
+	public PlaceTraffic(Dijkstra roadDijkstra, Dijkstra railDijkstra)
 	{
-		this.dijkstra = dijkstra;
+		this.roadDijkstra = roadDijkstra;
+		this.railDijkstra = railDijkstra;
 	}
 	
 	@Override
@@ -31,11 +34,23 @@ public class PlaceTraffic implements Routine
 	{
 		City city = simulation.getCity();
 		
-		for (RailwayNode node : city.getRailwayNodes())
+		for (IndexNode node : city.getRailwayNodes())
 		{
 			for (Edge edge : node.getEdges())
 			{
-				for (SingleEdge singleEdge : ((RailwayEdge)edge).getEdges())
+				for (SingleEdge singleEdge : ((MultiEdge)edge).getEdges())
+				{
+					singleEdge.resetTraffic();
+				}
+				
+			}
+		}
+		
+		for (IndexNode node : city.getHighwayNodes())
+		{
+			for (Edge edge : node.getEdges())
+			{
+				for (SingleEdge singleEdge : ((MultiEdge)edge).getEdges())
 				{
 					singleEdge.resetTraffic();
 				}
@@ -51,10 +66,7 @@ public class PlaceTraffic implements Routine
 		
 		for (Block block : city.getBlocks())
 		{
-			for (Edge edge : block.getTrackNode().getEdges())
-			{
-				((SingleEdge)edge).resetTraffic();
-			}
+			
 			
 			if (!block.getResidents().isEmpty())
 			{
@@ -81,8 +93,8 @@ public class PlaceTraffic implements Routine
 					
 					count++;
 					Block focus = city.getBlocks()[b];
-					
-					double distance = (Math.abs(block.getRoadNode().x - focus.getRoadNode().x) + Math.abs(block.getRoadNode().y - focus.getRoadNode().y));
+										
+					double distance = roadDijkstra.getDistances()[block.getHighwayNode().getIndex()][focus.getHighwayNode().getIndex()];
 					//double distance = Double.POSITIVE_INFINITY;
 					
 					Station from=null;
@@ -92,7 +104,7 @@ public class PlaceTraffic implements Routine
 					{
 						for (Station s2: focus.getStations())
 						{
-							double focusDistance = dijkstra.getDistances()[s.getIndex()][s2.getIndex()];
+							double focusDistance = railDijkstra.getDistances()[s.getIndex()][s2.getIndex()];
 															
 							if (focusDistance<distance)
 							{
@@ -104,24 +116,31 @@ public class PlaceTraffic implements Routine
 						}
 					}
 					
+					List<MultiEdge> path;
+					
 					if (from!=null)
 					{
-						List<RailwayEdge> path = dijkstra.getPath(from, to);
-						//List<Tubeway> path = Collections.emptyList();
-													
-						if (path!=null)
+						path = railDijkstra.getPath(from, to);
+												
+					}
+					else
+					{
+						path = roadDijkstra.getPath(block.getHighwayNode(), focus.getHighwayNode());
+					}
+					
+					
+					if (path!=null)
+					{
+						
+						for (MultiEdge multiEdge : path)
 						{
-							
-							for (RailwayEdge railwayEdge : path)
+							for (SingleEdge singleEdge : multiEdge.getEdges())
 							{
-								for (SingleEdge singleEdge : railwayEdge.getEdges())
-								{
-									singleEdge.addTraffic(commuters[b]);
-									maxTraffic = Math.max(maxTraffic, singleEdge.getTraffic());
-	
-								}
-								
+								singleEdge.addTraffic(commuters[b]);
+								maxTraffic = Math.max(maxTraffic, singleEdge.getTraffic());
+
 							}
+							
 						}
 					}
 				}
