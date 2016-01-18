@@ -8,5 +8,13 @@
 		</attributes>
 	</classpathentry>
 	<classpathentry kind="lib" path="lib/lwjgl-2.9.3/jar/lwjgl_util.jar"/>
+	<classpathentry kind="lib" path="lib/voronoi/activation.jar"/>
+	<classpathentry kind="lib" path="lib/voronoi/core.jar"/>
+	<classpathentry kind="lib" path="lib/voronoi/JavaAPIforKml-2.2.0.jar"/>
+	<classpathentry kind="lib" path="lib/voronoi/jaxb-api.jar"/>
+	<classpathentry kind="lib" path="lib/voronoi/jaxb-impl.jar"/>
+	<classpathentry kind="lib" path="lib/voronoi/jcoord-1.0.jar"/>
+	<classpathentry kind="lib" path="lib/voronoi/jsr173_1.0_api.jar"/>
+	<classpathentry kind="lib" path="lib/voronoi/quickhull3d.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
