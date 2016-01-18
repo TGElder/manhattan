@@ -40,7 +40,9 @@ import elder.manhattan.routines.AddChildren;
 import elder.manhattan.routines.AddImmigrants;
 import elder.manhattan.routines.Allocate;
 import elder.manhattan.routines.CreateHighwayNodes;
+import elder.manhattan.routines.CreateHighwayNodesFromFields;
 import elder.manhattan.routines.CreateHighways;
+import elder.manhattan.routines.CreateHighwaysViaDelauney;
 import elder.manhattan.routines.CreateRoads;
 import elder.manhattan.routines.Dijkstra;
 import elder.manhattan.routines.OpenFields;
@@ -144,7 +146,7 @@ public class Controls extends JFrame
 	{
 		
 		
-		Simulation sim = new Simulation(new City(180,180,1),1987,500);
+		Simulation sim = new Simulation(new City(180,180,1),1988,500);
 
 		CityDrawer cityDrawer = new CityDrawer(sim,1024,1024);
 		
@@ -157,11 +159,11 @@ public class Controls extends JFrame
 		HoverSelector selector = new HoverSelector(sim);
 		cityDrawer.addMouseListener(selector);
 		
-		sim.run(new OpenRandomFields(0.005),false);
+		sim.run(new OpenRandomFields(0.01),false);
 		sim.run(new Populate(1000),false);
-		sim.run(new CreateHighwayNodes(),false);
+		sim.run(new CreateHighwayNodesFromFields(),false);
 		sim.run(new CreateRoads(),false);
-		sim.run(new CreateHighways(),false);
+		sim.run(new CreateHighwaysViaDelauney(),false);
 		
 		Dijkstra roadDijkstra = new Dijkstra(sim.getCity().getHighwayNodes());
 

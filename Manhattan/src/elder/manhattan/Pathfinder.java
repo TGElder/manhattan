@@ -11,10 +11,16 @@ public class Pathfinder
 {
 
 	private final City city;
+	private boolean trafficBias = false;
 	
 	public Pathfinder(City city)
 	{
 		this.city = city;
+	}
+	
+	public void setTrafficBias(boolean trafficBias)
+	{
+		this.trafficBias = trafficBias;
 	}
 	
 	public List<SingleEdge> findPath (IndexNode from, IndexNode to, int max)
@@ -75,8 +81,17 @@ public class Pathfinder
 				SingleEdge singleEdge = (SingleEdge)edge;
 				IndexNode neighbour  = (IndexNode)(singleEdge.b);
 				
-				double focusDistance = distances[focus.getIndex()] + (singleEdge.length);
+				double focusDistance = distances[focus.getIndex()];
 				
+				if (trafficBias)
+				{
+					focusDistance += singleEdge.length/(singleEdge.getTraffic()+1);
+				}
+				else
+				{
+					focusDistance += singleEdge.length;
+				}
+								
 				if (!closed[neighbour.getIndex()])
 				{
 					if (focusDistance < distances[neighbour.getIndex()])

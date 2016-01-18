@@ -1,18 +1,15 @@
 package elder.geometry;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
-import megamu.mesh.MPolygon;
 import megamu.mesh.Delaunay;
 
 public class DelaunayDiagrammer
 {
 	private static double SCALE=1000;
 	
-	public static List<Collection<Point>> draw(List<Point> points)
+	public static List<Collection<Point>> draw(List<? extends Point> points)
 	{
 		double[][] delaunayPoints = new double[points.size()][2];
 

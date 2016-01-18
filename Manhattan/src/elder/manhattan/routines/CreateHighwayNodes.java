@@ -27,7 +27,7 @@ public class CreateHighwayNodes implements Routine
 		{
 			for (int y=1; y<city.getHeight(); y+=3)
 			{
-				HighwayNode node = new HighwayNode(city.getBlock(x, y).getRoadNode().x,city.getBlock(x, y).getRoadNode().y,nodes.size(),city.getBlock(x, y));
+				HighwayNode node = new HighwayNode(city.getBlock(x, y),nodes.size());
 				nodes.add(node);
 				
 				List<Block> members = new ArrayList<Block> ();

@@ -5,9 +5,9 @@ public class HighwayNode extends IndexNode
 	private final Block centre;
 	private Block [] members;
 	
-	public HighwayNode(double x, double y, Integer integer, Block centre)
+	public HighwayNode(Block centre, Integer integer)
 	{
-		super(x, y, integer);
+		super(centre.getRoadNode().x, centre.getRoadNode().y, integer);
 		this.centre = centre;
 	}
 
