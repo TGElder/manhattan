@@ -5,9 +5,13 @@ import java.util.List;
 
 import elder.geometry.Point;
 import elder.manhattan.Block;
+import elder.manhattan.City;
+import elder.manhattan.IndexNode;
 import elder.manhattan.Routine;
 import elder.manhattan.SelectionListener;
 import elder.manhattan.Simulation;
+import elder.manhattan.Station;
+import elder.manhattan.routines.Dijkstra;
 
 
 public class StationBuilder extends Mode implements SelectionListener<Block>,Routine
@@ -17,9 +21,16 @@ public class StationBuilder extends Mode implements SelectionListener<Block>,Rou
 	
 	private Block to=null;
 
-	public StationBuilder()
+	private final City city;
+	private final Dijkstra roadDijkstra;
+	private final double threshold;
+	
+	public StationBuilder(City city, Dijkstra roadDijkstra, double threshold)
 	{
 		super("Station Builder");
+		this.city = city;
+		this.roadDijkstra = roadDijkstra;
+		this.threshold = threshold;
 	}
 	
 	@Override
@@ -115,12 +126,20 @@ public class StationBuilder extends Mode implements SelectionListener<Block>,Rou
 		
 		if (to!=null)
 		{
+			
+			
+			
+			
 			drawPolygon(to.getPolygon(),1f,1f,0,0.5f,true);
 			
-			for (Block block : to.getNeighbours())
+			for (Block block : city.getBlocks())
 			{
+				if (roadDijkstra.getDistances()[to.getHighwayNode().getIndex()][block.getHighwayNode().getIndex()]<=threshold)
+				{
+					drawPolygon(block.getPolygon(),1f,1f,0,0.25f,true);
+
+				}
 				
-				drawPolygon(block.getPolygon(),1f,1f,0,0.5f,true);
 				
 			}
 		}
@@ -133,6 +152,7 @@ public class StationBuilder extends Mode implements SelectionListener<Block>,Rou
 	{
 
 	}
+
 
 
 }

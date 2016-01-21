@@ -12,11 +12,13 @@ import elder.manhattan.Station;
 public class Allocate implements Routine
 {
 
-	private final Dijkstra dijkstra;
+	private final Dijkstra railDijkstra;
+	private final Dijkstra roadDijkstra;
 	
-	public Allocate(Dijkstra dijkstra)
+	public Allocate(Dijkstra railDijkstra, Dijkstra roadDijkstra)
 	{
-		this.dijkstra = dijkstra;
+		this.railDijkstra = railDijkstra;
+		this.roadDijkstra = roadDijkstra;
 	}
 	
 	@Override
@@ -106,13 +108,16 @@ public class Allocate implements Routine
 					
 					if (focus.isBuilt()&&focus.getPopulation()<simulation.BLOCK_POPULATION_LIMIT)
 					{
-						double distance = (Math.abs(block.getRoadNode().x - focus.getRoadNode().x) + Math.abs(block.getRoadNode().y - focus.getRoadNode().y));
+						double distance = roadDijkstra.getDistances()[block.getHighwayNode().getIndex()][focus.getHighwayNode().getIndex()];
 						
 						for (Station s : block.getStations())
 						{
 							for (Station s2: focus.getStations())
 							{
-								distance = Math.min(distance, dijkstra.getDistances()[s.getIndex()][s2.getIndex()]);
+								double toStation = roadDijkstra.getDistances()[block.getHighwayNode().getIndex()][s.getBlock().getHighwayNode().getIndex()];
+								double station2station = railDijkstra.getDistances()[s.getIndex()][s2.getIndex()];
+								double fromStation = roadDijkstra.getDistances()[s2.getBlock().getHighwayNode().getIndex()][block.getHighwayNode().getIndex()];
+								distance = Math.min(distance, toStation + station2station + fromStation);
 							}
 						}
 						

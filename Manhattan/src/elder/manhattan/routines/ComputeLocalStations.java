@@ -42,7 +42,7 @@ public class ComputeLocalStations implements Routine
 					
 					double distance = roadDijkstra.getDistances()[block.getHighwayNode().getIndex()][station.getBlock().getHighwayNode().getIndex()];
 					
-					if (distance<threshold)
+					if (distance<=threshold)
 					{
 						local.add(station);
 					}
@@ -73,6 +73,7 @@ public class ComputeLocalStations implements Routine
 			
 			local.removeAll(toRemove);
 			
+			block.setStations(local.toArray(new Station[local.size()]));
 			
 		}
 		

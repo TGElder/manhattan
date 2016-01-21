@@ -68,6 +68,8 @@ public class Dijkstra implements Routine
 		
 		for (int s=0; s<noNodes; s++)
 		{
+
+			
 //			if (nodes.get(s) instanceof Station) // Not a platform
 //			{
 			

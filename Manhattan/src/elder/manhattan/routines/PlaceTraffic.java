@@ -14,6 +14,7 @@ import elder.manhattan.Simulation;
 import elder.manhattan.SingleEdge;
 import elder.manhattan.Station;
 import elder.network.Edge;
+import elder.network.Path;
 
 public class PlaceTraffic implements Routine
 {
@@ -104,7 +105,11 @@ public class PlaceTraffic implements Routine
 					{
 						for (Station s2: focus.getStations())
 						{
-							double focusDistance = railDijkstra.getDistances()[s.getIndex()][s2.getIndex()];
+							double toStation = roadDijkstra.getDistances()[block.getHighwayNode().getIndex()][s.getBlock().getHighwayNode().getIndex()];
+							double station2station = railDijkstra.getDistances()[s.getIndex()][s2.getIndex()];
+							double fromStation = roadDijkstra.getDistances()[s2.getBlock().getHighwayNode().getIndex()][block.getHighwayNode().getIndex()];
+							
+							double focusDistance = toStation+station2station+fromStation;
 															
 							if (focusDistance<distance)
 							{
@@ -120,29 +125,21 @@ public class PlaceTraffic implements Routine
 					
 					if (from!=null)
 					{
-						path = railDijkstra.getPath(from, to);
+						placeTraffic(roadDijkstra.getPath(block.getHighwayNode(), to.getBlock().getHighwayNode()),commuters[b]);
+
+						placeTraffic(railDijkstra.getPath(from, to),commuters[b]);
+						
+						placeTraffic(roadDijkstra.getPath(from.getBlock().getHighwayNode(),block.getHighwayNode()),commuters[b]);
 												
 					}
 					else
 					{
-						path = roadDijkstra.getPath(block.getHighwayNode(), focus.getHighwayNode());
-					}
-					
-					
-					if (path!=null)
-					{
-						
-						for (MultiEdge multiEdge : path)
-						{
-							for (SingleEdge singleEdge : multiEdge.getEdges())
-							{
-								singleEdge.addTraffic(commuters[b]);
-								maxTraffic = Math.max(maxTraffic, singleEdge.getTraffic());
+						placeTraffic(roadDijkstra.getPath(block.getHighwayNode(), focus.getHighwayNode()),commuters[b]);
 
-							}
-							
-						}
 					}
+					
+					
+					
 				}
 				
 			}
@@ -151,6 +148,25 @@ public class PlaceTraffic implements Routine
 		return count+"";
 		
 		
+	}
+	
+	private void placeTraffic(List<MultiEdge> path, int traffic)
+	{
+		if (path!=null)
+		{
+			
+			for (MultiEdge multiEdge : path)
+			{
+				for (SingleEdge singleEdge : multiEdge.getEdges())
+				{
+					singleEdge.addTraffic(traffic);
+					singleEdge.getReverse().addTraffic(traffic);
+					maxTraffic = Math.max(maxTraffic, singleEdge.getTraffic());
+
+				}
+				
+			}
+		}
 	}
 	
 	public int getMaxTraffic()

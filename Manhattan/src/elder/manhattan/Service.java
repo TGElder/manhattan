@@ -11,7 +11,7 @@ public class Service
 	private String name;
 	private Line line;
 	
-	private final List<Railway> railwaies = new ArrayList<Railway> ();
+	private final List<Railway> railways = new ArrayList<Railway> ();
 	
 	public Service(String string)
 	{
@@ -48,9 +48,9 @@ public class Service
 	
 	public Platform getStart()
 	{
-		if (!railwaies.isEmpty())
+		if (!railways.isEmpty())
 		{
-			return (Platform)(railwaies.get(0).a);
+			return (Platform)(railways.get(0).a);
 		}
 		else
 		{
@@ -60,9 +60,9 @@ public class Service
 	
 	public Platform getEnd()
 	{
-		if (!railwaies.isEmpty())
+		if (!railways.isEmpty())
 		{
-			return (Platform)(railwaies.get(railwaies.size()-1).b);
+			return (Platform)(railways.get(railways.size()-1).b);
 		}
 		else
 		{
@@ -79,7 +79,7 @@ public class Service
 	{
 		
 		
-		if (railwaies.isEmpty()||a==getStart().getStation()||a==getEnd().getStation()||b==getStart().getStation()||b==getEnd().getStation())
+		if (railways.isEmpty()||a==getStart().getStation()||a==getEnd().getStation()||b==getStart().getStation()||b==getEnd().getStation())
 		{
 			Platform platformA = a.getPlatform(this);
 			
@@ -104,28 +104,27 @@ public class Service
 			ab.setReverse(ba);
 			ba.setReverse(ab);
 			
-			if (railwaies.isEmpty())
+			if (railways.isEmpty())
 			{
-				railwaies.add(ab);
+				railways.add(ab);
 			}
 			else if(a==getStart().getStation())
 			{
-				railwaies.add(0,ba);
+				railways.add(0,ba);
 			}
 			else if (a==getEnd().getStation())
 			{
-				railwaies.add(ab);
+				railways.add(ab);
 			}
 			else if (b==getStart().getStation())
 			{
-				railwaies.add(0,ab);
+				railways.add(0,ab);
 			}
 			else if(b==getEnd().getStation())
 			{
-				railwaies.add(ba);
+				railways.add(ba);
 			}
 			
-			System.out.println(railwaies);
 		}
 		else
 		{
@@ -145,15 +144,15 @@ public class Service
 
 			Railway ab;
 			
-			if (railwaies.contains(railway))
+			if (railways.contains(railway))
 			{
 				ab = railway;
-				assert(!railwaies.contains(reverse));
+				assert(!railways.contains(reverse));
 			}
-			else if (railwaies.contains(reverse))
+			else if (railways.contains(reverse))
 			{
 				ab = reverse;
-				assert(!railwaies.contains(railway));
+				assert(!railways.contains(railway));
 			}
 			else
 			{
@@ -161,13 +160,13 @@ public class Service
 				assert(false);
 			}
 			
-			int index = railwaies.indexOf(ab);
+			int index = railways.indexOf(ab);
 			
-			if (index==0||index==railwaies.size()-1)
+			if (index==0||index==railways.size()-1)
 			{
-				railwaies.remove(ab);
+				railways.remove(ab);
 				
-				System.out.println(railwaies);
+				System.out.println(railways);
 				
 				a.removeEdge(railway);
 				b.removeEdge(reverse);
@@ -215,7 +214,7 @@ public class Service
 	
 	public List<Railway> getSections()
 	{
-		return railwaies;
+		return railways;
 	}
 	
 	

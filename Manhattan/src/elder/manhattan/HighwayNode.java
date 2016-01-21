@@ -1,19 +1,13 @@
 package elder.manhattan;
 
+
 public class HighwayNode extends IndexNode
 {
-	private final Block centre;
 	private Block [] members;
 	
-	public HighwayNode(Block centre, Integer integer)
+	public HighwayNode(double x, double y, Integer integer)
 	{
-		super(centre.getRoadNode().x, centre.getRoadNode().y, integer);
-		this.centre = centre;
-	}
-
-	public Block getCentre()
-	{
-		return centre;
+		super(x, y, integer);
 	}
 
 	public Block [] getMembers()

@@ -1,6 +1,7 @@
 package elder.manhattan.layers;
 
 import elder.manhattan.Block;
+import elder.manhattan.MultiEdge;
 import elder.manhattan.Simulation;
 import elder.manhattan.SingleEdge;
 import elder.manhattan.routines.PlaceTraffic;
@@ -26,18 +27,22 @@ public class RoadLayer extends SimulationLayer
 		
 		for (Block block : simulation.getCity().getBlocks())
 		{
-			for (Edge edge : block.getRoadNode().getEdges())
+			for (Edge multiEdge : block.getHighwayNode().getEdges())
 			{
-				SingleEdge singleEdge = (SingleEdge) edge;
-				
-				if (traffic.getMaxTraffic()>0)
+				for (Edge edge: ((MultiEdge)multiEdge).getEdges())
 				{
-					if (singleEdge.getTraffic()>0)
+					SingleEdge singleEdge = (SingleEdge) edge;
+					
+					if (traffic.getMaxTraffic()>0)
 					{
-						float width = 1 + (singleEdge.getTraffic()*9f)/(traffic.getMaxTraffic()*1f);
-						drawLine(edge,0f,0f,0f,width,false);
+						if (singleEdge.getTraffic()>0)
+						{
+							float width = 1 + (singleEdge.getTraffic()*9f)/(traffic.getMaxTraffic()*1f);
+							drawLine(edge,0f,0f,0f,width,false);
+						}
 					}
 				}
+				
 				
 			}
 

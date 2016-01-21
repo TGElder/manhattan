@@ -19,7 +19,7 @@ public class HighwayNodeLayer extends SimulationLayer
 				
 		for (Block block : simulation.getCity().getBlocks())
 		{
-			drawLine(new Line(block.getRoadNode(),block.getHighwayNode()),1f,0f,0f,2f,false);
+			drawLine(new Line(block.getTrackNode(),block.getHighwayNode()),1f,0f,0f,2f,false);
 		}
 		
 	}

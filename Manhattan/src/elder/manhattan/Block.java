@@ -25,13 +25,11 @@ public class Block
 	
 	private Station station;
 	
-	private final IndexNode roadNode;
 	private final IndexNode trackNode;
 	private HighwayNode highwayNode;
 	
 	public Block(int x, int y, int index, Polygon polygon, Point centre)
 	{
-		roadNode = new IndexNode(centre.x,centre.y,index);
 		trackNode = new IndexNode(centre.x,centre.y,index);
 		
 		this.cityX = x;
@@ -132,10 +130,6 @@ public class Block
 		this.stations = stations;
 	}
 
-	public IndexNode getRoadNode()
-	{
-		return roadNode;
-	}
 
 	public IndexNode getTrackNode()
 	{
@@ -152,10 +146,5 @@ public class Block
 		this.highwayNode = node;
 	}
 	
-	public boolean isCentreOfHighwayNode()
-	{
-		return highwayNode.getCentre()==this;
-	}
-
 	
 }
