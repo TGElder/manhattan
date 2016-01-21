@@ -1,6 +1,7 @@
 package elder.manhattan.routines;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import elder.manhattan.Block;
@@ -47,7 +48,7 @@ public class CreateHighwayNodes implements Routine
 				node.setMembers(members.toArray(new Block[members.size()]));
 			}
 		}
-		
+				
 		city.setHighwayNodes(nodes);
 		
 		return null;

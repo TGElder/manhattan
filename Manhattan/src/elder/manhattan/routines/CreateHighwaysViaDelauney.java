@@ -1,6 +1,8 @@
 package elder.manhattan.routines;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 import elder.geometry.DelaunayDiagrammer;
@@ -16,23 +18,26 @@ import elder.manhattan.SingleEdge;
 public class CreateHighwaysViaDelauney implements Routine
 {
 
+	private int trafficBias;
+	
+	public CreateHighwaysViaDelauney(int trafficBias)
+	{
+		this.trafficBias = trafficBias;
+	}
+	
 	@Override
 	public String run(Simulation simulation)
 	{
 		Pathfinder pathfinder = new Pathfinder(simulation.getCity());
 		pathfinder.setTrafficBias(true);
 		
-		List<HighwayNode> nodes = simulation.getCity().getHighwayNodes();
+		List<HighwayNode> nodes = new ArrayList<HighwayNode>(simulation.getCity().getHighwayNodes());
+		
+		Collections.shuffle(nodes);
 		
 		List<Collection<Point>> delauney = DelaunayDiagrammer.draw(nodes);
 		
-		double [] modifiers = new double[simulation.getCity().getBlocks().length];
-		
-		for (int b=0; b<simulation.getCity().getBlocks().length; b++)
-		{
-			modifiers[b] = 1;
-		}
-		
+
 		for (int n=0; n<nodes.size(); n++)
 		{
 			HighwayNode a = nodes.get(n);
@@ -41,16 +46,16 @@ public class CreateHighwaysViaDelauney implements Routine
 			{
 				HighwayNode b = (HighwayNode)neighbour;
 				
-				if (b.getIndex()>a.getIndex())
+				if (nodes.indexOf(b)>nodes.indexOf(a))
 				{
 					List<SingleEdge> path = pathfinder.findPath(a.getCentre().getRoadNode(), b.getCentre().getRoadNode(), simulation.getCity().getBlocks().length);
 					
 					for (SingleEdge singleEdge : path)
 					{
 						singleEdge.resetTraffic();
-						singleEdge.addTraffic(1);
+						singleEdge.addTraffic(trafficBias);
 						singleEdge.getReverse().resetTraffic();
-						singleEdge.getReverse().addTraffic(1);
+						singleEdge.getReverse().addTraffic(trafficBias);
 					}
 					
 					Highway highway = new Highway(a,b,path.toArray(new SingleEdge[path.size()]),1);
@@ -68,6 +73,7 @@ public class CreateHighwaysViaDelauney implements Routine
 			}
 			
 		}
+		
 		
 		return null;
 	}

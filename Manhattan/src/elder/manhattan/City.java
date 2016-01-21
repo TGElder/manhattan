@@ -140,7 +140,7 @@ public class City
 		return railwayNodes;
 	}
 	
-	public void createTrack(Block from, Block to)
+	public SingleEdge createTrack(Block from, Block to)
 	{
 		assert(!from.getTrackNode().hasEdge(to.getTrackNode()));
 		
@@ -152,6 +152,8 @@ public class City
 		
 		from.getTrackNode().addEdge(fromTo);
 		to.getTrackNode().addEdge(toFrom);
+		
+		return fromTo;
 		
 	}
 	

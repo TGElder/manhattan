@@ -22,10 +22,12 @@ import elder.manhattan.Simulation;
 import elder.manhattan.graphics.CityDrawer;
 import elder.manhattan.graphics.CityDrawerLayer;
 import elder.manhattan.layers.BlockLayer;
+import elder.manhattan.layers.CommuteLayer;
 import elder.manhattan.layers.DijkstraLayer;
 import elder.manhattan.layers.HighwayLayer;
 import elder.manhattan.layers.HighwayNodeLayer;
 import elder.manhattan.layers.KatherineLayer;
+import elder.manhattan.layers.LocalStationsLayer;
 import elder.manhattan.layers.PathfindTestLayer;
 import elder.manhattan.layers.PlatformLayer;
 import elder.manhattan.layers.RailwayLayer;
@@ -39,11 +41,14 @@ import elder.manhattan.layers.TrackLayer;
 import elder.manhattan.routines.AddChildren;
 import elder.manhattan.routines.AddImmigrants;
 import elder.manhattan.routines.Allocate;
+import elder.manhattan.routines.ComputeLocalStations;
 import elder.manhattan.routines.CreateHighwayNodes;
+import elder.manhattan.routines.CreateHighwayNodesEnsuringCoverage;
 import elder.manhattan.routines.CreateHighwayNodesFromFields;
 import elder.manhattan.routines.CreateHighways;
 import elder.manhattan.routines.CreateHighwaysViaDelauney;
 import elder.manhattan.routines.CreateRoads;
+import elder.manhattan.routines.CreateTestTubes;
 import elder.manhattan.routines.Dijkstra;
 import elder.manhattan.routines.OpenFields;
 import elder.manhattan.routines.OpenRandomFields;
@@ -146,7 +151,7 @@ public class Controls extends JFrame
 	{
 		
 		
-		Simulation sim = new Simulation(new City(180,180,1),1988,500);
+		Simulation sim = new Simulation(new City(160,160,1),1988,500);
 
 		CityDrawer cityDrawer = new CityDrawer(sim,1024,1024);
 		
@@ -156,15 +161,17 @@ public class Controls extends JFrame
 		Dijkstra dijkstra = new Dijkstra(sim.getCity().getRailwayNodes());	
 
 		
+		
 		HoverSelector selector = new HoverSelector(sim);
 		cityDrawer.addMouseListener(selector);
 		
 		sim.run(new OpenRandomFields(0.01),false);
 		sim.run(new Populate(1000),false);
-		sim.run(new CreateHighwayNodesFromFields(),false);
+		sim.run(new CreateHighwayNodesEnsuringCoverage(5),false);
 		sim.run(new CreateRoads(),false);
-		sim.run(new CreateHighwaysViaDelauney(),false);
-		
+		sim.run(new CreateHighwaysViaDelauney(1),false);
+		sim.run(new CreateTestTubes(),false);
+
 		Dijkstra roadDijkstra = new Dijkstra(sim.getCity().getHighwayNodes());
 
 		sim.run(roadDijkstra,false);
@@ -188,6 +195,7 @@ public class Controls extends JFrame
 		//sim.addRoutine(new ComputeTubeways());
 
 		sim.addRoutine(dijkstra);
+		sim.addRoutine(new ComputeLocalStations(dijkstra,roadDijkstra,20));
 		sim.addRoutine(new Allocate(dijkstra));
 		PlaceTraffic placeTraffic = new PlaceTraffic(roadDijkstra,dijkstra);
 		sim.addRoutine(placeTraffic);
@@ -208,6 +216,7 @@ public class Controls extends JFrame
 		RoadLayer roadLayer = new RoadLayer(placeTraffic);
 		roadLayer.disable();
 		StationLayer stationLayer = new StationLayer();
+		
 		PlatformLayer platformLayer = new PlatformLayer();
 		StationCoverageLayer stationCoverageLayer = new StationCoverageLayer();
 		HighwayNodeLayer highwayNodes = new HighwayNodeLayer();
@@ -221,6 +230,10 @@ public class Controls extends JFrame
 		selector.getSelectedBlock().addListener(selectedBlock);
 		
 		// MOUSE LAYERS
+		LocalStationsLayer localStations = new LocalStationsLayer(sim.getCity(),dijkstra,roadDijkstra,10);
+		localStations.disable();
+		selector.getSelectedBlock().addListener(localStations);
+
 		HighwayLayer highwayLayer = new HighwayLayer();
 		highwayLayer.disable();
 		selector.getSelectedBlock().addListener(highwayLayer);
@@ -232,6 +245,11 @@ public class Controls extends JFrame
 		DijkstraLayer dijkstraLayer = new DijkstraLayer(dijkstra);
 		selector.getSelectedBlock().addListener(dijkstraLayer);
 		cityDrawer.addLayer(dijkstraLayer);
+		
+		CommuteLayer commuteLayer = new CommuteLayer(sim.getCity(),roadDijkstra,dijkstra);
+		selector.getSelectedBlock().addListener(commuteLayer);
+		cityDrawer.addLayer(commuteLayer);
+	
 		
 		PathfindTestLayer pathfindTestLayer = new PathfindTestLayer(dijkstra);
 		selector.getSelectedBlock().addListener(pathfindTestLayer);
@@ -307,6 +325,7 @@ public class Controls extends JFrame
 		cityDrawer.addMouseListener(manager);
 		manager.setMode(trackBuilder);
 
+		cityDrawer.addLayer(localStations);
 		cityDrawer.addLayer(highwayLayer);
 		cityDrawer.addLayer(railwayLayer);
 		cityDrawer.addLayer(selectedBlock);

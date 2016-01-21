@@ -28,6 +28,10 @@ public class BlockLayer extends SimulationLayer
 				drawPolygon(block.getPolygon(),occupancy,occupancy,occupancy,1,true);
 				
 			}
+			else if (!block.getResidents().isEmpty()&&!block.getWorkers().isEmpty())
+			{
+				drawPolygon(block.getPolygon(),1f,0f,0f,1,true);
+			}
 			else
 			{
 				drawPolygon(block.getPolygon(),0f,1f,0f,1,true);

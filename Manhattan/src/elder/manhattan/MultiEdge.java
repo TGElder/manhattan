@@ -41,7 +41,7 @@ public class MultiEdge extends Edge
 		
 		for (int e=0; e<edges.length; e++)
 		{
-			reverse[e] = edges[(edges.length - 1) - e];
+			reverse[e] = edges[(edges.length - 1) - e].getReverse();
 		}
 		
 		return reverse;
