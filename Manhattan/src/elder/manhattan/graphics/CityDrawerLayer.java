@@ -11,9 +11,8 @@ import elder.geometry.Polygon;
 public abstract class CityDrawerLayer
 {
 	
-	protected List<Drawable> next = Collections.emptyList();
-	protected List<Drawable> ready = Collections.emptyList();
-	protected List<Drawable> current = Collections.emptyList();
+	private List<Drawable> next = Collections.emptyList();
+	private List<Drawable> ready = Collections.emptyList();
 	
 	protected boolean display=true;
 	
@@ -22,6 +21,7 @@ public abstract class CityDrawerLayer
 	private String name;
 	
 	private boolean drawing=false;
+		
 	
 	public CityDrawerLayer(String name)
 	{
@@ -32,11 +32,13 @@ public abstract class CityDrawerLayer
 	{
 		if (display)
 		{
-			current = ready;
-			
+			List<Drawable> current = ready;
+						
 			for (Drawable drawable : current)
 			{
+				
 				drawable.draw(cityDrawer);
+				
 			}
 			
 			
@@ -45,25 +47,25 @@ public abstract class CityDrawerLayer
 	
 	protected void drawPolygon(Polygon polygon, float R, float G, float B, float alpha, boolean fill)
 	{
-		next.add(new DrawnPolygon(polygon,R,G,B,alpha,fill));
+		draw(new DrawnPolygon(polygon,R,G,B,alpha,fill));
 	}
 	
 	
 	protected void drawLine(Line line, float R, float G, float B, float thickness, boolean scaled)
 	{
 		
-		next.add(new DrawnLine(line,R,G,B,thickness,scaled));
+		draw(new DrawnLine(line,R,G,B,thickness,scaled));
 	}
 	
 	protected void drawPoint(Point point, float R, float G, float B, float size)
 	{
 		
-		next.add(new DrawnPoint(point,R,G,B,size));
+		draw(new DrawnPoint(point,R,G,B,size));
 	}
 	
 	protected void drawText(String text, int size, Point centre)
 	{
-		next.add(new DrawnText(text,size,centre));
+		draw(new DrawnText(text,size,centre));
 	}
 	
 	protected void draw(Drawable drawable)
@@ -90,8 +92,9 @@ public abstract class CityDrawerLayer
 	
 	public void refresh()
 	{
-		if (enabled())
+		if (!drawing&&enabled())
 		{
+			drawing=true;
 			
 			next = new ArrayList<Drawable> ();
 	
@@ -100,10 +103,15 @@ public abstract class CityDrawerLayer
 			
 			ready=next;
 			
+			assert(!ready.contains(null));
 			
+			drawing=false;
 		}
 		
+		
 	}
+	
+	
 		
 
 	

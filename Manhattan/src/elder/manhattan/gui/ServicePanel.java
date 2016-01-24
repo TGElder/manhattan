@@ -103,7 +103,10 @@ public class ServicePanel extends JPanel
 				for (Service service : serviceList.getSelection().getSelection())
 				{
 					service.setLine(null);
-					serviceList.removeService(service);;
+					serviceList.removeService(service);
+					
+					
+					
 					if (serviceBuilder.getService()==service)
 					{
 						serviceBuilder.setService(null);

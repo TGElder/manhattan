@@ -10,11 +10,13 @@ public class Pathfinder
 	
 	private final Dijkstra road;
 	private final Dijkstra rail;
+	private final double walkThreshold;
 	
-	public Pathfinder(Dijkstra road, Dijkstra rail)
+	public Pathfinder(Dijkstra road, Dijkstra rail, double walkThreshold)
 	{
 		this.road = road;
 		this.rail = rail;
+		this.walkThreshold = walkThreshold;
 	}
 	
 	public void computeDistance(Journey journey)
@@ -58,7 +60,7 @@ public class Pathfinder
 			legs = new Leg[3];
 			
 			double to2station = road.getDistances()[from.getHighwayNode().getIndex()][fromStation.getBlock().getHighwayNode().getIndex()];
-			if (to2station<=2)
+			if (to2station<=walkThreshold)
 			{
 				mode = SingleEdge.FOOT;
 			}
@@ -71,7 +73,7 @@ public class Pathfinder
 			legs[1] = journey.new RailLeg(fromStation,toStation);
 			
 			double station2from = road.getDistances()[toStation.getBlock().getHighwayNode().getIndex()][to.getHighwayNode().getIndex()];
-			if (station2from<=2)
+			if (station2from<=walkThreshold)
 			{
 				mode = SingleEdge.FOOT;
 			}

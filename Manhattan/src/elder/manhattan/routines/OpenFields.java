@@ -20,25 +20,35 @@ public class OpenFields implements Routine
 		
 		for (Block block : simulation.getCity().getBlocks())
 		{
-			double score=0.0;
-			
 			if (!block.isBuilt())
 			{
-				for (Block neighbour : block.getNeighbours())
+
+				if (block.hasStation())
 				{
-					if (neighbour.isBuilt())
-					{
-						
-						double occupancy = (neighbour.getPopulation())/(simulation.BLOCK_POPULATION_LIMIT*1.0);
-						
-						score += occupancy*(openProbability/13.0);
-					}
+					block.setBuilt(true);
 				}
-			}
-			
-			if (simulation.getRandom().nextDouble()<score)
-			{
-				block.setBuilt(true);
+				else
+				{
+					double score=0.0;
+				
+					for (Block neighbour : block.getNeighbours())
+					{
+						if (neighbour.isBuilt())
+						{
+							
+							double occupancy = (neighbour.getPopulation())/(simulation.BLOCK_POPULATION_LIMIT*1.0);
+							
+							score += occupancy*(openProbability/13.0);
+						}
+					}
+				
+				
+					if (simulation.getRandom().nextDouble()<score)
+					{
+						block.setBuilt(true);
+					}
+				
+				}
 			}
 		}
 		

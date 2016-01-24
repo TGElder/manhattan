@@ -92,20 +92,20 @@ public class CommuteLayer extends CityDrawerLayer implements SelectionListener<B
 					{
 						for (MultiEdge multiEdge : leg.getPath())
 						{
-							float R,G,B;
+							float R=1f;
+							float G=1f;
+							float B=1f;
 							if (multiEdge instanceof Railway)
 							{
 								Railway railway = (Railway)multiEdge;
-								Color color = railway.getService().getLine().getColor();
-								R = color.getRed()/255f;
-								G = color.getGreen()/255f;
-								B = color.getBlue()/255f;
-							}
-							else
-							{
-								R = 1f;
-								G = 1f;
-								B = 1f;
+								
+								if (railway.getService().getLine()!=null)
+								{
+									Color color = railway.getService().getLine().getColor();
+									R = color.getRed()/255f;
+									G = color.getGreen()/255f;
+									B = color.getBlue()/255f;
+								}
 							}
 							
 							for (SingleEdge singleEdge : multiEdge.getEdges())

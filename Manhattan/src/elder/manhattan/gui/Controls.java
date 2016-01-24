@@ -13,6 +13,7 @@ import java.util.List;
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 import elder.manhattan.City;
@@ -21,6 +22,7 @@ import elder.manhattan.Pathfinder;
 import elder.manhattan.Service;
 import elder.manhattan.Simulation;
 import elder.manhattan.SingleEdge;
+import elder.manhattan.Wallet.WalletListener;
 import elder.manhattan.graphics.CityDrawer;
 import elder.manhattan.graphics.CityDrawerLayer;
 import elder.manhattan.layers.BlockLayer;
@@ -74,16 +76,35 @@ public class Controls extends JFrame
 		GridBagConstraints constraints = new GridBagConstraints();
 		constraints.fill = GridBagConstraints.BOTH;
 		constraints.gridx = 0;
-		constraints.gridy = 0;
+		constraints.gridy = 1;
 		constraints.gridwidth=2;
 		constraints.gridheight=1;
 		constraints.weightx = 1;
 		constraints.weighty = 1;
 		
-		add(new SimulationControlPanel(simulation),constraints);
+		JLabel money = new JLabel("£"+simulation.getCity().getWallet().getMoney());
+		add(money);
+		
+		simulation.getCity().getWallet().addListener(new WalletListener()
+		{
+
+			@Override
+			public void onChange()
+			{
+				money.setText("£"+simulation.getCity().getWallet().getMoney());
+			}
+	
+		});
 		
 		constraints.gridx = 0;
 		constraints.gridy = 1;
+		constraints.gridwidth=2;
+		constraints.gridheight=1;
+		
+		add(new SimulationControlPanel(simulation),constraints);
+		
+		constraints.gridx = 0;
+		constraints.gridy = 2;
 		constraints.gridwidth=1;
 		constraints.gridheight=1;
 
@@ -118,7 +139,7 @@ public class Controls extends JFrame
 		}
 		
 		constraints.gridx = 1;
-		constraints.gridy = 1;
+		constraints.gridy = 2;
 		constraints.gridwidth=1;
 		constraints.gridheight=1;
 		
@@ -128,13 +149,13 @@ public class Controls extends JFrame
 
 		LinePanel linePanel = new LinePanel(simulation.getCity());
 		constraints.gridx = 0;
-		constraints.gridy = 2;
+		constraints.gridy = 3;
 		constraints.gridwidth=2;
 		constraints.gridheight=1;
 		add(linePanel,constraints);
 		
 		constraints.gridx = 0;
-		constraints.gridy = 3;
+		constraints.gridy = 4;
 		constraints.gridwidth=2;
 		constraints.gridheight=1;
 		
@@ -153,7 +174,7 @@ public class Controls extends JFrame
 	{
 		
 		
-		Simulation sim = new Simulation(new City(80,80,1),2016,500);
+		Simulation sim = new Simulation(new City(160,160,1,500000),2020,500);
 
 		CityDrawer cityDrawer = new CityDrawer(sim,1024,1024);
 		
@@ -176,18 +197,18 @@ public class Controls extends JFrame
 
 		Dijkstra roadDijkstra = new Dijkstra(sim.getCity().getHighwayNodes());
 
-		Pathfinder pathfinder = new Pathfinder(roadDijkstra,dijkstra);
+		Pathfinder pathfinder = new Pathfinder(roadDijkstra,dijkstra,2);
 		
 		sim.run(roadDijkstra,false);
 
 		
-		TrackBuilder trackBuilder = new TrackBuilder();
+		TrackBuilder trackBuilder = new TrackBuilder(sim.getCity(),10000,100000,10000);
 		selector.getSelectedBlock().addListener(trackBuilder);
 		
 		ServiceBuilder serviceBuilder = new ServiceBuilder(sim.getCity());
 		selector.getSelectedBlock().addListener(serviceBuilder);
 		
-		StationBuilder stationBuilder = new StationBuilder(sim.getCity(),roadDijkstra,2,20);
+		StationBuilder stationBuilder = new StationBuilder(sim.getCity(),roadDijkstra,2,20,20000,40000,5000);
 		selector.getSelectedBlock().addListener(stationBuilder);
 		
 		sim.addRoutine(new OpenFields(2.0/52.0));

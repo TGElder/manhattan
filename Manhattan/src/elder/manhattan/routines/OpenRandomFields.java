@@ -23,8 +23,8 @@ public class OpenRandomFields implements Routine
 		
 		for (int b=0; b<blocks;b++)
 		{
-			int x = simulation.getRandom().nextInt(simulation.getCity().getWidth()/2)+ simulation.getRandom().nextInt(simulation.getCity().getWidth()/2);
-			int y = simulation.getRandom().nextInt(simulation.getCity().getHeight()/2)+ simulation.getRandom().nextInt(simulation.getCity().getHeight()/2);
+			int x = simulation.getRandom().nextInt(simulation.getCity().getWidth()/4)+ simulation.getRandom().nextInt(simulation.getCity().getWidth()/4) + simulation.getRandom().nextInt(simulation.getCity().getWidth()/4) + simulation.getRandom().nextInt(simulation.getCity().getWidth()/4);
+			int y = simulation.getRandom().nextInt(simulation.getCity().getHeight()/4)+ simulation.getRandom().nextInt(simulation.getCity().getHeight()/4)+ simulation.getRandom().nextInt(simulation.getCity().getHeight()/4)+ simulation.getRandom().nextInt(simulation.getCity().getHeight()/4);
 			
 			Block open = simulation.getCity().getBlock(x,y);
 			

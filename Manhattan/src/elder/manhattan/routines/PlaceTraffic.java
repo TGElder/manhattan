@@ -98,6 +98,11 @@ public class PlaceTraffic implements Routine
 					for (Leg leg : journey.getLegs())
 					{
 						placeTraffic(leg.getPath(),leg.getMode(),commuters[b]);
+						
+						if (leg.getMode()==SingleEdge.RAIL)
+						{
+							city.getWallet().addMoney(commuters[b]);
+						}
 					}
 					
 				}

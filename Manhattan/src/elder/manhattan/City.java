@@ -29,12 +29,15 @@ public class City
 	
 	private List<HighwayNode> highwayNodes;
 	
+	private final Wallet wallet;
 	
-	public City(int width, int height, double scale)
+	
+	public City(int width, int height, double scale, int money)
 	{
 		this.width = width;
 		this.height = height;
 		this.scale = scale;
+		this.wallet = new Wallet(money);
 		
 		blocks = new Block[width*height];
 
@@ -176,28 +179,23 @@ public class City
 		
 	}
 	
-	public void toggleTrack(Block from, Block to) throws Exception
+	public boolean hasTrack(Block from, Block to)
 	{
 		SingleEdge singleEdge = (SingleEdge)(from.getTrackNode().getEdge(to.getTrackNode()));
 		
 		if (singleEdge==null)
 		{
-			createTrack(from,to);
+			return false;
 		}
 		else
 		{
-			removeTrack(from,to);
+			return true;
 		}
 	}
 	
 	public void createStation(Block block, String name)
 	{
 		assert(!block.hasStation());
-		
-		if (!block.isBuilt())
-		{
-			block.setBuilt(true);
-		}
 		
 		Station station = new Station(block,name);
 		block.setStation(station);
@@ -272,6 +270,11 @@ public class City
 	public void setHighwayNodes(List<HighwayNode> highwayNodes)
 	{
 		this.highwayNodes = highwayNodes;
+	}
+
+	public Wallet getWallet()
+	{
+		return wallet;
 	}
 
 

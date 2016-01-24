@@ -37,14 +37,20 @@ public class StationBuilder extends Mode implements SelectionListener<Block>,Rou
 	private final Dijkstra roadDijkstra;
 	private final double threshold1;	
 	private final double threshold2;
-
-	public StationBuilder(City city, Dijkstra roadDijkstra, double threshold1, double threshold2)
+	private final int buildCost;
+	private final int builtUpBuildCost;
+	private final int removalCost;
+	
+	public StationBuilder(City city, Dijkstra roadDijkstra, double threshold1, double threshold2, int buildCost, int builtUpBuildCost, int removalCost)
 	{
 		super("Station Builder");
 		this.city = city;
 		this.roadDijkstra = roadDijkstra;
 		this.threshold1 = threshold1;
 		this.threshold2 = threshold2;
+		this.buildCost = buildCost;
+		this.builtUpBuildCost = builtUpBuildCost;
+		this.removalCost = removalCost;
 	}
 	
 	@Override
@@ -124,11 +130,44 @@ public class StationBuilder extends Mode implements SelectionListener<Block>,Rou
 			{
 				if (!block.hasStation())
 				{
-					simulation.getCity().createStation(block,recommendStationName(simulation.getCity().getRailwayNodes(),block));
+					int cost;
+							
+					if (block.isBuilt())
+					{
+						cost = builtUpBuildCost;
+					}
+					else
+					{
+						cost = buildCost;
+					}
+					
+					if (cost<=city.getWallet().getMoney())
+					{
+						simulation.getCity().createStation(block,recommendStationName(simulation.getCity().getRailwayNodes(),block));
+						city.getWallet().addMoney(-cost);
+					}
+					else
+					{
+						System.out.println("Cannot afford £"+cost+"!");
+					}
+					
 				}
 				else
 				{
-					simulation.getCity().removeStation(block);
+					int cost = removalCost;
+					
+					if (cost<=city.getWallet().getMoney())
+					{
+					
+						simulation.getCity().removeStation(block);
+						city.getWallet().addMoney(-cost);
+
+					}
+					else
+					{
+						System.out.println("Cannot afford £"+cost+"!");
+					}
+					
 				}
 			}
 			catch (Exception e)
@@ -213,6 +252,22 @@ public class StationBuilder extends Mode implements SelectionListener<Block>,Rou
 				}
 				
 				
+			}
+			
+			if (to.hasStation())
+			{
+				drawText("£"+removalCost,16,to.getCentre());
+			}
+			else
+			{
+				if (to.isBuilt())
+				{
+					drawText("£"+builtUpBuildCost,16,to.getCentre());
+				}
+				else
+				{
+					drawText("£"+buildCost,16,to.getCentre());
+				}
 			}
 		}
 		
