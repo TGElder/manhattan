@@ -1,5 +1,6 @@
 package elder.manhattan.layers;
 
+import java.awt.Color;
 import java.util.HashSet;
 import java.util.List;
 
@@ -7,11 +8,16 @@ import elder.manhattan.Block;
 import elder.manhattan.City;
 import elder.manhattan.Commute;
 import elder.manhattan.MultiEdge;
+import elder.manhattan.Pathfinder;
+import elder.manhattan.Pathfinder.Journey;
+import elder.manhattan.Pathfinder.Journey.Leg;
+import elder.manhattan.Railway;
 import elder.manhattan.SelectionListener;
 import elder.manhattan.SingleEdge;
 import elder.manhattan.Station;
 import elder.manhattan.graphics.CityDrawerLayer;
 import elder.manhattan.routines.Dijkstra;
+import elder.manhattan.routines.PlaceTraffic;
 
 
 public class CommuteLayer extends CityDrawerLayer implements SelectionListener<Block>
@@ -20,16 +26,18 @@ public class CommuteLayer extends CityDrawerLayer implements SelectionListener<B
 	private Block selectedBlock;
 	
 	private final City city;
-	private final Dijkstra roadDijkstra;
-	private final Dijkstra railDijkstra;
+	
+	private final Pathfinder pathfinder;
+	private final PlaceTraffic traffic;
+
 
 	
-	public CommuteLayer(City city, Dijkstra roadDijkstra, Dijkstra railDijkstra)
+	public CommuteLayer(City city, Pathfinder pathfinder, PlaceTraffic traffic)
 	{
 		super("Commute Layer");
 		this.city = city;
-		this.roadDijkstra = roadDijkstra;
-		this.railDijkstra = railDijkstra;
+		this.pathfinder = pathfinder;
+		this.traffic = traffic;
 	}
 
 	@Override
@@ -75,56 +83,44 @@ public class CommuteLayer extends CityDrawerLayer implements SelectionListener<B
 				{
 					
 					Block focus = city.getBlocks()[b];
-										
-					double distance = roadDijkstra.getDistances()[selectedBlock.getHighwayNode().getIndex()][focus.getHighwayNode().getIndex()];
-					//double distance = Double.POSITIVE_INFINITY;
 					
-					Station from=null;
-					Station to=null;
+					Journey journey = pathfinder.new Journey(selectedBlock,focus);
+					pathfinder.computeDistance(journey);
+					pathfinder.computePaths(journey);
 					
-					for (Station s : selectedBlock.getStations())
+					for (Leg leg : journey.getLegs())
 					{
-						for (Station s2: focus.getStations())
+						for (MultiEdge multiEdge : leg.getPath())
 						{
-							double focusDistance = railDijkstra.getDistances()[s.getIndex()][s2.getIndex()];
-															
-							if (focusDistance<distance)
+							float R,G,B;
+							if (multiEdge instanceof Railway)
 							{
-								from = s;
-								to = s2;
-								distance = focusDistance;
+								Railway railway = (Railway)multiEdge;
+								Color color = railway.getService().getLine().getColor();
+								R = color.getRed()/255f;
+								G = color.getGreen()/255f;
+								B = color.getBlue()/255f;
+							}
+							else
+							{
+								R = 1f;
+								G = 1f;
+								B = 1f;
 							}
 							
-						}
-					}
-					
-					List<MultiEdge> path;
-					
-					if (from!=null)
-					{
-						path = railDijkstra.getPath(from, to);
-												
-					}
-					else
-					{
-						path = roadDijkstra.getPath(selectedBlock.getHighwayNode(), focus.getHighwayNode());
-					}
-					
-					
-					if (path!=null)
-					{
-						
-						for (MultiEdge multiEdge : path)
-						{
 							for (SingleEdge singleEdge : multiEdge.getEdges())
 							{
-								drawLine(singleEdge,1f,0f,0f,2f,false);
-								drawLine(singleEdge.getReverse(),1f,0f,0f,2f,false);
+								float width = 1 + (commuters[b]*9f)/(traffic.getMaxTraffic()*1f);
+								
+								drawLine(singleEdge,R,G,B,width,false);
+								drawLine(singleEdge.getReverse(),R,G,B,width,false);
 
 							}
 							
 						}
 					}
+					
+					
 				}
 			
 			}

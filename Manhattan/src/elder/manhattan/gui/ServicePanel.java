@@ -255,6 +255,9 @@ public class ServicePanel extends JPanel
 				@Override
 				public void actionPerformed(ActionEvent e)
 				{
+					service.setName(textField.getText());
+					service.setLine((Line)lineChooser.getSelectedItem());
+					serviceList.refresh();
 					serviceBuilder.setService(service);
 					dispose();
 				}});

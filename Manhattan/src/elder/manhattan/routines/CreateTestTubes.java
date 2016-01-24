@@ -31,7 +31,7 @@ public class CreateTestTubes implements Routine
 			
 			for (int y=0; y<city.getHeight(); y+=interval)
 			{
-				city.createStation(city.getBlock(x,y));
+				city.createStation(city.getBlock(x,y),x+","+y);
 				
 			}
 		}

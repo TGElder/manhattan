@@ -7,7 +7,7 @@ import java.util.List;
 import elder.geometry.Point;
 import elder.manhattan.Block;
 import elder.manhattan.City;
-import elder.manhattan.Pathfinder;
+import elder.manhattan.SimplePathfinder;
 import elder.manhattan.Platform;
 import elder.manhattan.Routine;
 import elder.manhattan.SelectionListener;
@@ -28,7 +28,7 @@ public class ServiceBuilder extends Mode implements SelectionListener<Block>,Rou
 	
 	
 	private final City city;
-	private final Pathfinder pathfinder;
+	private final SimplePathfinder simplePathfinder;
 		
 	private Service service;
 	
@@ -36,7 +36,7 @@ public class ServiceBuilder extends Mode implements SelectionListener<Block>,Rou
 	{
 		super("Service Builder");
 		this.city = city;
-		pathfinder = new Pathfinder(city);
+		simplePathfinder = new SimplePathfinder();
 	}
 	
 	@Override
@@ -151,7 +151,7 @@ public class ServiceBuilder extends Mode implements SelectionListener<Block>,Rou
 			else
 			{
 			
-				List<SingleEdge> singleEdges = pathfinder.findPath(from.getBlock().getTrackNode(), to.getBlock().getTrackNode(), city.getBlocks().length);
+				List<SingleEdge> singleEdges = simplePathfinder.findPath(from.getBlock().getTrackNode(), to.getBlock().getTrackNode(), city.getBlocks().length);
 				
 				if (singleEdges!=null)
 				{
@@ -183,7 +183,7 @@ public class ServiceBuilder extends Mode implements SelectionListener<Block>,Rou
 	
 			if ( (from!=null&&to!=null) && (from!=to))
 			{
-				List<SingleEdge> singleEdges = pathfinder.findPath(from.getBlock().getTrackNode(), to.getBlock().getTrackNode(), city.getBlocks().length);
+				List<SingleEdge> singleEdges = simplePathfinder.findPath(from.getBlock().getTrackNode(), to.getBlock().getTrackNode(), city.getBlocks().length);
 				
 				if (singleEdges!=null)
 				{

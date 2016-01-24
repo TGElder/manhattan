@@ -22,9 +22,9 @@ public class Platform extends IndexNode
 		this.service = service;
 		
 		down = new Railway(station,this,service,1, new SingleEdge[] {});
-		down.setDelay(1);
+		down.setDelay(0);
 		up = new Railway(this,station,service,1, new SingleEdge[] {});
-		up.setDelay(1);
+		up.setDelay(0);
 		
 		up.setReverse(down);
 		down.setReverse(up);

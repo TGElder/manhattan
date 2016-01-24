@@ -40,7 +40,7 @@ public class ServiceLayer extends SimulationLayer
 
 						if (traffic.getMaxTraffic()>0)
 						{
-							width += (singleEdge.getTraffic()*9f)/(traffic.getMaxTraffic()*1f);
+							width += (singleEdge.getTraffic(SingleEdge.RAIL)*9f)/(traffic.getMaxTraffic()*1f);
 						}
 						
 						drawLine(singleEdge,R,G,B,width,false);

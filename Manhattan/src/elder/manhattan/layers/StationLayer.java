@@ -25,6 +25,7 @@ public class StationLayer extends SimulationLayer
 				
 				if (station.getBlock().getStation()==station)
 				{
+					drawText(station.getName(),12,station);
 					drawPoint(station,0f,0f,0f,6f);
 					drawPoint(station,1f,1f,1f,4f);
 				}

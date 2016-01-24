@@ -1,160 +1,227 @@
 package elder.manhattan;
 
-import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
-import java.util.PriorityQueue;
 
-import elder.network.Edge;
+import elder.manhattan.Pathfinder.Journey.Leg;
+import elder.manhattan.routines.Dijkstra;
 
 public class Pathfinder
 {
-
-	private final City city;
-	private boolean trafficBias = false;
 	
-	public Pathfinder(City city)
+	private final Dijkstra road;
+	private final Dijkstra rail;
+	
+	public Pathfinder(Dijkstra road, Dijkstra rail)
 	{
-		this.city = city;
+		this.road = road;
+		this.rail = rail;
 	}
 	
-	public void setTrafficBias(boolean trafficBias)
+	public void computeDistance(Journey journey)
 	{
-		this.trafficBias = trafficBias;
-	}
-	
-	public List<SingleEdge> findPath (IndexNode from, IndexNode to, int max)
-	{
-			
-		if (from==to)
+		Block from = journey.getFrom();
+		Block to = journey.getTo();
+		
+		double distance = road.getDistances()[from.getHighwayNode().getIndex()][to.getHighwayNode().getIndex()];
+		
+		Station fromStation = null;
+		Station toStation = null;
+		
+		for (Station s : from.getStations())
 		{
-			return null;
-		}
+			for (Station s2: to.getStations())
+			{
+				double to2station = road.getDistances()[from.getHighwayNode().getIndex()][s.getBlock().getHighwayNode().getIndex()];
+				double station2station = rail.getDistances()[s.getIndex()][s2.getIndex()];
+				double station2from = road.getDistances()[s2.getBlock().getHighwayNode().getIndex()][to.getHighwayNode().getIndex()];
 				
-		boolean [] open = new boolean[max];
-		boolean [] closed = new boolean[max];
+				double focusDistance = to2station+station2station+station2from;
+												
+				if (focusDistance<distance)
+				{
+					fromStation = s;
+					toStation = s2;
+					distance = focusDistance;
+				}
+				
+			}
+		}
 		
-		final SingleEdge [] directions = new SingleEdge[max];
-		final double [] distances = new double[max];
+		journey.setDistance(distance);
 		
-		PriorityQueue<IndexNode> openList = new PriorityQueue<IndexNode> (new Comparator<IndexNode>() 
+		Leg [] legs;
+		
+		if (fromStation!=null)
 		{
+			int mode;
+			
+			legs = new Leg[3];
+			
+			double to2station = road.getDistances()[from.getHighwayNode().getIndex()][fromStation.getBlock().getHighwayNode().getIndex()];
+			if (to2station<=2)
+			{
+				mode = SingleEdge.FOOT;
+			}
+			else
+			{
+				mode = SingleEdge.BUS;
+			}
+			
+			legs[0] = journey.new RoadLeg(from.getHighwayNode(),fromStation.getBlock().getHighwayNode(),mode);
+			legs[1] = journey.new RailLeg(fromStation,toStation);
+			
+			double station2from = road.getDistances()[toStation.getBlock().getHighwayNode().getIndex()][to.getHighwayNode().getIndex()];
+			if (station2from<=2)
+			{
+				mode = SingleEdge.FOOT;
+			}
+			else
+			{
+				mode = SingleEdge.BUS;
+			}
+			
+			legs[2] = journey.new RoadLeg(toStation.getBlock().getHighwayNode(),to.getHighwayNode(),SingleEdge.BUS);
+	
+		}
+		else
+		{
+			legs = new Leg[1];
+			legs[0] = journey.new RoadLeg(from.getHighwayNode(),to.getHighwayNode(),SingleEdge.CAR);
+		}
+		
+		journey.setLegs(legs);
+
+	}
+	
+	public void computePaths(Journey journey)
+	{
+		for (Leg leg : journey.getLegs())
+		{
+			leg.setPath(leg.getDijkstra().getPath(leg.getFrom(), leg.getTo()));
+		}
+	}
+	
+	public class Journey
+	{
+		
+		private final Block from;
+		private final Block to;
+		private double distance;
+		private Leg [] legs;
+		
+		public Journey(Block from, Block to)
+		{
+			this.from = from;
+			this.to = to;
+		}
+		
+		public Block getFrom()
+		{
+			return from;
+		}
+		
+		public Block getTo()
+		{
+			return to;
+		}
+
+		public double getDistance()
+		{
+			return distance;
+		}
+
+		private void setDistance(double distance)
+		{
+			this.distance = distance;
+		}
+		
+		public Leg [] getLegs()
+		{
+			return legs;
+		}
+
+		private void setLegs(Leg [] legs)
+		{
+			this.legs = legs;
+		}
+
+		public abstract class Leg
+		{
+			private final IndexNode from;
+			private final IndexNode to;
+			private final int mode;
+			private List<MultiEdge> path;
+			
+			public Leg(IndexNode from, IndexNode to, int mode)
+			{
+				this.from = from;
+				this.to = to;
+				this.mode = mode;
+			}
+			
+			public IndexNode getFrom()
+			{
+				return from;
+			}
+			
+			public IndexNode getTo()
+			{
+				return to;
+			}
+			
+			public int getMode()
+			{
+				return mode;
+			}
+			
+			public abstract Dijkstra getDijkstra();
+
+			public List<MultiEdge> getPath()
+			{
+				return path;
+			}
+
+			private void setPath(List<MultiEdge> path)
+			{
+				this.path = path;
+			}
+			
+		}
+		
+		public class RoadLeg extends Leg
+		{
+
+			public RoadLeg(IndexNode from, IndexNode to, int mode)
+			{
+				super(from, to, mode);
+			}
 
 			@Override
-			public int compare(IndexNode a, IndexNode b)
+			public Dijkstra getDijkstra()
 			{
-				if (distances[a.getIndex()]<distances[b.getIndex()])
-				{
-					return -1;
-				}
-				else if (distances[a.getIndex()]>distances[b.getIndex()])
-				{
-					return 1;
-				}
-				else
-				{
-					return 0;
-				}
-					
+				return road;
 			}
-		});
+			
+		}
 		
-		IndexNode node = from;
-		int b=node.getIndex();		
-		
-		init(distances,Double.POSITIVE_INFINITY);
-		openList.clear();
-		
-		openList.add(node);
-		open[b] = true;
-
-		distances[b] = 0;
-		directions[b] = null;
-		
-		IndexNode focus;
-		
-		while ((focus = openList.poll())!=null)
+		public class RailLeg extends Leg
 		{
-			
-			for (Edge edge : focus.getEdges())
+
+			public RailLeg(IndexNode from, IndexNode to)
 			{
-				SingleEdge singleEdge = (SingleEdge)edge;
-				IndexNode neighbour  = (IndexNode)(singleEdge.b);
-				
-				double focusDistance = distances[focus.getIndex()];
-				
-				if (trafficBias)
-				{
-					focusDistance += singleEdge.length/(singleEdge.getTraffic()+1);
-				}
-				else
-				{
-					focusDistance += singleEdge.length;
-				}
-								
-				if (!closed[neighbour.getIndex()])
-				{
-					if (focusDistance < distances[neighbour.getIndex()])
-					{
-						if (open[neighbour.getIndex()])
-						{
-							openList.remove(neighbour);
-						}
-						else
-						{
-							open[neighbour.getIndex()] = true;
-						}
-						
-						directions[neighbour.getIndex()] = singleEdge.getReverse();
-						distances[neighbour.getIndex()] = focusDistance;
-						
-						openList.add(neighbour);
-						
-					}
-				}
+				super(from, to, SingleEdge.RAIL);
+			}
+
+			@Override
+			public Dijkstra getDijkstra()
+			{
+				return rail;
 			}
 			
-		
-			if (focus==to)
-			{
-				return getPath(from,to,directions,distances);
-			}
-			
-			closed[focus.getIndex()] = true;
 		}
 		
 		
-		return null;
-
 	}
 	
-	private List<SingleEdge> getPath(IndexNode from, IndexNode to, SingleEdge[] directions, double[] distances)
-	{
 
-		List<SingleEdge> singleEdges = new ArrayList<SingleEdge> ();
-		
-		IndexNode focus = to;
-
-		while (focus!=from)
-		{
-			SingleEdge singleEdge = directions[focus.getIndex()];
-			focus = (IndexNode)(singleEdge.b);
-			
-			singleEdges.add(singleEdge);
-		}
-		
-		return singleEdges;
-
-	}
-	
-	
-	
-	private void init(double [] array, double value)
-	{
-		for (int d=0; d<array.length; d++)
-		{
-			array[d] = value;
-		}
-	}
-	
 }

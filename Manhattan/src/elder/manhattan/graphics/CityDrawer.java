@@ -542,7 +542,7 @@ public class CityDrawer
 								try
 								{
 
-									trueTypeFont.drawString((int)(text.centre.x),(int)(text.centre.y - height/2),text.text,(float)(1/zoom),(float)(1/zoom), TrueTypeFont.ALIGN_CENTER);
+									trueTypeFont.drawString((float)(text.centre.x),(float)(text.centre.y - height/2),text.text,(float)(1/zoom),(float)(1/zoom), TrueTypeFont.ALIGN_CENTER);
 								}
 								catch (NullPointerException e)
 								{

@@ -9,11 +9,13 @@ public class Station extends IndexNode
 
 	private final Block block;
 	private final Map<Service,Platform> platforms = new HashMap<Service,Platform> ();
+	private String name;
 	
-	public Station(Block block)
+	public Station(Block block, String name)
 	{
 		super(block.getTrackNode().x, block.getTrackNode().y, null);
 		this.block = block;
+		this.name = name;
 	
 	}
 
@@ -47,6 +49,16 @@ public class Station extends IndexNode
 	public Collection<Platform> getPlatforms()
 	{
 		return platforms.values();
+	}
+
+	public String getName()
+	{
+		return name;
+	}
+
+	public void setName(String name)
+	{
+		this.name = name;
 	}
 
 

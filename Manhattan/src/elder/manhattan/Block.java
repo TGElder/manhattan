@@ -28,6 +28,8 @@ public class Block
 	private final IndexNode trackNode;
 	private HighwayNode highwayNode;
 	
+	private Town town;
+	
 	public Block(int x, int y, int index, Polygon polygon, Point centre)
 	{
 		trackNode = new IndexNode(centre.x,centre.y,index);
@@ -136,6 +138,11 @@ public class Block
 		return trackNode;
 	}
 	
+	public Point getCentre()
+	{
+		return trackNode;
+	}
+	
 	public HighwayNode getHighwayNode()
 	{
 		return highwayNode;
@@ -145,6 +152,17 @@ public class Block
 	{
 		this.highwayNode = node;
 	}
+
+	public Town getTown()
+	{
+		return town;
+	}
+
+	public void setTown(Town town)
+	{
+		this.town = town;
+	}
+	
 	
 	
 }

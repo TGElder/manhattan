@@ -8,6 +8,9 @@ import elder.manhattan.City;
 import elder.manhattan.Commute;
 import elder.manhattan.IndexNode;
 import elder.manhattan.MultiEdge;
+import elder.manhattan.Pathfinder;
+import elder.manhattan.Pathfinder.Journey;
+import elder.manhattan.Pathfinder.Journey.Leg;
 import elder.manhattan.Railway;
 import elder.manhattan.Routine;
 import elder.manhattan.Simulation;
@@ -19,15 +22,13 @@ import elder.network.Path;
 public class PlaceTraffic implements Routine
 {
 
-	private final Dijkstra roadDijkstra;
-	private final Dijkstra railDijkstra;
+	private Pathfinder pathfinder;
 	
 	private int maxTraffic=0;
 	
-	public PlaceTraffic(Dijkstra roadDijkstra, Dijkstra railDijkstra)
+	public PlaceTraffic(Pathfinder pathfinder)
 	{
-		this.roadDijkstra = roadDijkstra;
-		this.railDijkstra = railDijkstra;
+		this.pathfinder = pathfinder;
 	}
 	
 	@Override
@@ -59,11 +60,7 @@ public class PlaceTraffic implements Routine
 			}
 		}
 		
-		maxTraffic = 0;
-		
-		int count=0;
-
-		
+		maxTraffic = 0;		
 		
 		for (Block block : city.getBlocks())
 		{
@@ -92,65 +89,27 @@ public class PlaceTraffic implements Routine
 				for (Integer b : commuted)
 				{
 					
-					count++;
 					Block focus = city.getBlocks()[b];
 										
-					double distance = roadDijkstra.getDistances()[block.getHighwayNode().getIndex()][focus.getHighwayNode().getIndex()];
-					//double distance = Double.POSITIVE_INFINITY;
+					Journey journey = pathfinder.new Journey(block,focus);
+					pathfinder.computeDistance(journey);
+					pathfinder.computePaths(journey);
 					
-					Station from=null;
-					Station to=null;
-					
-					for (Station s : block.getStations())
+					for (Leg leg : journey.getLegs())
 					{
-						for (Station s2: focus.getStations())
-						{
-							double toStation = roadDijkstra.getDistances()[block.getHighwayNode().getIndex()][s.getBlock().getHighwayNode().getIndex()];
-							double station2station = railDijkstra.getDistances()[s.getIndex()][s2.getIndex()];
-							double fromStation = roadDijkstra.getDistances()[s2.getBlock().getHighwayNode().getIndex()][block.getHighwayNode().getIndex()];
-							
-							double focusDistance = toStation+station2station+fromStation;
-															
-							if (focusDistance<distance)
-							{
-								from = s;
-								to = s2;
-								distance = focusDistance;
-							}
-							
-						}
+						placeTraffic(leg.getPath(),leg.getMode(),commuters[b]);
 					}
-					
-					List<MultiEdge> path;
-					
-					if (from!=null)
-					{
-						placeTraffic(roadDijkstra.getPath(block.getHighwayNode(), to.getBlock().getHighwayNode()),commuters[b]);
-
-						placeTraffic(railDijkstra.getPath(from, to),commuters[b]);
-						
-						placeTraffic(roadDijkstra.getPath(from.getBlock().getHighwayNode(),block.getHighwayNode()),commuters[b]);
-												
-					}
-					else
-					{
-						placeTraffic(roadDijkstra.getPath(block.getHighwayNode(), focus.getHighwayNode()),commuters[b]);
-
-					}
-					
-					
 					
 				}
 				
 			}
 		}
 		
-		return count+"";
-		
+		return null;
 		
 	}
 	
-	private void placeTraffic(List<MultiEdge> path, int traffic)
+	private void placeTraffic(List<MultiEdge> path, int type, int traffic)
 	{
 		if (path!=null)
 		{
@@ -159,9 +118,9 @@ public class PlaceTraffic implements Routine
 			{
 				for (SingleEdge singleEdge : multiEdge.getEdges())
 				{
-					singleEdge.addTraffic(traffic);
-					singleEdge.getReverse().addTraffic(traffic);
-					maxTraffic = Math.max(maxTraffic, singleEdge.getTraffic());
+					singleEdge.addTraffic(type,traffic);
+					singleEdge.getReverse().addTraffic(type,traffic);
+					maxTraffic = Math.max(maxTraffic, singleEdge.getTraffic(type));
 
 				}
 				

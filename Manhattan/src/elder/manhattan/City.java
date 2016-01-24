@@ -190,7 +190,7 @@ public class City
 		}
 	}
 	
-	public void createStation(Block block)
+	public void createStation(Block block, String name)
 	{
 		assert(!block.hasStation());
 		
@@ -199,7 +199,7 @@ public class City
 			block.setBuilt(true);
 		}
 		
-		Station station = new Station(block);
+		Station station = new Station(block,name);
 		block.setStation(station);
 		railwayNodes.add(station);
 	}
@@ -224,17 +224,6 @@ public class City
 		
 	}
 	
-	public void toggleStation(Block block) throws Exception
-	{
-		if (!block.hasStation())
-		{
-			createStation(block);
-		}
-		else
-		{
-			removeStation(block);
-		}
-	}
 	
 	public Platform createPlatform(Station station, Service service)
 	{

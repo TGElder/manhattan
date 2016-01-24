@@ -5,6 +5,8 @@ import java.util.Collection;
 import elder.manhattan.Block;
 import elder.manhattan.City;
 import elder.manhattan.Commute;
+import elder.manhattan.Pathfinder;
+import elder.manhattan.Pathfinder.Journey;
 import elder.manhattan.Routine;
 import elder.manhattan.Simulation;
 import elder.manhattan.Station;
@@ -12,13 +14,11 @@ import elder.manhattan.Station;
 public class Allocate implements Routine
 {
 
-	private final Dijkstra railDijkstra;
-	private final Dijkstra roadDijkstra;
+	private final Pathfinder pathfinder;
 	
-	public Allocate(Dijkstra railDijkstra, Dijkstra roadDijkstra)
+	public Allocate(Pathfinder pathfinder)
 	{
-		this.railDijkstra = railDijkstra;
-		this.roadDijkstra = roadDijkstra;
+		this.pathfinder = pathfinder;
 	}
 	
 	@Override
@@ -108,20 +108,10 @@ public class Allocate implements Routine
 					
 					if (focus.isBuilt()&&focus.getPopulation()<simulation.BLOCK_POPULATION_LIMIT)
 					{
-						double distance = roadDijkstra.getDistances()[block.getHighwayNode().getIndex()][focus.getHighwayNode().getIndex()];
-						
-						for (Station s : block.getStations())
-						{
-							for (Station s2: focus.getStations())
-							{
-								double toStation = roadDijkstra.getDistances()[block.getHighwayNode().getIndex()][s.getBlock().getHighwayNode().getIndex()];
-								double station2station = railDijkstra.getDistances()[s.getIndex()][s2.getIndex()];
-								double fromStation = roadDijkstra.getDistances()[s2.getBlock().getHighwayNode().getIndex()][block.getHighwayNode().getIndex()];
-								distance = Math.min(distance, toStation + station2station + fromStation);
-							}
-						}
-						
-						double distanceScore = distance/maxDistance;
+						Journey journey = pathfinder.new Journey(block,focus);
+						pathfinder.computeDistance(journey);
+				
+						double distanceScore = journey.getDistance()/maxDistance;
 						
 						double blockScore = distanceScore*1.0 + gravity[x][y]*0.0;
 						blockScore = 1/Math.pow(2,distanceScore*10);

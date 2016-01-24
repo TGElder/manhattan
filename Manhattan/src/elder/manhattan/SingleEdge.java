@@ -8,7 +8,12 @@ public class SingleEdge extends Edge
 	
 	private SingleEdge reverse;
 	
-	private int traffic=0;
+	public final static int FOOT=0;
+	public final static int CAR=1;
+	public final static int BUS=2;
+	public final static int RAIL=3;
+	
+	private int [] traffic = new int[4];
 
 	public SingleEdge(Node from, Node to)
 	{
@@ -30,19 +35,23 @@ public class SingleEdge extends Edge
 		return super.toString();
 	}
 
-	public void addTraffic(int traffic)
+	
+	public int getTraffic(int type)
 	{
-		this.traffic += traffic; 
+		return traffic[type];
 	}
 	
-	public int getTraffic()
+	public void addTraffic(int type, int traffic)
 	{
-		return traffic;
+		this.traffic[type] += traffic;
 	}
 	
 	public void resetTraffic()
 	{
-		traffic=0;
+		for (int t=0; t<traffic.length; t++)
+		{
+			traffic[t] = 0;
+		}
 	}
 	
 }
