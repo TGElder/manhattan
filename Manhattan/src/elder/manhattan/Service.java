@@ -95,7 +95,7 @@ public class Service
 				platformB = city.createPlatform(b,this);
 			}
 
-			Railway ab = new Railway(platformA,platformB,this,10,singleEdge.toArray(new SingleEdge[singleEdge.size()]));
+			Railway ab = new Railway(platformA,platformB,this,2,singleEdge.toArray(new SingleEdge[singleEdge.size()]));
 			Railway ba = ab.createReverse();
 			
 			platformA.addEdge(ab);

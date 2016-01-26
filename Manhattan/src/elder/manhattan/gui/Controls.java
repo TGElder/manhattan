@@ -36,6 +36,7 @@ import elder.manhattan.layers.PathfindTestLayer;
 import elder.manhattan.layers.PlatformLayer;
 import elder.manhattan.layers.RailwayLayer;
 import elder.manhattan.layers.RoadLayer;
+import elder.manhattan.layers.RoadOrRailLayer;
 import elder.manhattan.layers.SelectedBlockLayer;
 import elder.manhattan.layers.SelectedStationCoverage;
 import elder.manhattan.layers.ServiceLayer;
@@ -302,10 +303,15 @@ public class Controls extends JFrame
 		
 		
 		
-		TimeLayer timeLayer = new TimeLayer(sim.getCity(),dijkstra,roadDijkstra);
+		TimeLayer timeLayer = new TimeLayer(sim.getCity(),pathfinder);
 		selector.getSelectedBlock().addListener(timeLayer);
 		cityDrawer.addLayer(timeLayer);
 		timeLayer.disable();
+		
+		RoadOrRailLayer roadOrRail = new RoadOrRailLayer(sim.getCity(),pathfinder);
+		selector.getSelectedBlock().addListener(roadOrRail);
+		cityDrawer.addLayer(roadOrRail);
+		roadOrRail.disable();
 		
 		ServiceLayer serviceLayer = new ServiceLayer(placeTraffic);
 		
