@@ -174,7 +174,7 @@ public class Controls extends JFrame
 	{
 		
 		
-		Simulation sim = new Simulation(new City(160,160,1,500000),2020,500);
+		Simulation sim = new Simulation(new City(80,80,1,500000),2020,500);
 
 		CityDrawer cityDrawer = new CityDrawer(sim,1024,1024);
 		

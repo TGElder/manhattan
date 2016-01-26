@@ -217,5 +217,23 @@ public class Service
 		return railways;
 	}
 	
+	public void removeAllSections(City city)
+	{
+		List<Railway> railways = new ArrayList<Railway> (this.railways); 
+		
+		for (Railway railway : railways)
+		{
+			
+			try
+			{
+				unlink(city, (Platform)railway.a, (Platform)railway.b);
+			}
+			catch (Exception e)
+			{
+				e.printStackTrace();
+			}
+			
+		}
+	}
 	
 }

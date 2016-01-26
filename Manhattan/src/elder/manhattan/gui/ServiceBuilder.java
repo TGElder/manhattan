@@ -25,7 +25,7 @@ public class ServiceBuilder extends Mode implements SelectionListener<Block>,Rou
 
 	private final List<Station> fromStations = new ArrayList<Station> ();
 	private final List<Station> toStations = new ArrayList<Station> ();
-	
+	private final List<Service> removals = new ArrayList<Service> ();
 	
 	private final City city;
 	private final SimplePathfinder simplePathfinder;
@@ -129,6 +129,12 @@ public class ServiceBuilder extends Mode implements SelectionListener<Block>,Rou
 	@Override
 	public String run(Simulation simulation)
 	{
+		for (Service service : removals)
+		{
+			service.setLine(null);
+			service.removeAllSections(city);
+		}
+		
 		for (int s=0; s<fromStations.size(); s++)
 		{
 			Station from = fromStations.get(s);
@@ -219,6 +225,12 @@ public class ServiceBuilder extends Mode implements SelectionListener<Block>,Rou
 		from=null;
 	}
 
+	
+	public void removeService(Service service)
+	{
+		removals.add(service);
+		
+	}
 
 
 }

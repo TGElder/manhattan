@@ -109,8 +109,15 @@ public class LinePanel extends JPanel
 			{
 				for (Line line : lineList.getSelection().getSelection())
 				{
-					city.getLines().remove(line);
-					lineList.removeLine(line);
+					if (line.getServices().isEmpty())
+					{
+						city.getLines().remove(line);
+						lineList.removeLine(line);
+					}
+					else
+					{
+						System.out.println("Remove services from this line before deleting it.");
+					}
 				}
 				
 			}});
