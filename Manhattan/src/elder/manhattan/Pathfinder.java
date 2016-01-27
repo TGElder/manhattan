@@ -26,6 +26,7 @@ public class Pathfinder
 		
 		double distance = road.getDistances()[from.getHighwayNode().getIndex()][to.getHighwayNode().getIndex()];
 		
+		double [] distances = null;
 		Station fromStation = null;
 		Station toStation = null;
 		
@@ -33,14 +34,17 @@ public class Pathfinder
 		{
 			for (Station s2: to.getStations())
 			{
-				double to2station = road.getDistances()[from.getHighwayNode().getIndex()][s.getBlock().getHighwayNode().getIndex()];
-				double station2station = rail.getDistances()[s.getIndex()][s2.getIndex()];
-				double station2from = road.getDistances()[s2.getBlock().getHighwayNode().getIndex()][to.getHighwayNode().getIndex()];
+				double [] focusDistances = new double[3];
 				
-				double focusDistance = to2station+station2station+station2from;
+				focusDistances[0] = road.getDistances()[from.getHighwayNode().getIndex()][s.getBlock().getHighwayNode().getIndex()];
+				focusDistances[1] = rail.getDistances()[s.getIndex()][s2.getIndex()];
+				focusDistances[2] = road.getDistances()[s2.getBlock().getHighwayNode().getIndex()][to.getHighwayNode().getIndex()];
+				
+				double focusDistance = focusDistances[0]+focusDistances[1]+focusDistances[2];
 												
 				if (focusDistance<distance)
 				{
+					distances = focusDistances;
 					fromStation = s;
 					toStation = s2;
 					distance = focusDistance;
@@ -59,8 +63,7 @@ public class Pathfinder
 			
 			legs = new Leg[3];
 			
-			double to2station = road.getDistances()[from.getHighwayNode().getIndex()][fromStation.getBlock().getHighwayNode().getIndex()];
-			if (to2station<=walkThreshold)
+			if (distances[0]<=walkThreshold)
 			{
 				mode = SingleEdge.FOOT;
 			}
@@ -69,11 +72,10 @@ public class Pathfinder
 				mode = SingleEdge.BUS;
 			}
 			
-			legs[0] = journey.new RoadLeg(from.getHighwayNode(),fromStation.getBlock().getHighwayNode(),mode);
-			legs[1] = journey.new RailLeg(fromStation,toStation);
+			legs[0] = journey.new RoadLeg(from.getHighwayNode(),fromStation.getBlock().getHighwayNode(),mode,distances[0]);
+			legs[1] = journey.new RailLeg(fromStation,toStation,distances[1]);
 			
-			double station2from = road.getDistances()[toStation.getBlock().getHighwayNode().getIndex()][to.getHighwayNode().getIndex()];
-			if (station2from<=walkThreshold)
+			if (distances[2]<=walkThreshold)
 			{
 				mode = SingleEdge.FOOT;
 			}
@@ -82,13 +84,13 @@ public class Pathfinder
 				mode = SingleEdge.BUS;
 			}
 			
-			legs[2] = journey.new RoadLeg(toStation.getBlock().getHighwayNode(),to.getHighwayNode(),SingleEdge.BUS);
+			legs[2] = journey.new RoadLeg(toStation.getBlock().getHighwayNode(),to.getHighwayNode(),mode,distances[2]);
 	
 		}
 		else
 		{
 			legs = new Leg[1];
-			legs[0] = journey.new RoadLeg(from.getHighwayNode(),to.getHighwayNode(),SingleEdge.CAR);
+			legs[0] = journey.new RoadLeg(from.getHighwayNode(),to.getHighwayNode(),SingleEdge.CAR,distance);
 		}
 		
 		journey.setLegs(legs);
@@ -153,12 +155,14 @@ public class Pathfinder
 			private final IndexNode to;
 			private final int mode;
 			private List<MultiEdge> path;
+			private final double distance;
 			
-			public Leg(IndexNode from, IndexNode to, int mode)
+			public Leg(IndexNode from, IndexNode to, int mode, double distance)
 			{
 				this.from = from;
 				this.to = to;
 				this.mode = mode;
+				this.distance = distance;
 			}
 			
 			public IndexNode getFrom()
@@ -174,6 +178,11 @@ public class Pathfinder
 			public int getMode()
 			{
 				return mode;
+			}
+			
+			public double getDistance()
+			{
+				return distance;
 			}
 			
 			public abstract Dijkstra getDijkstra();
@@ -193,9 +202,9 @@ public class Pathfinder
 		public class RoadLeg extends Leg
 		{
 
-			public RoadLeg(IndexNode from, IndexNode to, int mode)
+			public RoadLeg(IndexNode from, IndexNode to, int mode, double distance)
 			{
-				super(from, to, mode);
+				super(from, to, mode, distance);
 			}
 
 			@Override
@@ -209,9 +218,9 @@ public class Pathfinder
 		public class RailLeg extends Leg
 		{
 
-			public RailLeg(IndexNode from, IndexNode to)
+			public RailLeg(IndexNode from, IndexNode to, double distance)
 			{
-				super(from, to, SingleEdge.RAIL);
+				super(from, to, SingleEdge.RAIL, distance);
 			}
 
 			@Override

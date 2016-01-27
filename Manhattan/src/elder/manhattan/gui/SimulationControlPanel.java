@@ -18,7 +18,6 @@ public class SimulationControlPanel extends JPanel
 {
 
 	private Simulation sim;
-	private Thread thread;
 	private JButton stop;
 	private JButton stepButton;
 	private JSpinner iterationsSpinner;
@@ -30,8 +29,6 @@ public class SimulationControlPanel extends JPanel
 		setName("Simulation");
 		setBorder(BorderFactory.createTitledBorder(getName()));
 
-		thread = new Thread(simulation);
-		thread.start();
 		
 		setLayout(new GridBagLayout());
 		GridBagConstraints constraints = new GridBagConstraints();

@@ -20,6 +20,7 @@ public class Block
 	private final List<Commute> workers = new ArrayList<Commute> ();
 	private final List<Commute> residents = new ArrayList<Commute> ();
 	
+	private Block[] borders;
 	private Block[] neighbours;
 	private Station[] stations = {};
 	
@@ -101,7 +102,17 @@ public class Block
 	{
 		this.neighbours = neighbours;
 	}
-
+	
+	void setBorders(Block [] borders)
+	{
+		this.borders = borders;
+	}
+	
+	public Block[] getBorders()
+	{
+		return borders;
+	}
+ 
 	public double getPopulation()
 	{
 		return workers.size()+residents.size();

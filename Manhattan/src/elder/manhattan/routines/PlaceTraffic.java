@@ -11,19 +11,18 @@ import elder.manhattan.MultiEdge;
 import elder.manhattan.Pathfinder;
 import elder.manhattan.Pathfinder.Journey;
 import elder.manhattan.Pathfinder.Journey.Leg;
-import elder.manhattan.Railway;
 import elder.manhattan.Routine;
 import elder.manhattan.Simulation;
 import elder.manhattan.SingleEdge;
-import elder.manhattan.Station;
 import elder.network.Edge;
-import elder.network.Path;
 
 public class PlaceTraffic implements Routine
 {
 
 	private Pathfinder pathfinder;
 	
+	private int railPassengers=0;
+	private double railDistance=0;
 	private int maxTraffic=0;
 	
 	public PlaceTraffic(Pathfinder pathfinder)
@@ -35,6 +34,9 @@ public class PlaceTraffic implements Routine
 	public String run(Simulation simulation)
 	{
 		City city = simulation.getCity();
+		
+		railPassengers=0;
+		railDistance=0;
 		
 		for (IndexNode node : city.getRailwayNodes())
 		{
@@ -101,7 +103,12 @@ public class PlaceTraffic implements Routine
 						
 						if (leg.getMode()==SingleEdge.RAIL)
 						{
-							city.getWallet().addMoney(commuters[b]);
+							railPassengers+=commuters[b];
+							
+							double railDistance = leg.getDistance()*commuters[b];
+							
+							this.railDistance+=railDistance;
+							city.getWallet().addMoney((int)(railDistance));
 						}
 					}
 					
@@ -137,5 +144,19 @@ public class PlaceTraffic implements Routine
 	{
 		return maxTraffic;
 	}
+	
+	public int getRailPassengers()
+	{
+		return railPassengers;
+	}
+	
+	public double getRailDistance()
+	{
+		return railDistance;
+	}
+	
+
+	
+	 
 
 }

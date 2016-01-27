@@ -15,10 +15,12 @@ import javax.swing.BoxLayout;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.SwingConstants;
 
 import elder.manhattan.City;
 import elder.manhattan.Line;
 import elder.manhattan.Pathfinder;
+import elder.manhattan.Routine;
 import elder.manhattan.Service;
 import elder.manhattan.Simulation;
 import elder.manhattan.SingleEdge;
@@ -63,12 +65,18 @@ import elder.manhattan.routines.UpdateTowns;
 
 
 
-public class Controls extends JFrame
+public class Controls extends JFrame implements Routine
 {
 	
+	private final PlaceTraffic traffic;
+	private final JLabel railPassengers;
+	private final JLabel railDistance;
+	private final JLabel ticketIncome;
+
 	
-	Controls(Simulation simulation, CityDrawer cityDrawer, List<Mode> modes, ModeManager manager, ServiceBuilder serviceBuilder)
+	Controls(Simulation simulation, CityDrawer cityDrawer, List<Mode> modes, ModeManager manager, ServiceBuilder serviceBuilder, PlaceTraffic traffic)
 	{
+		this.traffic = traffic;
 		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
@@ -77,14 +85,14 @@ public class Controls extends JFrame
 		GridBagConstraints constraints = new GridBagConstraints();
 		constraints.fill = GridBagConstraints.BOTH;
 		constraints.gridx = 0;
-		constraints.gridy = 1;
+		constraints.gridy = 0;
 		constraints.gridwidth=2;
 		constraints.gridheight=1;
 		constraints.weightx = 1;
 		constraints.weighty = 1;
 		
-		JLabel money = new JLabel("£"+simulation.getCity().getWallet().getMoney());
-		add(money);
+		JLabel money = new JLabel("£"+simulation.getCity().getWallet().getMoney(),SwingConstants.CENTER);
+		add(money,constraints);
 		
 		simulation.getCity().getWallet().addListener(new WalletListener()
 		{
@@ -97,16 +105,28 @@ public class Controls extends JFrame
 	
 		});
 		
-		constraints.gridx = 0;
 		constraints.gridy = 1;
+		railPassengers = new JLabel("0 passengers",SwingConstants.CENTER);
+		add(railPassengers,constraints);
+		
+		constraints.gridy = 2;
+		railDistance = new JLabel("0km",SwingConstants.CENTER);
+		add(railDistance,constraints);
+		
+		constraints.gridy = 3;
+		ticketIncome = new JLabel("£0",SwingConstants.CENTER);
+		add(ticketIncome,constraints);
+		
+		constraints.gridx = 0;
+		constraints.gridy = 4;
 		constraints.gridwidth=2;
 		constraints.gridheight=1;
 		
 		add(new SimulationControlPanel(simulation),constraints);
 		
 		constraints.gridx = 0;
-		constraints.gridy = 2;
-		constraints.gridwidth=1;
+		constraints.gridy = 5;
+		constraints.gridwidth=2;
 		constraints.gridheight=1;
 
 		add(new ModePanel(modes, manager),constraints);
@@ -139,10 +159,10 @@ public class Controls extends JFrame
 			layerPanel.add(checkbox);
 		}
 		
-		constraints.gridx = 1;
-		constraints.gridy = 2;
+		constraints.gridx = 2;
+		constraints.gridy = 0;
 		constraints.gridwidth=1;
-		constraints.gridheight=1;
+		constraints.gridheight=9;
 		
 		add(layerPanel,constraints);
 				
@@ -150,13 +170,13 @@ public class Controls extends JFrame
 
 		LinePanel linePanel = new LinePanel(simulation.getCity());
 		constraints.gridx = 0;
-		constraints.gridy = 3;
+		constraints.gridy = 7;
 		constraints.gridwidth=2;
 		constraints.gridheight=1;
 		add(linePanel,constraints);
 		
 		constraints.gridx = 0;
-		constraints.gridy = 4;
+		constraints.gridy = 8;
 		constraints.gridwidth=2;
 		constraints.gridheight=1;
 		
@@ -167,6 +187,15 @@ public class Controls extends JFrame
 	}
 	
 
+
+	@Override
+	public String run(Simulation simulation)
+	{
+		railPassengers.setText(traffic.getRailPassengers()+" passengers");
+		railDistance.setText((int)(traffic.getRailDistance())+"km");
+		return null;
+	}
+
 	
 	/**
 	 * @param args
@@ -175,7 +204,7 @@ public class Controls extends JFrame
 	{
 		
 		
-		Simulation sim = new Simulation(new City(80,80,1,500000),2020,500);
+		Simulation sim = new Simulation(new City(160,160,0.5,500000),2022,500);
 
 		CityDrawer cityDrawer = new CityDrawer(sim,1024,1024);
 		
@@ -198,7 +227,7 @@ public class Controls extends JFrame
 
 		Dijkstra roadDijkstra = new Dijkstra(sim.getCity().getHighwayNodes());
 
-		Pathfinder pathfinder = new Pathfinder(roadDijkstra,dijkstra,2);
+		Pathfinder pathfinder = new Pathfinder(roadDijkstra,dijkstra,1);
 		
 		sim.run(roadDijkstra,false);
 
@@ -209,7 +238,7 @@ public class Controls extends JFrame
 		ServiceBuilder serviceBuilder = new ServiceBuilder(sim.getCity());
 		selector.getSelectedBlock().addListener(serviceBuilder);
 		
-		StationBuilder stationBuilder = new StationBuilder(sim.getCity(),roadDijkstra,2,20,20000,40000,5000);
+		StationBuilder stationBuilder = new StationBuilder(sim.getCity(),roadDijkstra,1,10,20000,40000,5000);
 		selector.getSelectedBlock().addListener(stationBuilder);
 		
 		sim.addRoutine(new OpenFields(2.0/52.0));
@@ -220,7 +249,7 @@ public class Controls extends JFrame
 		//sim.addRoutine(new ComputeTubeways());
 
 		sim.addRoutine(dijkstra);
-		sim.addRoutine(new ComputeLocalStations(dijkstra,roadDijkstra,20));
+		sim.addRoutine(new ComputeLocalStations(dijkstra,roadDijkstra,10));
 		sim.addRoutine(new Allocate(pathfinder));
 		PlaceTraffic placeTraffic = new PlaceTraffic(pathfinder);
 		sim.addRoutine(placeTraffic);
@@ -256,7 +285,7 @@ public class Controls extends JFrame
 		StationLayer stationLayer = new StationLayer();
 		
 		PlatformLayer platformLayer = new PlatformLayer();
-		StationCoverageLayer stationCoverageLayer = new StationCoverageLayer(roadDijkstra,2,20);
+		StationCoverageLayer stationCoverageLayer = new StationCoverageLayer(roadDijkstra,1,10);
 		HighwayNodeLayer highwayNodes = new HighwayNodeLayer();
 		highwayNodes.disable();
 		
@@ -409,12 +438,18 @@ public class Controls extends JFrame
     	sim.getCity().getLines().add(green);
     	sim.getCity().getLines().add(blue);
 		
-    	Controls controls = new Controls(sim,cityDrawer,modes,manager,serviceBuilder);
-
     	
+    	
+    	Controls controls = new Controls(sim,cityDrawer,modes,manager,serviceBuilder,placeTraffic);
+
+    	sim.addRoutine(controls);
+    	sim.addPauseRoutine(controls);
     	
     	
     	//new LineFrame(sim.getCity(),serviceBuilder);
+    	
+    	Thread thread = new Thread(sim);
+		thread.start();
     	
     	cityDrawer.run();
     	

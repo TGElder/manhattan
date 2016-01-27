@@ -189,6 +189,30 @@ public class StationBuilder extends Mode implements SelectionListener<Block>,Rou
 		
 		Town focus = block.getTown();
 		
+		if (block.getTown().getPopulation()==0)
+		{
+			
+			int [] dx = {0,0,1,-1};
+			int [] dy = {1,-1,0,0};
+			
+			for (int n=0; n<4; n++)
+			{
+				int nx = block.getX() + dx[n];
+				int ny = block.getY() + dy[n];
+				
+				if (nx >= 0 && nx < city.getWidth() && ny >= 0 && ny < city.getHeight())
+				{
+					Block neighbour = city.getBlock(nx, ny);
+					
+					if (neighbour.getTown().getPopulation()>focus.getPopulation())
+					{
+						focus = neighbour.getTown();
+					}
+				}
+			}
+		}
+		
+		
 		while (focus!=null)
 		{
 			towns.add(0,focus);
@@ -242,16 +266,33 @@ public class StationBuilder extends Mode implements SelectionListener<Block>,Rou
 			{
 				double distance = roadDijkstra.getDistances()[to.getHighwayNode().getIndex()][block.getHighwayNode().getIndex()];
 				
-				if (distance<=threshold1)
+				for (int b=0; b<block.getBorders().length; b++)
 				{
-					drawPolygon(block.getPolygon(),1f,1f,0,0.5f,true);
-				}
-				else if (distance<=threshold2)
-				{
-					drawPolygon(block.getPolygon(),1f,1f,0,0.25f,true);
+					if (block.getBorders()[b]!=null)
+					{
+					
+						double borderDistance = roadDijkstra.getDistances()[to.getHighwayNode().getIndex()][block.getBorders()[b].getHighwayNode().getIndex()];
+						
+						if (distance<=threshold1)
+						{
+							if (borderDistance>threshold1)
+							{
+								drawLine(block.getPolygon().get(b),1f,1f,1f,2f,false);
+							}
+						}
+						else if (distance<=threshold2)
+						{
+							if (borderDistance>threshold2)
+							{
+								drawLine(block.getPolygon().get(b),0f,0f,0f,2f,false);
+							}
+						}
+						
+					}
 				}
 				
-				
+			
+	
 			}
 			
 			if (to.hasStation())

@@ -3,6 +3,8 @@ package elder.manhattan;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.swing.JLabel;
+
 import elder.geometry.Point;
 import elder.geometry.Polygon;
 import elder.network.Edge;
@@ -20,6 +22,8 @@ public class City
 	private final List<Commute> homeless = new ArrayList<Commute> ();
 	private final List<Commute> unemployed = new ArrayList<Commute> ();
 	
+	private static int [] borderXs = {0,1,0,-1};
+	private static int [] borderYs = {-1,0,1,0};
 	private static int [] neighbourXs = { 0,-1, 0, 1,-2,-1,1,2,-1,0,1,0};
 	private static int [] neighbourYs = {-2,-1,-1,-1, 0, 0,0,0, 1,1,1,2};
 	
@@ -61,7 +65,7 @@ public class City
 		{
 			for (int y=0;y<height; y++)
 			{
-				ArrayList<Block> neighbours1 = new ArrayList<Block> ();
+				ArrayList<Block> neighbours = new ArrayList<Block> ();
 				
 				for (int n=0; n<neighbourXs.length; n++)
 				{
@@ -70,18 +74,30 @@ public class City
 					
 					if (nx>=0 && nx<width && ny>=0 && ny<height)
 					{
-						neighbours1.add(getBlock(nx,ny));
+						neighbours.add(getBlock(nx,ny));
 					}
 				}
 				
-				Block[] neighbours2 = new Block[neighbours1.size()];
+				Block [] borders = new Block[4];
 				
-				for (int n=0; n<neighbours1.size(); n++)
+				for (int b=0; b<borderXs.length; b++)
 				{
-					neighbours2[n] = neighbours1.get(n);
+					int bx = x+borderXs[b];
+					int by = y+borderYs[b];
+					
+					if (bx>=0 && bx<width && by>=0 && by<height)
+					{
+						borders[b] = getBlock(bx,by);
+					}
+					else
+					{
+						borders[b] = null;
+					}
 				}
+	
 				
-				getBlock(x,y).setNeighbours(neighbours2);
+				getBlock(x,y).setNeighbours(neighbours.toArray(new Block[neighbours.size()]));
+				getBlock(x,y).setBorders(borders);
 			}
 		}
 	}
@@ -276,6 +292,7 @@ public class City
 	{
 		return wallet;
 	}
+
 
 
 

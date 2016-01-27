@@ -23,7 +23,7 @@ public class OpenFields implements Routine
 			if (!block.isBuilt())
 			{
 
-				if (block.hasStation())
+				if (block.hasStation()&&!block.getStation().getPlatforms().isEmpty())
 				{
 					block.setBuilt(true);
 				}

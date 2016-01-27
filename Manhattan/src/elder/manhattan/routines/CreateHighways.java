@@ -39,7 +39,7 @@ public class CreateHighways implements Routine
 		{
 			for (int y=1; y<city.getHeight(); y+=2)
 			{
-				HighwayNode node = new HighwayNode(x,y,nodes.size());
+				HighwayNode node = new HighwayNode(x*city.getScale(),y*city.getScale(),nodes.size());
 				nodes.add(node);
 				matrix[(x-1)/2][(y-1)/2] = node;
 				

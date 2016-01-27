@@ -29,20 +29,56 @@ public class StationCoverageLayer extends SimulationLayer
 	public void draw(Simulation simulation)
 	{
 
+		int [][] covered = new int[simulation.getCity().getWidth()][simulation.getCity().getHeight()]; 
+		
 		for (Block block : simulation.getCity().getBlocks())
 		{
 			
 			if (covered(simulation.getCity().getRailwayNodes(),block,threshold1))
 			{
-				drawPolygon(block.getPolygon(),1f,1f,0,0.5f,true);
+				covered[block.getX()][block.getY()] = 0;
+				//drawPolygon(block.getPolygon(),1f,1f,0,0.5f,true);
 			}
 			else if (covered(simulation.getCity().getRailwayNodes(),block,threshold2))
 			{
-				drawPolygon(block.getPolygon(),1f,1f,0,0.25f,true);
+				covered[block.getX()][block.getY()] = 1;
+				//drawPolygon(block.getPolygon(),1f,1f,0,0.25f,true);
+			}
+			else
+			{
+				covered[block.getX()][block.getY()] = 2;
 			}
 				
 		}
 		
+		
+		for (Block block : simulation.getCity().getBlocks())
+		{	
+			int blockCovered = covered[block.getX()][block.getY()];
+			
+			for (int b=0; b<block.getBorders().length; b++)
+			{
+				Block border = block.getBorders()[b];
+				
+				if (border!=null)
+				{
+					int borderCovered = covered[border.getX()][border.getY()];
+					
+					if (blockCovered==0&&borderCovered==1)
+					{
+						drawLine(block.getPolygon().get(b),1f,1f,1f,2f,false);
+					}
+					else if (blockCovered==1&&borderCovered==2)
+					{
+						drawLine(block.getPolygon().get(b),0f,0f,0f,2f,false);
+					}
+					
+				}
+			}
+			
+		
+
+		}
 	}
 	
 	private boolean covered(List<IndexNode> nodes, Block block, double threshold)
