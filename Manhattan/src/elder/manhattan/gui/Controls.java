@@ -193,6 +193,7 @@ public class Controls extends JFrame implements Routine
 	{
 		railPassengers.setText(traffic.getRailPassengers()+" passengers");
 		railDistance.setText((int)(traffic.getRailDistance())+"km");
+		ticketIncome.setText("£"+(int)(traffic.getRailDistance()/10));
 		return null;
 	}
 

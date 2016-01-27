@@ -108,7 +108,7 @@ public class PlaceTraffic implements Routine
 							double railDistance = leg.getDistance()*commuters[b];
 							
 							this.railDistance+=railDistance;
-							city.getWallet().addMoney((int)(railDistance));
+							city.getWallet().addMoney((int)(railDistance/10));
 						}
 					}
 					
