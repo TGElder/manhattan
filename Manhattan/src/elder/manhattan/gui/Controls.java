@@ -205,7 +205,7 @@ public class Controls extends JFrame implements Routine
 	{
 		
 		
-		Simulation sim = new Simulation(new City(160,160,0.5,500000),2022,500);
+		Simulation sim = new Simulation(new City(160,160,0.5,500000),2027,500);
 
 		CityDrawer cityDrawer = new CityDrawer(sim,1024,1024);
 		

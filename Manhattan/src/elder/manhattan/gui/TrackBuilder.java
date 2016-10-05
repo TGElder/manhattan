@@ -29,6 +29,7 @@ public class TrackBuilder extends Mode implements SelectionListener<Block>, Rout
 	private double buildCostPerBuiltUpKilometre;
 	private double removalCostPerKilometre;
 	
+	
 	public TrackBuilder(City city, double buildCostPerKilometre, double buildCostPerBuiltUpKilometre, double removalCostPerKilometre)
 	{
 		super("Track Builder");
@@ -43,9 +44,18 @@ public class TrackBuilder extends Mode implements SelectionListener<Block>, Rout
 	{
 		to = selection;
 		
-		if ( (from!=null&&to!=null) && (from!=to))
+		
+		
+		if ( (from!=null&&to!=null))
 		{
-			next = new NewTrack(from,to);
+			int dx = Math.abs(from.getX() - to.getX());
+			int dy = Math.abs(from.getY() - to.getY());
+			
+			if ((from!=to))// && ((dx==0)||(dy==0)||(dx==dy)))
+			{
+				next = new NewTrack(from,to);
+			}
+			
 		}
 		
 		refresh();
@@ -127,25 +137,36 @@ public class TrackBuilder extends Mode implements SelectionListener<Block>, Rout
 			if (track.getCost()<=city.getWallet().getMoney())
 			{
 			
-				city.getWallet().addMoney(-track.getCost());
 				
-				if (track.remove)
-				{
-					try
+					for (int b=0; b<track.blocksIntersected.size()-1;b++)
 					{
-						simulation.getCity().removeTrack(track.from, track.to);
+						Block from = track.blocksIntersected.get(b);
+						Block to = track.blocksIntersected.get(b+1);
+					
+						if (city.hasTrack(from, to))
+						{
+							try
+							{
+								city.getWallet().addMoney(-track.getCost(from,to));
+								simulation.getCity().removeTrack(from, to);
+							}
+							catch (Exception e)
+							{
+								System.out.println(e.getMessage());
+							}
+						}
+						else
+						{
+							city.getWallet().addMoney(-track.getCost(from,to));
+							simulation.getCity().createTrack(from, to);
+						}
+		
 					}
-					catch (Exception e)
-					{
-						System.out.println(e.getMessage());
-					}
-				}
-				else
-				{
-					simulation.getCity().createTrack(track.from, track.to);
 					
 					
-				}
+				
+				
+
 			}
 			else
 			{
@@ -172,32 +193,66 @@ public class TrackBuilder extends Mode implements SelectionListener<Block>, Rout
 		if (next!=null)
 		{
 			
-			if (next.remove)
-			{
-				drawLine(next.line,1f,0f,0f,2f,false);
-			}
-			else
-			{
-				drawLine(next.line,0f,0f,0f,2f,false);
-				
-				for (Line line : next.builtUpTrack)
+				for (int b=0; b<next.blocksIntersected.size()-1; b++)
 				{
-					drawLine(line,0f,0f,1f,2f,false);
-				}
-				
-				for (Block block : next.builtUpBlocksIntersected)
-				{
-					drawPolygon(block.getPolygon(),0f,0f,1f,1f,false);
+					Block from = next.blocksIntersected.get(b);
+					Block to = next.blocksIntersected.get(b+1);					
+					
+					if (city.hasTrack(from, to))
+					{
+						Line line = new Line(from.getTrackNode(),to.getTrackNode());
+						drawLine(line,1f,0f,0f,2f,false);
+					}
+					else
+					{
+						
+						Point midpoint = new Point(
+								from.getTrackNode().x+((to.getTrackNode().x - from.getTrackNode().x)*0.5),
+								from.getTrackNode().y+((to.getTrackNode().y - from.getTrackNode().y)*0.5));
+						
+						
+						
+						Line line = new Line(from.getTrackNode(),midpoint);
+						
+						if (from.isBuilt())
+						{
+							drawLine(line,0f,0f,1f,2f,false);
+						}
+						else
+						{
+							drawLine(line,0f,0f,0f,2f,false);
+						}
+						
+						line = new Line(midpoint,to.getTrackNode());
+						
+						if (to.isBuilt())
+						{
+							drawLine(line,0f,0f,1f,2f,false);
+						}
+						else
+						{
+							drawLine(line,0f,0f,0f,2f,false);
+						}
+		
+					}
 
 				}
 				
 				
+			for (Block block : next.blocksIntersected)
+			{
+				if (block.isBuilt())
+				{
+					drawPolygon(block.getPolygon(),0f,0f,1f,1f,false);
+				}
 			}
+			
 			
 			drawText("£"+next.getCost(),16,next.to.getTrackNode());
 
 
 		}
+		
 		
 	
 	}
@@ -232,101 +287,104 @@ public class TrackBuilder extends Mode implements SelectionListener<Block>, Rout
 		
 		Block from;
 		Block to;
-		
-		boolean remove;
-		
-		Line line;
-		List<Line> builtUpTrack = new ArrayList<Line> ();
-		List<Block> builtUpBlocksIntersected = new ArrayList<Block> ();
-		double length=0;
-		double builtUpLength=0;
-		
+				
+		List<Block> blocksIntersected = new ArrayList<Block> ();
+				
 		public NewTrack(Block from, Block to)
 		{
-			
 			
 			this.from = from;
 			this.to = to;
 			
-			remove = city.hasTrack(from, to);
+			Line line = new Line(from.getTrackNode(),to.getTrackNode());
+
+			int xd;
 			
-			line = new Line(from.getTrackNode(),to.getTrackNode());
-			
-			length = line.length;
-			
-			if (!remove)
+			if (from.getX()>to.getX())
 			{
+				xd=-1;
+			}
+			else
+			{
+				xd=1;
+			}
+
+			int yd;
 			
-				int minX = Math.min(from.getX(), to.getX());
-				int maxX = Math.max(from.getX(), to.getX());
-				int minY = Math.min(from.getY(), to.getY());
-				int maxY = Math.max(from.getY(), to.getY());
-				
-				for (int x=minX; x<=maxX; x++)
+			if (from.getY()>to.getY())
+			{
+				yd=-1;
+			}
+			else
+			{
+				yd=1;
+			}
+			
+			blocksIntersected.add(from);
+			
+			for (int x=from.getX(); x!=to.getX()+xd; x+=xd)
+			{
+				for (int y=from.getY(); y!=to.getY()+yd; y+=yd)
 				{
-					for (int y=minY; y<=maxY; y++)
-					{
-						Collection<Point> intersects = getIntersects(city.getBlock(x, y).getPolygon(),line);
+					Collection<Point> intersects = getIntersects(city.getBlock(x, y).getPolygon(),line);
+					
+					if (intersects.size()==2)
+					{					
+						blocksIntersected.add(city.getBlock(x, y));
 						
-						if (intersects.size()==2)
-						{
-							List<Point> intersectList = new ArrayList<Point> (intersects);
-							
-							if (city.getBlock(x, y).isBuilt())
-							{
-								Line blockLine = new Line(intersectList.get(0),intersectList.get(1));
-								builtUpTrack.add(blockLine);
-								builtUpLength += blockLine.length;
-								builtUpBlocksIntersected.add(city.getBlock(x, y));
-							}
-						}
+						
 					}
 				}
+			}
+			
+			blocksIntersected.add(to);
+
+		}
+		
+		public int getCost(Block from, Block to)
+		{
+			double cost=0;
+			
+			Line line = new Line(from.getTrackNode(),to.getTrackNode());
+			
+			if (city.hasTrack(from, to))
+			{
+				cost += line.getLength()*removalCostPerKilometre;
+			}
+			else
+			{
+				int built=0;
 				
 				if (from.isBuilt())
 				{
-					builtUpBlocksIntersected.add(from);
-					
-					Collection<Point> intersects = getIntersects(from.getPolygon(),line);
-					
-					assert(intersects.size()==1);
-					
-					List<Point> intersectList = new ArrayList<Point> (intersects);
-					Line blockLine = new Line(intersectList.get(0),from.getTrackNode());
-					builtUpTrack.add(blockLine);
-					builtUpLength += blockLine.length;
-					
+					built++;
 				}
-				
 				if (to.isBuilt())
 				{
-					builtUpBlocksIntersected.add(to);
-					
-					Collection<Point> intersects = getIntersects(to.getPolygon(),line);
-					
-					assert(intersects.size()==1);
-					
-					List<Point> intersectList = new ArrayList<Point> (intersects);
-					Line blockLine = new Line(intersectList.get(0),to.getTrackNode());
-					builtUpTrack.add(blockLine);
-					builtUpLength += blockLine.length;
+					built ++;
 				}
-			
+				
+				cost += (built/2.0)*line.getLength()*buildCostPerBuiltUpKilometre;
+				cost += (1.0-(built/2.0))*line.getLength()*buildCostPerKilometre;
 			}
+			
+			return (int)Math.ceil(cost);
 			
 		}
 		
 		public int getCost()
 		{
-			if (remove)
+			int cost=0;
+			
+			for (int b=0; b<next.blocksIntersected.size()-1; b++)
 			{
-				return (int)Math.ceil(length*removalCostPerKilometre);
-			}
-			else
-			{
-				return (int)Math.ceil(length*buildCostPerKilometre + builtUpLength*buildCostPerBuiltUpKilometre*10);
+				Block from = next.blocksIntersected.get(b);
+				Block to = next.blocksIntersected.get(b+1);
+				
+				cost += getCost(from,to);
 			}
 			
+			return cost;
 		}
 	}
 
